@@ -38,6 +38,10 @@ export class PathParamNode<T> implements Node<T> {
     return `${TAG}::${this.paramName}`;
   }
 
+  get children() {
+    return [...this.children_]
+  }
+
   equals(other: Node<T>) {
     return (other instanceof PathParamNode && other.pathSeparator === this.pathSeparator)
   }
@@ -101,17 +105,6 @@ export class PathParamNode<T> implements Node<T> {
     }
 
     return childMatch
-  }
-
-
-  public printNode(indent: number = 0) {
-
-    return `
-    ${' '.repeat(indent * 4)} || ${'='.repeat(36)}
-    ${' '.repeat(indent * 4)} || node=${this.name}
-    ${' '.repeat(indent * 4)} || hasController=${!!this.controller}
-    ${' '.repeat(indent * 4)} || children (${this.children_.length}) =${printChildren(this.children_, indent)}
-    ${' '.repeat(indent * 4)} || ${'='.repeat(36)}`
   }
 
 

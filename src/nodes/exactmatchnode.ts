@@ -111,15 +111,8 @@ export class ExactMatchNode<T> implements Node<T> {
   }
 
 
-  public printNode(indent: number = 1) {
-
-    return `
-    ${' '.repeat(indent * 4)} || ${'='.repeat(36)}
-    ${' '.repeat(indent * 4)} || node=${this.name}
-    ${' '.repeat(indent * 4)} || hasController=${!!this.controller}
-    ${' '.repeat(indent * 4)} || children (${this.children_.length}) =${printChildren(this.children_, indent)}
-    ${' '.repeat(indent * 4)} || ${'='.repeat(36)}`
-
+  get children() {
+    return [...this.children_]
   }
 
 }

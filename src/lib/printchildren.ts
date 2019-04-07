@@ -1,11 +1,12 @@
-import { Node } from '../interfaces/ifnode'
+import { Node } from '../interfaces'
+import { printNode } from './printnode'
 
 export const printChildren = <T>(children: Array<Node<T>>, indent: number = 1): string => {
 
   let ret = '';
 
   for (let i = 0; i < children.length; i++) {
-    ret = ret + `${children[i].printNode(indent + 1)}`
+    ret = ret + `${printNode(children[i], indent + 1)}`
   }
 
   return ret;

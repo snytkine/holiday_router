@@ -36,6 +36,8 @@ export interface Node<T> {
 
   name: string
 
+  controller?: T
+
   equals(other: Node<T>): boolean
 
   findRoute(uri: string, params?: UriParams): RouteMatchResult<T>
@@ -50,8 +52,7 @@ export interface Node<T> {
    */
   addChild(node: Node<T>): void;
 
-  //readonly children: Array<Node<T>>
-  printNode(indent?: number): string
+  readonly children: Array<Node<T>>
 }
 
 
