@@ -4,7 +4,6 @@ import {
   UriParams
 } from '../interfaces/ifnode'
 import { addToChildren } from '../lib/addtochildren'
-import { printChildren } from '../lib'
 
 const TAG = 'ExactMathNode'
 

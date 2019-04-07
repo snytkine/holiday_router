@@ -5,9 +5,8 @@ import {
 } from '../interfaces/ifnode'
 import {
   makeParam,
-  printChildren
 } from '../lib'
-import { addToChildren } from '../lib/addtochildren'
+
 
 export const CATCH_APP_PARAM_NAME = '**';
 
@@ -17,10 +16,6 @@ const TAG = 'CatchAllNode';
  * Node represents uri segment that ends with path separator
  */
 export class CatchAllNode<T> implements Node<T> {
-
-
-  private children_: Array<Node<T>> = [];
-
 
   /**
    * catchall node has lowest priority because

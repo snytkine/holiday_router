@@ -2,13 +2,12 @@ import {
   Node,
   RouteMatchResult,
   URI_PATH_SEPARATOR,
-  UriParams
+  UriParams,
 } from '../interfaces/ifnode'
 import {
   makeParam,
-  printChildren
+  addToChildren,
 } from '../lib'
-import { addToChildren } from '../lib/addtochildren'
 
 const TAG = 'PathParamNode';
 
