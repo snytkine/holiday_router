@@ -8,7 +8,7 @@ import {
 } from '../lib'
 
 
-export const CATCH_APP_PARAM_NAME = '**';
+export const CATCH_ALL_PARAM_NAME = '**';
 
 const TAG = 'CatchAllNode';
 
@@ -17,6 +17,7 @@ const TAG = 'CatchAllNode';
  */
 export class CatchAllNode<T> implements Node<T> {
 
+  public controller: T;
   /**
    * catchall node has lowest priority because
    * it must be the last node in children array
@@ -38,7 +39,7 @@ export class CatchAllNode<T> implements Node<T> {
    * children nodes - that simply would not make sense because
    * this node matches any uri and will never even look children
    */
-  constructor(public controller: T) {
+  constructor() {
   }
 
   equals(other: Node<T>): boolean {
@@ -51,7 +52,7 @@ export class CatchAllNode<T> implements Node<T> {
 
   findRoute(uri: string, params: UriParams = { pathParams: [] }): RouteMatchResult<T> {
 
-    params.pathParams.push(makeParam(CATCH_APP_PARAM_NAME, uri));
+    params.pathParams.push(makeParam(CATCH_ALL_PARAM_NAME, uri));
 
     return this.controller && {
       controller: this.controller,
