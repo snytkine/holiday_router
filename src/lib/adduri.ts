@@ -1,49 +1,20 @@
 import {
   Node,
-  RouteMatchResult,
-  UriParams
+  URI_PATH_SEPARATOR,
 } from '../interfaces/ifnode'
 import {
   CATCH_ALL_PARAM_NAME,
   CatchAllNode,
   ExactMatchNode,
-  PathParamNode
+  PathParamNode,
 } from '../nodes'
 import {
   BRACKET_CLOSED,
   BRACKET_OPEN,
-  ROUTE_PATH_SEPARATOR,
-  ROUTE_STRING_SERARATOR
+  ROUTE_STRING_SERARATOR,
+
 } from '../interfaces'
-
-/**
- * Read string until STRING_SEPARATOR or PATH_SEPARATOR char or until end of string.
- *
- * @param {string} s
- *
- * @returns {head, tail} head is first part of string including separator,
- * tail is rest of string
- */
-export const splitBySeparator = (s: string, separators: Array<string>): { head: string, tail: string } => {
-
-  let i,
-      ch;
-  let ret = {
-    head: '',
-    tail: ''
-  }
-
-  for (i = 0; ch = s[i++]; ch !== undefined) {
-    ret.head += ch;
-    if (separators.includes(ch)) {
-      break;
-    }
-  }
-
-  ret.tail = s.substring(i);
-
-  return ret;
-}
+import { splitBySeparator } from './strlib'
 
 /**
  * Placeholder segment can be either:
@@ -58,10 +29,11 @@ export const parsePlaceholderSegment = (s: string): { paramName: string, prefix?
 
   const bracketOpenPos = s.indexOf(BRACKET_OPEN);
   const bracketClosedPos = s.indexOf(BRACKET_CLOSED);
+
   const res = {
     paramName: '',
-    prefix: undefined,
-    postfix: undefined
+    prefix:    undefined,
+    postfix:   undefined
   }
 
   if (bracketOpenPos < 0 || bracketClosedPos < 0) {
@@ -93,33 +65,112 @@ export const parsePlaceholderSegment = (s: string): { paramName: string, prefix?
   return res;
 }
 
-export const makeRouterNode = <T>(uriSegment: string): Node<T> => {
+export type NodeFactory<T> = (uriSegment: string) => Node<T> | Error;
 
-  let node: Node<T>;
+export const makeCatchAllNode = <T>(uriSegment: string): Node<T> | Error => {
+
+  const re = /^{\*([^{}]+)}$/
+
   if (uriSegment === CATCH_ALL_PARAM_NAME) {
-    node = new CatchAllNode()
-  } else if (!uriSegment.includes(BRACKET_OPEN)) {
-    node = new ExactMatchNode(uriSegment)
-  } else if (uriSegment.includes(BRACKET_CLOSED)){
-    /**
-     * Validate positions of { and } chars.
-     * Right now segment must start with { and end with } followed by optional separator
-     * chars between { and } must be valid for param name
-     */
-
-    node = new PathParamNode()
+    return new CatchAllNode();
   }
 
-  return node;
+  const res = re.exec(uriSegment);
+
+  if (res && Array.isArray(res) && res[1]) {
+    return new CatchAllNode(res[1])
+  }
+
+  return new Error(`Did not create catchAllNode from segment=${uriSegment}`);
 }
 
-export const splitUri = (uri: string): Array<string> => {
+export const makeExactMatchNode = <T>(uriSegment: string): Node<T> | Error => {
+  /**
+   * @todo
+   * need some validation for allowed chars in segment
+   */
+  if (uriSegment !== CATCH_ALL_PARAM_NAME) {
+    return new ExactMatchNode(uriSegment);
+  }
 
-  return uri.split(/[\/_]/)
+  return new Error(`Did not create exactMatch node from segment=${uriSegment}`);
+}
+
+export const makePathParamNode = <T>(uriSegment: string): Node<T> | Error => {
+
+  const re = /^{([a-zA-Z0-9-_]+)}([\/_]?)$/;
+
+  const res = re.exec(uriSegment);
+
+  if (!res) {
+    return new Error(`Did not create pathParam node from segment=${uriSegment}`);
+  }
+
+  const [_, paramName, pathSep] = res;
+
+  return new PathParamNode(paramName, pathSep);
+
 }
 
 
-export const addRoute = <T>(node: Node<T>, uri: string, controller: T): void => {
+export const makePathParamNodeRegex = <T>(uriSegment: string): Node<T> | Error => {
 
+  const re = /^{([a-zA-Z0-9-_]+):(.*)}([\/_]?)$/;
+  let regex: RegExp;
+
+  const res = re.exec(uriSegment);
+
+  if (!res) {
+    return new Error(`Did not create pathParamRegex node from segment=${uriSegment}`);
+  }
+
+  const [_, paramName, pattern, pathSep] = res;
+
+  try {
+    regex = new RegExp(pattern);
+    return new PathParamNode(paramName, pathSep, regex);
+  } catch (e) {
+    throw new Error(`Invalid regex pattern '${pattern}' in uriSegment=${uriSegment} e=${e}`);
+  }
+
+}
+
+
+/**
+ * Created new node(s) and append as child to parentNode
+ *
+ * @param {Node<T>} node
+ * @param {string} uri
+ * @param {T} controller
+ */
+export const makeNode = <T>(uriSegment: string): Node<T> => {
+
+  /**
+   * Array of factory functions that can create router node
+   * Order is important because makeExactMatchNode will
+   * create a new for PathParam node and
+   * @type {<T>(uriSegment: string) => (Node<T> | false)[]}
+   */
+  const factories: Array<NodeFactory<T>> = [
+    makeCatchAllNode,
+    makePathParamNodeRegex,
+    makePathParamNode,
+    makeExactMatchNode,
+  ];
+
+
+  const ret = factories.reduce((prev, cur) => {
+    if (!(prev instanceof Error)) {
+      return prev;
+    }
+    return cur(uriSegment);
+  }, new Error())
+
+
+  if(ret instanceof Error){
+    throw new Error(`No suitable factory function to create node from uriSegment=${uriSegment}`)
+  }
+
+  return ret;
 
 }

@@ -6,6 +6,7 @@ import {
 import {
   makeParam,
 } from '../lib'
+import { RootNode } from './rootnode'
 
 
 export const CATCH_ALL_PARAM_NAME = '**';
@@ -15,9 +16,9 @@ const TAG = 'CatchAllNode';
 /**
  * Node represents uri segment that ends with path separator
  */
-export class CatchAllNode<T> implements Node<T> {
+export class CatchAllNode<T> extends RootNode<T> implements Node<T> {
 
-  public controller: T;
+  private paramName: string;
   /**
    * catchall node has lowest priority because
    * it must be the last node in children array
@@ -31,7 +32,7 @@ export class CatchAllNode<T> implements Node<T> {
   }
 
   get name() {
-    return TAG;
+    return `${TAG}::${this.paramName}`;
   }
 
   /**
@@ -39,7 +40,9 @@ export class CatchAllNode<T> implements Node<T> {
    * children nodes - that simply would not make sense because
    * this node matches any uri and will never even look children
    */
-  constructor() {
+  constructor(paramName: string = CATCH_ALL_PARAM_NAME) {
+    super();
+    this.paramName = paramName.trim();
   }
 
   equals(other: Node<T>): boolean {
@@ -52,20 +55,12 @@ export class CatchAllNode<T> implements Node<T> {
 
   findRoute(uri: string, params: UriParams = { pathParams: [] }): RouteMatchResult<T> {
 
-    params.pathParams.push(makeParam(CATCH_ALL_PARAM_NAME, uri));
+    params.pathParams.push(makeParam(this.paramName, uri));
 
     return this.controller && {
       controller: this.controller,
       params
     }
-  }
-
-  /**
-   *Catchall node cannot have any children
-   * @returns {any[]}
-   */
-  get children() {
-    return [];
   }
 
 }

@@ -7,7 +7,9 @@ import {
 import {
   makeParam,
   addToChildren,
+  extractUriParam,
 } from '../lib'
+import { RootNode } from './rootnode'
 
 const TAG = 'PathParamNode';
 
@@ -15,18 +17,23 @@ const TAG = 'PathParamNode';
  * Node represents uri segment that
  * extracts pathParam and ends with path separator
  */
-export class PathParamNode<T> implements Node<T> {
-
-  private children_: Array<Node<T>> = [];
+export class PathParamNode<T> extends RootNode<T> implements Node<T> {
 
   public controller: T
+
+  protected paramName: string;
+
+  public readonly regex: RegExp;
 
 
   /**
    * Uri segment will be something like {string} uri |{region}/ or {region}_ or {region}
    * @param {string} uri |{region}/ or {region}_ or {region}
    */
-  constructor(private paramName: string, public readonly pathSeparator?: string | undefined) {
+  constructor(paramName: string, public readonly pathSeparator?: string | undefined, re?: RegExp) {
+    super();
+    this.paramName = paramName.trim();
+    this.regex = re;
   }
 
   get priority() {
@@ -34,77 +41,79 @@ export class PathParamNode<T> implements Node<T> {
   }
 
   get name() {
-    return `${TAG}::${this.paramName}`;
+    return `${TAG}::${this.paramName}::${this.pathSeparator}`;
   }
 
-  get children() {
-    return [...this.children_]
-  }
-
-  equals(other: Node<T>) {
-    return (other instanceof PathParamNode && other.pathSeparator === this.pathSeparator)
-  }
-
-  addChild(node: Node<T>) {
-    this.children_ = addToChildren(this.children_, node);
-  }
-
-  findRoute(uri: string, params: UriParams = { pathParams: [] }): RouteMatchResult<T> {
-
-    let pathParam: string = '';
-    let i = 0
-    let j = 0
-    let ch = '';
-    let rest: string;
-    let childMatch: RouteMatchResult<T>
+  /**
+   * This method is used only when adding child node
+   * the purpose is to prevent adding duplicate nodes that has equal match condition
+   *
+   * @param {Node<T>} other
+   * @returns {boolean}
+   */
+  public equals(other: Node<T>) {
 
     /**
-     * Read characters until end or uri or till reached pathSeparator
-     * and collect these chars into string.
-     *
+     * If other node is not PathParamNode return false
      */
-    while (ch !== undefined && ch !== URI_PATH_SEPARATOR && ch !== this.pathSeparator) {
-      pathParam += uri[i]
-      ch = uri[++i]
+    if (!(other instanceof PathParamNode)) {
+      return false
     }
 
     /**
-     * ch points to next char after pathParam (because of ++i)
-     * so if next param does not match path separator this is considered
-     * as non-match
+     * regex can be undefined in this node or in other node
+     * if typeof regex (undefined or RegExp) are not same in both nodes
+     * return false
      */
-    if (ch !== this.pathSeparator) {
-
-      return undefined;
-
+    if (typeof this.regex !== typeof other.regex) {
+      return false;
     }
 
-    params.pathParams.push(makeParam(this.paramName, pathParam));
+    /**
+     * If this node and other node have regex and their source property are the same
+     * then nodes are considered equal
+     */
+    if (this.regex && other.regex && this.regex.source === other.regex.source) {
+      return true;
+    }
 
-    rest = uri.substr(i + 1);
+    return (!this.regex && !other.regex && other.pathSeparator === this.pathSeparator)
+  }
 
-    if (!rest) {
+  public findRoute(uri: string, params: UriParams = { pathParams: [] }): RouteMatchResult<T> {
 
-      return this.controller && {
+    const extractedParam = extractUriParam(uri, this.pathSeparator);
+
+    if (!extractedParam) {
+      return undefined
+    }
+
+    params.pathParams.push(makeParam(this.paramName, extractedParam.param));
+
+
+    if (!extractedParam.rest) {
+
+      if (this.regex && !this.regex.test(extractedParam.param)) {
+        return false;
+      }
+
+      /**
+       * If no tail left in search string
+       * it means there are no more segments left in string to match
+       * In this case this node is a complete match
+       */
+      if (!this.controller) {
+        return false;
+      }
+
+      return {
         controller: this.controller,
         params
-
       }
 
     }
 
-
-    /**
-     * Have rest of uri
-     * Loop over children to get result
-     */
-    while (!childMatch && j < this.children_.length) {
-      childMatch = this.children_[j].findRoute(rest, params)
-      j += 1
-    }
-
-    return childMatch
+    return this.findChildMatch(extractedParam.rest, params);
   }
-
 
 }

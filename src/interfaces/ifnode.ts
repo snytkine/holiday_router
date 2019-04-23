@@ -28,7 +28,7 @@ export interface RouteMatch<T> {
  * in which case if this.controller has not been initialized it will
  * be undefined and so the return value will also be undefined
  */
-export type RouteMatchResult<T> = RouteMatch<T> | undefined
+export type RouteMatchResult<T> = RouteMatch<T> | undefined | false
 
 export interface Node<T> {
 
@@ -52,7 +52,15 @@ export interface Node<T> {
    */
   addChild(node: Node<T>): void;
 
-  readonly children: Array<Node<T>>
+  /**
+   *
+   * @param {string} uri
+   * @param {T} controller
+   * @returns {Node<T> | Error}
+   */
+  addUriController(uri: string, controller: T): Node<T>;
+
+  children: Array<Node<T>>;
 }
 
 

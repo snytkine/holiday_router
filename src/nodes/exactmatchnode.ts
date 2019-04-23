@@ -4,13 +4,14 @@ import {
   UriParams
 } from '../interfaces/ifnode'
 import { addToChildren } from '../lib/addtochildren'
+import { RootNode } from './rootnode'
 
 const TAG = 'ExactMathNode'
 
 /**
  * Node represents uri segment that ends with path separator
  */
-export class ExactMatchNode<T> implements Node<T> {
+export class ExactMatchNode<T> extends RootNode<T> implements Node<T> {
 
   /**
    * The exact match segment may or may not end with path separator
@@ -32,13 +33,11 @@ export class ExactMatchNode<T> implements Node<T> {
 
   public controller: T
 
-  private children_: Array<Node<T>>
-
 
   constructor(uri: string) {
+    super();
     this.origUriPattern = uri
     this.controller = void 0;
-    this.children_ = []
     this.segmentLength = uri.length
   }
 
@@ -56,16 +55,16 @@ export class ExactMatchNode<T> implements Node<T> {
   }
 
   addChild(node: Node<T>) {
-    this.children_ = addToChildren(this.children_, node);
+    this.children = addToChildren(this.children, node);
   }
 
   findRoute(uri: string, params: UriParams = { pathParams: [] }): RouteMatchResult<T> {
 
-    let i: number = 0
+    //let i: number = 0
 
     let rest: string
 
-    let childMatch: RouteMatchResult<T>
+    //let childMatch: RouteMatchResult<T>
 
     if (uri.startsWith(this.origUriPattern)) {
 
@@ -96,22 +95,19 @@ export class ExactMatchNode<T> implements Node<T> {
        * Have rest of uri
        * Loop over children to get result
        */
-      while (!childMatch && i < this.children_.length) {
-        childMatch = this.children_[i].findRoute(rest, params)
-        i += 1
-      }
+      // while (!childMatch && i < this.children_.length) {
+      //   childMatch = this.children_[i].findRoute(rest, params)
+      //   i += 1
+      // }
+      //
+      // return childMatch;
 
-      return childMatch;
+      return this.findChildMatch(rest, params);
 
     } else {
       return undefined;
     }
 
-  }
-
-
-  get children() {
-    return [...this.children_]
   }
 
 }
