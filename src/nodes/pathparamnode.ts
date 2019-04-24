@@ -37,11 +37,17 @@ export class PathParamNode<T> extends RootNode<T> implements Node<T> {
   }
 
   get priority() {
-    return 98;
+    return 98 + ((this.regex) ? -1 : 0);
   }
 
   get name() {
-    return `${TAG}::${this.paramName}::${this.pathSeparator}`;
+    let s = '';
+    if (this.regex) {
+      s += this.regex.source;
+    }
+    let ret = `${TAG}::${this.paramName}::${s}${this.pathSeparator}`;
+
+    return ret;
   }
 
   /**
@@ -88,14 +94,22 @@ export class PathParamNode<T> extends RootNode<T> implements Node<T> {
       return undefined
     }
 
-    params.pathParams.push(makeParam(this.paramName, extractedParam.param));
+    if (this.regex && !this.regex.test(extractedParam.param)) {
+      return false;
+    }
 
-
+    /**
+     * Cannot add extracted pathParams to original params object - must make copy
+     * because if there is no match in child nodes this method will return false - no match
+     * but if we add to original params the extracted value will be passed
+     * to next sibling node's findRoute
+     *
+     * @todo should have helper function copyPathParams - pass orig and new pathParam
+     * @type {{pathParams: (any | {paramName: string; paramValue: string})[]}}
+     */
+    const myParams = { pathParams: [...params.pathParams, makeParam(this.paramName, extractedParam.param)] };//params.pathParams.push(makeParam(this.paramName,
+                                                                                                             // extractedParam.param));
     if (!extractedParam.rest) {
-
-      if (this.regex && !this.regex.test(extractedParam.param)) {
-        return false;
-      }
 
       /**
        * If no tail left in search string
@@ -108,12 +122,12 @@ export class PathParamNode<T> extends RootNode<T> implements Node<T> {
 
       return {
         controller: this.controller,
-        params
+        params: myParams
       }
 
     }
 
-    return this.findChildMatch(extractedParam.rest, params);
+    return this.findChildMatch(extractedParam.rest, myParams);
   }
 
 }
