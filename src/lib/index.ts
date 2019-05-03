@@ -1,6 +1,5 @@
 export * from './makeparam'
 export * from './printchildren'
-export * from './addtochildren'
 export * from './printnode'
 export * from './adduri'
 export * from './strlib'

@@ -1,18 +1,18 @@
-export type ControllerFunction<T, U> = (T) => U
 
-export type HTTP_REQUEST_METHOD = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD'
-
-export const URI_PATH_SEPARATOR = '/';
-
-//export type ControllersMap<T, U> = Map<HTTP_REQUEST_METHOD, ControllerFunction<T, U>>
 
 export interface ExtractedPathParam {
   paramName: string
   paramValue: string
 }
 
+export interface RegexParams {
+  paramName: string,
+  params: Array<string>
+}
+
 export interface UriParams {
   pathParams: Array<ExtractedPathParam>
+  regexParams?: Array<RegexParams>
 }
 
 export interface RouteMatch<T> {

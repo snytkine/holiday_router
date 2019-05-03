@@ -7,9 +7,7 @@ import {
   makeParam,
 } from '../lib'
 import { RootNode } from './rootnode'
-
-
-export const CATCH_ALL_PARAM_NAME = '**';
+import { CATCH_ALL_PARAM_NAME } from '../interfaces'
 
 const TAG = 'CatchAllNode';
 

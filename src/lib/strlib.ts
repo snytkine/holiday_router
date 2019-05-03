@@ -1,8 +1,6 @@
 import {
-  RouteMatchResult,
-  URI_PATH_SEPARATOR
-} from '../interfaces/ifnode'
-import { makeParam } from './index'
+  ROUTE_PATH_SEPARATOR
+} from '../interfaces/constants'
 
 export const escapeRegExp = (text: string): string => {
   // -[\]()*+?.,
@@ -62,7 +60,7 @@ export const extractUriParam = (uri: string, separator?: string): UriParamResult
    * Read characters until end or uri or till reached pathSeparator
    * and collect these chars into string.
    */
-  while (ch !== undefined && ch !== URI_PATH_SEPARATOR && ch !== this.pathSeparator) {
+  while (ch !== undefined && ch !== ROUTE_PATH_SEPARATOR && ch !== this.pathSeparator) {
     param += uri[i]
     ch = uri[++i]
   }

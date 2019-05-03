@@ -10,5 +10,4 @@ export const printChildren = <T>(children: Array<Node<T>>, indent: number = 1): 
   }
 
   return ret;
-
 }

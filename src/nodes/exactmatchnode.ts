@@ -3,7 +3,6 @@ import {
   RouteMatchResult,
   UriParams
 } from '../interfaces/ifnode'
-import { addToChildren } from '../lib/addtochildren'
 import { RootNode } from './rootnode'
 
 const TAG = 'ExactMathNode'
@@ -54,10 +53,6 @@ export class ExactMatchNode<T> extends RootNode<T> implements Node<T> {
     return (other instanceof ExactMatchNode && other.origUriPattern === this.origUriPattern)
   }
 
-  addChild(node: Node<T>) {
-    this.children = addToChildren(this.children, node);
-  }
-
   findRoute(uri: string, params: UriParams = { pathParams: [] }): RouteMatchResult<T> {
 
     //let i: number = 0
@@ -105,7 +100,7 @@ export class ExactMatchNode<T> extends RootNode<T> implements Node<T> {
       return this.findChildMatch(rest, params);
 
     } else {
-      return undefined;
+      return false;
     }
 
   }

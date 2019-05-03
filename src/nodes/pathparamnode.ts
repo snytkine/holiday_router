@@ -1,17 +1,15 @@
 import {
   Node,
   RouteMatchResult,
-  URI_PATH_SEPARATOR,
   UriParams,
-} from '../interfaces/ifnode'
-import {
   makeParam,
-  addToChildren,
   extractUriParam,
-} from '../lib'
+  copyPathParams,
+} from '../'
 import { RootNode } from './rootnode'
 
 const TAG = 'PathParamNode';
+
 
 /**
  * Node represents uri segment that
@@ -37,17 +35,11 @@ export class PathParamNode<T> extends RootNode<T> implements Node<T> {
   }
 
   get priority() {
-    return 98 + ((this.regex) ? -1 : 0);
+    return 98;
   }
 
   get name() {
-    let s = '';
-    if (this.regex) {
-      s += this.regex.source;
-    }
-    let ret = `${TAG}::${this.paramName}::${s}${this.pathSeparator}`;
-
-    return ret;
+    return `${TAG}::${this.paramName}::${this.pathSeparator}`;
   }
 
   /**
@@ -83,32 +75,21 @@ export class PathParamNode<T> extends RootNode<T> implements Node<T> {
       return true;
     }
 
-    return (!this.regex && !other.regex && other.pathSeparator === this.pathSeparator)
+    return (!this.regex && !other.regex && other.pathSeparator === this.pathSeparator);
   }
 
-  public findRoute(uri: string, params: UriParams = { pathParams: [] }): RouteMatchResult<T> {
+
+  public findRoute(uri: string, params: UriParams = {
+    pathParams:  [],
+    regexParams: []
+  }): RouteMatchResult<T> {
 
     const extractedParam = extractUriParam(uri, this.pathSeparator);
 
     if (!extractedParam) {
-      return undefined
-    }
-
-    if (this.regex && !this.regex.test(extractedParam.param)) {
       return false;
     }
 
-    /**
-     * Cannot add extracted pathParams to original params object - must make copy
-     * because if there is no match in child nodes this method will return false - no match
-     * but if we add to original params the extracted value will be passed
-     * to next sibling node's findRoute
-     *
-     * @todo should have helper function copyPathParams - pass orig and new pathParam
-     * @type {{pathParams: (any | {paramName: string; paramValue: string})[]}}
-     */
-    const myParams = { pathParams: [...params.pathParams, makeParam(this.paramName, extractedParam.param)] };//params.pathParams.push(makeParam(this.paramName,
-                                                                                                             // extractedParam.param));
     if (!extractedParam.rest) {
 
       /**
@@ -122,12 +103,12 @@ export class PathParamNode<T> extends RootNode<T> implements Node<T> {
 
       return {
         controller: this.controller,
-        params: myParams
+        params:     copyPathParams(params, makeParam(this.paramName, extractedParam.param))
       }
 
     }
 
-    return this.findChildMatch(extractedParam.rest, myParams);
+    return this.findChildMatch(extractedParam.rest, copyPathParams(params, makeParam(this.paramName, extractedParam.param)));
   }
 
 }

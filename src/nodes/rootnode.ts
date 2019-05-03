@@ -1,15 +1,11 @@
 import {
   Node,
-  URI_PATH_SEPARATOR
-} from '../interfaces/ifnode'
-import {
+  ROUTE_PATH_SEPARATOR,
   ROUTE_STRING_SERARATOR,
   RouteMatchResult,
   UriParams
 } from '../interfaces'
-import { makeNode } from '../lib/adduri'
-import { splitBySeparator } from '../lib/strlib'
-import { addToChildren } from '../lib'
+import { makeNode, splitBySeparator } from '../lib'
 
 
 export class RootNode<T> implements Node<T> {
@@ -70,7 +66,7 @@ export class RootNode<T> implements Node<T> {
       return this;
     }
 
-    let { head, tail } = splitBySeparator(uri, [URI_PATH_SEPARATOR, ROUTE_STRING_SERARATOR]);
+    let { head, tail } = splitBySeparator(uri, [ROUTE_PATH_SEPARATOR, ROUTE_STRING_SERARATOR]);
 
     let childNode = makeNode<T>(head);
 
@@ -93,7 +89,12 @@ export class RootNode<T> implements Node<T> {
   }
 
   public addChild(node: Node<T>) {
-    this.children = addToChildren(this.children, node);
+
+    if (this.children.find(child => child.equals(node))) {
+      throw new Error(`Cannot add node '${node.name}' because equal child node already exists in children array ${JSON.stringify(this.children)}`);
+    }
+
+    this.children = [...this.children, node].sort((node1, node2) => node2.priority - node1.priority);
   }
 
 }
