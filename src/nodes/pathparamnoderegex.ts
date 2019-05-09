@@ -20,19 +20,25 @@ export class PathParamNodeRegex<T> extends PathParamNode<T> implements Node<T> {
 
 
   get priority() {
-    return 99;
+    return 97;
   }
 
   get name() {
-    return `${TAG}::${this.paramName}:${this.regex.source}::${this.pathSeparator}`;
+    return `${TAG}::${this.paramName}:${this.regex.source}::${this.prefix}::${this.postfix}`;
   }
 
   equals(other: Node<T>): boolean {
-    return super.equals(other)
+
+    return (
+      (other instanceof PathParamNodeRegex) &&
+      (this.prefix === other.prefix) &&
+      (this.postfix === other.postfix) &&
+      (this.regex.source === other.regex.source)
+    )
   }
 
-  constructor(paramName: string, re: RegExp, public readonly pathSeparator?: string | undefined) {
-    super(paramName, pathSeparator)
+  constructor(paramName: string, re: RegExp, postfix: string = '', prefix = '') {
+    super(paramName, postfix, prefix);
     this.regex = re;
   }
 
@@ -54,7 +60,7 @@ export class PathParamNodeRegex<T> extends PathParamNode<T> implements Node<T> {
    */
   findRoute(uri: string, params: UriParams = { pathParams: [] }): RouteMatchResult<T> {
 
-    const extractedParam = extractUriParam(uri, this.pathSeparator);
+    const extractedParam = extractUriParam(uri, this.postfix, this.prefix);
 
     if (!extractedParam) {
       return false;
@@ -65,6 +71,15 @@ export class PathParamNodeRegex<T> extends PathParamNode<T> implements Node<T> {
     if (!regexParams) {
       return false;
     }
+
+    /**
+     * @todo
+     * if only 1 match was extracted then
+     * the order of matched elements is off?
+     * the array will have only one element (at 0)
+     * instead of normal 0 for whole string match and 1 for first extracted match
+     * Maybe put this logic in makeRegexParam
+     */
 
     if (!extractedParam.rest) {
 

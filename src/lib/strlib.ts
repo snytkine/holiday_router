@@ -41,7 +41,75 @@ export interface UriParamResult {
   rest: string
 }
 
-export const extractUriParam = (uri: string, separator?: string): UriParamResult | null => {
+
+export const extractUriParam = (uri: string, postfix: string = '', prefix: string = ''): UriParamResult | null => {
+
+  let param: string = '';
+  let prefixLen = (prefix && prefix.length) || 0;
+  let postfixLen = (postfix && postfix.length) || 0;
+  let acc: string = '';
+  let ch: string = '';
+
+  let i = 0;
+  let j = 0;
+
+  /**
+   * First read until match of prefix
+   */
+  while (ch !== undefined && i < prefixLen) {
+
+    if (i < prefixLen && prefix[i] !== uri[i]) {
+      /**
+       * Prefix does not match
+       *
+       */
+      return null;
+    }
+
+    i += 1;
+  }
+
+  /**
+   * If string ended before the prefixLen return false
+   */
+  if (i < prefixLen) {
+    return null;
+  }
+
+
+  while (ch = uri[i]) {
+
+    if (ch === postfix[j]) {
+      acc += ch;
+      j += 1;
+    } else {
+      param += acc;
+      acc = '';
+      j = 0;
+      param += ch;
+    }
+
+    i += 1;
+
+    if (ch === ROUTE_PATH_SEPARATOR) {
+      break;
+    }
+
+  }
+
+  if (j !== postfixLen) {
+    return null;
+  }
+
+  return {
+    param,
+    rest: uri.substr(i)
+  }
+
+}
+
+
+export const extractUriParam_ = (uri: string, separator?: string): UriParamResult | null => {
   /**
    * If separator is an empty string must convert it to undefined
    * in order for match to work

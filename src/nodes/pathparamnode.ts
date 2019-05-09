@@ -21,17 +21,20 @@ export class PathParamNode<T> extends RootNode<T> implements Node<T> {
 
   protected paramName: string;
 
-  public readonly regex: RegExp;
+  public readonly postfix: string;
+
+  public readonly prefix: string;
 
 
   /**
    * Uri segment will be something like {string} uri |{region}/ or {region}_ or {region}
    * @param {string} uri |{region}/ or {region}_ or {region}
    */
-  constructor(paramName: string, public readonly pathSeparator?: string | undefined, re?: RegExp) {
+  constructor(paramName: string, postfix: string = '', prefix = '') {
     super();
     this.paramName = paramName.trim();
-    this.regex = re;
+    this.postfix = postfix || "";
+    this.prefix = prefix || "";
   }
 
   get priority() {
@@ -39,7 +42,7 @@ export class PathParamNode<T> extends RootNode<T> implements Node<T> {
   }
 
   get name() {
-    return `${TAG}::${this.paramName}::${this.pathSeparator}`;
+    return `${TAG}::${this.paramName}::${this.prefix}::${this.postfix}`;
   }
 
   /**
@@ -58,24 +61,7 @@ export class PathParamNode<T> extends RootNode<T> implements Node<T> {
       return false
     }
 
-    /**
-     * regex can be undefined in this node or in other node
-     * if typeof regex (undefined or RegExp) are not same in both nodes
-     * return false
-     */
-    if (typeof this.regex !== typeof other.regex) {
-      return false;
-    }
-
-    /**
-     * If this node and other node have regex and their source property are the same
-     * then nodes are considered equal
-     */
-    if (this.regex && other.regex && this.regex.source === other.regex.source) {
-      return true;
-    }
-
-    return (!this.regex && !other.regex && other.pathSeparator === this.pathSeparator);
+    return ( (this.prefix === other.prefix) && (this.postfix === other.postfix) );
   }
 
 
@@ -84,7 +70,7 @@ export class PathParamNode<T> extends RootNode<T> implements Node<T> {
     regexParams: []
   }): RouteMatchResult<T> {
 
-    const extractedParam = extractUriParam(uri, this.pathSeparator);
+    const extractedParam = extractUriParam(uri, this.postfix, this.prefix);
 
     if (!extractedParam) {
       return false;
