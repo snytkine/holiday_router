@@ -50,6 +50,8 @@ export const extractUriParam = (uri: string, postfix: string = '', prefix: strin
   let acc: string = '';
   let ch: string = '';
 
+  console.log(`Entered extractUriParam with uri=${uri} prefix=${prefix} postfix=${postfix}`)
+
   let i = 0;
   let j = 0;
 

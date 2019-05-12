@@ -12,62 +12,19 @@ import {
   PathParamNodeRegex,
 } from '../nodes'
 
-
-/**
- * Placeholder segment can be either:
- * {somename} or {somename}/
- * or with prefix article-{articleID}
- * or also with postfix latest{num}articles/
- *
- * @param {string} s
- * @returns {{paramName: string; prefix: string; postFix: string} | false}
- */
-export const parsePlaceholderSegment = (s: string): { paramName: string, prefix?: string, postfix?: string } | false => {
-
-  const bracketOpenPos = s.indexOf(BRACKET_OPEN);
-  const bracketClosedPos = s.indexOf(BRACKET_CLOSED);
-
-  const res = {
-    paramName: '',
-    prefix:    undefined,
-    postfix:   undefined
-  }
-
-  if (bracketOpenPos < 0 || bracketClosedPos < 0) {
-    return false
-  }
-
-  if (bracketOpenPos > bracketClosedPos) {
-    return false
-  }
-
-  /**
-   * segment cannot have more than one param
-   * cannot be something like {category}subcategory{subcategory}
-   * For multiple params path must be separated by path separator or underscore
-   */
-
-  if (s.lastIndexOf(BRACKET_OPEN) !== bracketOpenPos) {
-    throw new Error(`Multiple '${BRACKET_OPEN}' chars in segment ${s}`);
-  }
-
-  if (s.lastIndexOf(BRACKET_CLOSED) !== bracketClosedPos) {
-    throw new Error(`Multiple '${BRACKET_CLOSED}' chars in segment ${s}`);
-  }
-
-  res.paramName = s.substring(bracketOpenPos + 1, bracketClosedPos);
-  res.prefix = s.substring(0, bracketOpenPos);
-  res.postfix = s.substring(bracketClosedPos + 1);
-
-  return res;
-}
-
 export type NodeFactory = <T>(uriSegment: string) => Node<T> | null;
-
 
 export const makeCatchAllNode: NodeFactory = <T>(uriSegment: string): Node<T> => {
 
-  const re = /^{\*([^{}]+)}$/
+  /**
+   * Supports named catchall parameter
+   * if segment looks like this: /*someParam
+   * in which case param name will be someParam
+   *
+   * otherwise the pattern is ** and  the paramName will be **
+   * @type {RegExp}
+   */
+  const re = /^{\*([a-zA-Z0-9-_]+)}$/
 
   if (uriSegment === CATCH_ALL_PARAM_NAME) {
     return new CatchAllNode();
@@ -83,10 +40,7 @@ export const makeCatchAllNode: NodeFactory = <T>(uriSegment: string): Node<T> =>
 }
 
 export const makeExactMatchNode: NodeFactory = <T>(uriSegment: string): Node<T> => {
-  /**
-   * @todo
-   * need some validation for allowed chars in segment
-   */
+
   if (uriSegment !== CATCH_ALL_PARAM_NAME) {
     return new ExactMatchNode(uriSegment);
   }
@@ -94,9 +48,20 @@ export const makeExactMatchNode: NodeFactory = <T>(uriSegment: string): Node<T> 
   return null;
 }
 
+
 export const makePathParamNode: NodeFactory = <T>(uriSegment: string): Node<T> => {
 
-  const re = /^{([a-zA-Z0-9-_]+)}([\/_]?)$/;
+  /**
+   * Prefix = anything except { and } and /
+   * followed by {
+   * followed by optional spaces
+   * followed by param name (alphanumeric with - and _)
+   * followed by optional spaces
+   * followed by }
+   * followed by optional path separator
+   * @type {RegExp}
+   */
+  const re = /^([^{}\/]*){(?:\s*)([a-zA-Z0-9-_]+)(?:\s*)}([^{}\/]*)([\/]?)$/;
 
   const res = re.exec(uriSegment);
 
@@ -104,28 +69,34 @@ export const makePathParamNode: NodeFactory = <T>(uriSegment: string): Node<T> =
     return null;
   }
 
-  const [_, paramName, pathSep] = res;
 
-  return new PathParamNode(paramName, pathSep);
+  const [_, prefix, paramName, postfix] = res;
+
+  return new PathParamNode(paramName, postfix, prefix);
 
 }
 
 /**
- *
+ * @throws SyntaxError if supplied regex pattern is invalid
  * @param {string} uriSegment
- * @returns {Node<T>}
- * @throws Exception in case the regex string is not a valid regex.
+ * @returns {any}
  */
-export const makePathParamNodeRegex: NodeFactory = <T>(uriSegment: string): Node<T> => {
+export const makePathParamNodeRegex = (uriSegment: string): any => {
+
   /**
-   * curly brace followed by optional spaces
-   * then alphanumeric string for param name then colon followed by
-   * string of any chars followed by optional path separator '/' or string delimeter '_'
-   *
+   * prefix - anything except { and } and /
+   * followed by {
+   * optionally followed by spaces
+   * followed by param name (alphanumeric or dash or underscore)
+   * optionally followed by spaces
+   * followed by :
+   * optionally followed by spaces
+   * followed by regex pattern  (anything but must be valid regex pattern or exception is thrown)
+   * followed by postfix = anything except {} and /
+   * followed by optional path separator = "/"
    * @type {RegExp}
    */
-  const re = /^{(?:\s*)([a-zA-Z0-9-_]+):(.*)}([\/_]?)$/;
-  let regex: RegExp;
+  const re = /^([^{}\/]*){(?:\s*)([a-zA-Z0-9-_]+)(?:\s*):(.*)}([^{}\/]*)([\/]?)$/;
 
   const res = re.exec(uriSegment);
 
@@ -133,9 +104,9 @@ export const makePathParamNodeRegex: NodeFactory = <T>(uriSegment: string): Node
     return null;
   }
 
-  let [_, paramName, pattern, pathSep] = res;
+  const [_, prefix, paramName, restr, postfix] = res;
 
-  pattern = pattern.trim();
+  let pattern = restr.trim();
 
   /**
    * Implicitly add the '^' to start of regex if it's not
@@ -151,13 +122,9 @@ export const makePathParamNodeRegex: NodeFactory = <T>(uriSegment: string): Node
     pattern = pattern + '$';
   }
 
-  try {
-    regex = new RegExp(pattern);
+  const nodeRegex = new RegExp(pattern);
 
-    return new PathParamNodeRegex(paramName, regex, pathSep);
-  } catch (e) {
-    throw new Error(`Invalid regex pattern '${pattern}' in uriSegment=${uriSegment} e=${e}`);
-  }
+  return new PathParamNodeRegex(paramName, nodeRegex, postfix, prefix);
 
 }
 

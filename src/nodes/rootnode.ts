@@ -66,7 +66,7 @@ export class RootNode<T> implements Node<T> {
       return this;
     }
 
-    let { head, tail } = splitBySeparator(uri, [ROUTE_PATH_SEPARATOR, ROUTE_STRING_SERARATOR]);
+    let { head, tail } = splitBySeparator(uri, [ROUTE_PATH_SEPARATOR]);
 
     let childNode = makeNode<T>(head);
 

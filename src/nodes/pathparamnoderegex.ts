@@ -58,27 +58,35 @@ export class PathParamNodeRegex<T> extends PathParamNode<T> implements Node<T> {
    * @param {UriParams} params
    * @returns {RouteMatchResult<T>}
    */
-  findRoute(uri: string, params: UriParams = { pathParams: [] }): RouteMatchResult<T> {
+  findRoute(uri: string,
+            params: UriParams = {
+              pathParams:  [],
+              regexParams: []
+            }): RouteMatchResult<T> {
+
+
 
     const extractedParam = extractUriParam(uri, this.postfix, this.prefix);
 
     if (!extractedParam) {
+
       return false;
     }
 
     const regexParams = this.match(extractedParam.param);
 
     if (!regexParams) {
+
       return false;
     }
 
     /**
-     * @todo
+     *
      * if only 1 match was extracted then
      * the order of matched elements is off?
      * the array will have only one element (at 0)
      * instead of normal 0 for whole string match and 1 for first extracted match
-     * Maybe put this logic in makeRegexParam
+     *
      */
 
     if (!extractedParam.rest) {

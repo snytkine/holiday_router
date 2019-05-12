@@ -33,8 +33,8 @@ export class PathParamNode<T> extends RootNode<T> implements Node<T> {
   constructor(paramName: string, postfix: string = '', prefix = '') {
     super();
     this.paramName = paramName.trim();
-    this.postfix = postfix || "";
-    this.prefix = prefix || "";
+    this.postfix = postfix || '';
+    this.prefix = prefix || '';
   }
 
   get priority() {
@@ -61,14 +61,15 @@ export class PathParamNode<T> extends RootNode<T> implements Node<T> {
       return false
     }
 
-    return ( (this.prefix === other.prefix) && (this.postfix === other.postfix) );
+    return ((this.prefix === other.prefix) && (this.postfix === other.postfix));
   }
 
 
-  public findRoute(uri: string, params: UriParams = {
-    pathParams:  [],
-    regexParams: []
-  }): RouteMatchResult<T> {
+  public findRoute(uri: string,
+                   params: UriParams = {
+                     pathParams:  [],
+                     regexParams: []
+                   }): RouteMatchResult<T> {
 
     const extractedParam = extractUriParam(uri, this.postfix, this.prefix);
 
