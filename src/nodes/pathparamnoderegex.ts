@@ -24,7 +24,7 @@ export class PathParamNodeRegex<T> extends PathParamNode<T> implements Node<T> {
   }
 
   get name() {
-    return `${TAG}::${this.paramName}:${this.regex.source}::${this.prefix}::${this.postfix}`;
+    return `${TAG}::'${this.paramName}'::'${this.regex.source}'::'${this.prefix}'::'${this.postfix}'`;
   }
 
   equals(other: Node<T>): boolean {

@@ -5,7 +5,11 @@ import {
   RouteMatchResult,
   UriParams
 } from '../interfaces'
-import { makeNode, splitBySeparator } from '../lib'
+import {
+  makeNode,
+  printNode,
+  splitBySeparator
+} from '../lib'
 
 
 export class RootNode<T> implements Node<T> {
@@ -58,7 +62,27 @@ export class RootNode<T> implements Node<T> {
     return this.findChildMatch(uri, params);
   }
 
-
+  /**
+   * Given the URI and controller:
+   * extract path segment from uri,
+   * make a node from extracted segment
+   * Add node as a child node.
+   *
+   * if no 'tail' after extracting uri segment
+   * then also add controller to this child node.
+   *
+   * if child node already exists:
+   * if no tail:
+   *  if child node does not have controller
+   *   then add controller to it
+   *  else throw
+   * else have tail
+   *  call childNode.addUriController with tail
+   *
+   * @param {string} uri
+   * @param {T} controller
+   * @returns {Node<T>}
+   */
   public addUriController(uri: string, controller: T): Node<T> {
 
     if (!uri) {
@@ -74,14 +98,38 @@ export class RootNode<T> implements Node<T> {
     /**
      * Loop over children.
      * If child matching this new node already exists
+     *
      * then return result of invoking addUriController method
      * on the matched child node with tail as uri parameter
      */
     const existingChildNode: Node<T> = this.children.find(node => node.equals(childNode));
 
     if (existingChildNode) {
-      return existingChildNode.addUriController(tail, controller)
+      if(tail) {
+        return existingChildNode.addUriController(tail, controller)
+      } else {
+        /**
+         * No tail
+         * if same node already exists and has controller then throw
+         */
+        if(existingChildNode.controller){
+
+          throw new Error(`Cannot add node '${childNode.name}' because equal child node already exists in children array ${printNode(existingChildNode)}`);
+        } else {
+          /**
+           * Same child node exists but does not have controller
+           * then just add controller to it
+           */
+          existingChildNode.controller = controller;
+
+          return existingChildNode;
+        }
+      }
     } else {
+      /**
+       * add this child node to children
+       * then invoke addUriController on this child node with tail
+       */
       this.addChild(childNode);
 
       return childNode.addUriController(tail, controller)
@@ -90,9 +138,6 @@ export class RootNode<T> implements Node<T> {
 
   public addChild(node: Node<T>) {
 
-    if (this.children.find(child => child.equals(node))) {
-      throw new Error(`Cannot add node '${node.name}' because equal child node already exists in children array ${JSON.stringify(this.children)}`);
-    }
 
     this.children = [...this.children, node].sort((node1, node2) => node2.priority - node1.priority);
   }

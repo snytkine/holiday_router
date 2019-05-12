@@ -58,17 +58,16 @@ export const makePathParamNode: NodeFactory = <T>(uriSegment: string): Node<T> =
    * followed by param name (alphanumeric with - and _)
    * followed by optional spaces
    * followed by }
-   * followed by optional path separator
+   * followed by optional postfix which will often be just path separator or some other string.
    * @type {RegExp}
    */
-  const re = /^([^{}\/]*){(?:\s*)([a-zA-Z0-9-_]+)(?:\s*)}([^{}\/]*)([\/]?)$/;
+  const re = /^([^{}\/]*){(?:\s*)([a-zA-Z0-9-_]+)(?:\s*)}([^{}]*)$/;
 
   const res = re.exec(uriSegment);
 
   if (!res) {
     return null;
   }
-
 
   const [_, prefix, paramName, postfix] = res;
 
@@ -92,11 +91,11 @@ export const makePathParamNodeRegex = (uriSegment: string): any => {
    * followed by :
    * optionally followed by spaces
    * followed by regex pattern  (anything but must be valid regex pattern or exception is thrown)
-   * followed by postfix = anything except {} and /
-   * followed by optional path separator = "/"
+   * followed by postfix = anything except {}
+   *
    * @type {RegExp}
    */
-  const re = /^([^{}\/]*){(?:\s*)([a-zA-Z0-9-_]+)(?:\s*):(.*)}([^{}\/]*)([\/]?)$/;
+  const re = /^([^{}\/]*){(?:\s*)([a-zA-Z0-9-_]+)(?:\s*):(.*)}([^{}]*)$/;
 
   const res = re.exec(uriSegment);
 
@@ -157,7 +156,7 @@ export const makeNode = <T>(uriSegment: string): Node<T> => {
     ret = factories[i](uriSegment);
   } while (!ret && i++ < factories.length);
 
-  if(!ret){
+  if (!ret) {
     throw new Error(`Failed to create node for uriSegment=${uriSegment}`);
   }
 

@@ -38,11 +38,16 @@ export class PathParamNode<T> extends RootNode<T> implements Node<T> {
   }
 
   get priority() {
-    return 98;
+    /**
+     * node with prefix and/or postfix must have higher priority
+     * otherwise the node without prefix will match first before
+     * node with prefix even has a chance to be tested.
+     */
+    return 98 + this.prefix.length + this.postfix.length;
   }
 
   get name() {
-    return `${TAG}::${this.paramName}::${this.prefix}::${this.postfix}`;
+    return `${TAG}::${this.paramName}::'${this.prefix}'::'${this.postfix}'`;
   }
 
   /**
