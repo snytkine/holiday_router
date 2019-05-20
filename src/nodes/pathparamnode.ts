@@ -43,7 +43,7 @@ export class PathParamNode<T> extends RootNode<T> implements Node<T> {
      * otherwise the node without prefix will match first before
      * node with prefix even has a chance to be tested.
      */
-    return 98 + this.prefix.length + this.postfix.length;
+    return 10000 + this.prefix.length + this.postfix.length;
   }
 
   get name() {
@@ -76,7 +76,7 @@ export class PathParamNode<T> extends RootNode<T> implements Node<T> {
                      regexParams: []
                    }): RouteMatchResult<T> {
 
-    const extractedParam = extractUriParam(uri, this.postfix, this.prefix);
+    const extractedParam = extractUriParam(uri, this.prefix, this.postfix);
 
     if (!extractedParam) {
       return false;

@@ -17,7 +17,7 @@ export class RootNode<T> implements Node<T> {
   public controller: T;
 
   get priority(): number {
-    return 99;
+    return 0;
   }
 
   get name(): string {
@@ -31,7 +31,7 @@ export class RootNode<T> implements Node<T> {
   }
 
   equals(other: Node<T>): boolean {
-    return false
+    return (other instanceof RootNode);
   }
 
   protected findChildMatch(uri: string, params: UriParams) {
@@ -137,7 +137,6 @@ export class RootNode<T> implements Node<T> {
   }
 
   public addChild(node: Node<T>) {
-
 
     this.children = [...this.children, node].sort((node1, node2) => node2.priority - node1.priority);
   }

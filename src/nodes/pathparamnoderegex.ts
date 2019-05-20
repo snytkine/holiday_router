@@ -20,7 +20,7 @@ export class PathParamNodeRegex<T> extends PathParamNode<T> implements Node<T> {
 
 
   get priority() {
-    return 97;
+    return 100 +  1 + this.prefix.length + this.postfix.length;
   }
 
   get name() {
@@ -66,7 +66,7 @@ export class PathParamNodeRegex<T> extends PathParamNode<T> implements Node<T> {
 
 
 
-    const extractedParam = extractUriParam(uri, this.postfix, this.prefix);
+    const extractedParam = extractUriParam(uri,  this.prefix, this.postfix);
 
     if (!extractedParam) {
 

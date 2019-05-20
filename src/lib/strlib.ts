@@ -42,15 +42,13 @@ export interface UriParamResult {
 }
 
 
-export const extractUriParam = (uri: string, postfix: string = '', prefix: string = ''): UriParamResult | null => {
+export const extractUriParam = (uri: string, prefix: string = '', postfix: string = ''): UriParamResult | null => {
 
   let param: string = '';
   let prefixLen = (prefix && prefix.length) || 0;
   let postfixLen = (postfix && postfix.length) || 0;
   let acc: string = '';
   let ch: string = '';
-
-  //console.log(`Entered extractUriParam with uri=${uri} prefix=${prefix} postfix=${postfix}`)
 
   let i = 0;
   let j = 0;
@@ -108,48 +106,4 @@ export const extractUriParam = (uri: string, postfix: string = '', prefix: strin
     rest: uri.substr(i)
   }
 
-}
-
-
-export const extractUriParam_ = (uri: string, separator?: string): UriParamResult | null => {
-  /**
-   * If separator is an empty string must convert it to undefined
-   * in order for match to work
-   * @type {(string | undefined) & undefined}
-   */
-  if (separator === '') {
-    separator = undefined;
-  }
-
-  let param: string = '';
-  let i = 0
-  let ch = '';
-  let rest: string;
-
-  /**
-   * Read characters until end or uri or till reached pathSeparator
-   * and collect these chars into string.
-   */
-  while (ch !== undefined && ch !== ROUTE_PATH_SEPARATOR && ch !== this.pathSeparator) {
-    param += uri[i]
-    ch = uri[++i]
-  }
-
-  /**
-   * ch points to next char after pathParam (because of ++i)
-   * so if next param does not match path separator this is considered
-   * a non-match
-   */
-  if (ch !== separator) {
-
-    return undefined;
-
-  }
-
-  rest = uri.substr(i + 1);
-
-  return {
-    param,
-    rest
-  }
 }

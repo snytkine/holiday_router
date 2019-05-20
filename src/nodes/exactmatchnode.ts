@@ -40,9 +40,12 @@ export class ExactMatchNode<T> extends RootNode<T> implements Node<T> {
     this.segmentLength = uri.length
   }
 
-
+  /**
+   * ExactMatch node should always have highest priority
+   * @returns {number}
+   */
   get priority() {
-    return 99
+    return 1000000
   }
 
   get name() {
@@ -55,11 +58,7 @@ export class ExactMatchNode<T> extends RootNode<T> implements Node<T> {
 
   findRoute(uri: string, params: UriParams = { pathParams: [] }): RouteMatchResult<T> {
 
-    //let i: number = 0
-
     let rest: string
-
-    //let childMatch: RouteMatchResult<T>
 
     if (uri.startsWith(this.origUriPattern)) {
 
@@ -90,13 +89,6 @@ export class ExactMatchNode<T> extends RootNode<T> implements Node<T> {
        * Have rest of uri
        * Loop over children to get result
        */
-      // while (!childMatch && i < this.children_.length) {
-      //   childMatch = this.children_[i].findRoute(rest, params)
-      //   i += 1
-      // }
-      //
-      // return childMatch;
-
       return this.findChildMatch(rest, params);
 
     } else {
