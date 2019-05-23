@@ -4,7 +4,7 @@ import {
   UriParams
 } from '../interfaces'
 
-export const makeParam = (paramName: string, paramValue: string) => {
+export const makeParam = (paramName: string, paramValue: string): ExtractedPathParam => {
   return {
     paramName,
     paramValue
