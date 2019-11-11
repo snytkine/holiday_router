@@ -60,14 +60,52 @@ describe('#makeparam.ts', () => {
 
       const copiedParams = copyPathParams(origparams, extraParam);
 
+      expect(copiedParams.pathParams.length)
+      .to
+      .equal(2)
+
       expect(copiedParams.pathParams)
       .to
       .contain(extraParam)
+
+      expect(origparams.pathParams.length)
+      .to
+      .equal(1)
 
       expect(origparams.pathParams)
       .to
       .not
       .contain(extraParam)
+    })
+
+    it('#copyPathParams with regexParam should contain new param. Original pathParam should not be modified', () => {
+
+      const extraParam = makeParam('model', 'T');
+      const regexParam = makeRegexParam('id', ['p1', 'p2']);
+
+      const copiedParams = copyPathParams(origparams, extraParam, regexParam);
+
+      expect(copiedParams.pathParams.length)
+      .to
+      .equal(2)
+
+      expect(copiedParams.regexParams.length)
+      .to
+      .equal(1)
+
+      expect(copiedParams.regexParams)
+      .to
+      .contain(regexParam)
+
+      expect(origparams.pathParams.length)
+      .to
+      .equal(1)
+
+      expect(origparams)
+      .to
+      .not
+      .haveOwnProperty('regexParams')
+
     })
 
 

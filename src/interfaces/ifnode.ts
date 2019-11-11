@@ -32,6 +32,8 @@ export type RouteMatchResult<T> = RouteMatch<T> | undefined | false
 
 export interface Node<T> {
 
+  id: string
+
   priority: number
 
   name: string

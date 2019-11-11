@@ -7,6 +7,10 @@ import {
   copyPathParams,
 } from '../'
 import { RootNode } from './rootnode'
+import {
+  getNodePriority,
+  PRIORITY
+} from './nodepriorities'
 
 const TAG = 'PathParamNode';
 
@@ -37,13 +41,20 @@ export class PathParamNode<T> extends RootNode<T> implements Node<T> {
     this.prefix = prefix || '';
   }
 
+  get id() {
+    return 'PathParamNode';
+  }
+
   get priority() {
     /**
      * node with prefix and/or postfix must have higher priority
      * otherwise the node without prefix will match first before
      * node with prefix even has a chance to be tested.
+     *
+     * @todo param with longer prefix should have priority over shorter prefix
+     * example widgets-{id}  should be higher than widget-{id}
      */
-    return 10000 + this.prefix.length + this.postfix.length;
+    return getNodePriority(PRIORITY.PATHPARAM )+ this.prefix.length + this.postfix.length;
   }
 
   get name() {
@@ -62,11 +73,11 @@ export class PathParamNode<T> extends RootNode<T> implements Node<T> {
     /**
      * If other node is not PathParamNode return false
      */
-    if (!(other instanceof PathParamNode)) {
+    if (other.id !== this.id) {
       return false
     }
 
-    return ((this.prefix === other.prefix) && (this.postfix === other.postfix));
+    return (other instanceof PathParamNode && (this.prefix === other.prefix) && (this.postfix === other.postfix));
   }
 
 

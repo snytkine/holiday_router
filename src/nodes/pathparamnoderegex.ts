@@ -10,6 +10,10 @@ import {
   makeParam,
   makeRegexParam
 } from '../lib'
+import {
+  getNodePriority,
+  PRIORITY
+} from './nodepriorities'
 
 const TAG = 'PathParamNodeRegex';
 
@@ -18,9 +22,12 @@ export class PathParamNodeRegex<T> extends PathParamNode<T> implements Node<T> {
 
   public readonly regex: RegExp;
 
+  get id() {
+    return 'PathParamNodeRegex';
+  }
 
   get priority() {
-    return 100 +  1 + this.prefix.length + this.postfix.length;
+    return getNodePriority(PRIORITY.REGEX) + this.prefix.length + this.postfix.length;
   }
 
   get name() {
@@ -30,6 +37,7 @@ export class PathParamNodeRegex<T> extends PathParamNode<T> implements Node<T> {
   equals(other: Node<T>): boolean {
 
     return (
+      (other.id === this.id) &&
       (other instanceof PathParamNodeRegex) &&
       (this.prefix === other.prefix) &&
       (this.postfix === other.postfix) &&

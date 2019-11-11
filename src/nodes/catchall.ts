@@ -3,11 +3,13 @@ import {
   RouteMatchResult,
   UriParams
 } from '../interfaces/ifnode'
-import {
-  makeParam,
-} from '../lib'
+import { makeParam, } from '../lib'
 import { RootNode } from './rootnode'
 import { CATCH_ALL_PARAM_NAME } from '../interfaces'
+import {
+  getNodePriority,
+  PRIORITY
+} from './nodepriorities'
 
 const TAG = 'CatchAllNode';
 
@@ -26,7 +28,7 @@ export class CatchAllNode<T> extends RootNode<T> implements Node<T> {
    * @returns {number}
    */
   get priority() {
-    return 1;
+    return getNodePriority(PRIORITY.CATCHALL);
   }
 
   get name() {

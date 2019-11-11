@@ -10,14 +10,22 @@ import {
   printNode,
   splitBySeparator
 } from '../lib'
+import {
+  getNodePriority,
+  PRIORITY
+} from './nodepriorities'
 
 
 export class RootNode<T> implements Node<T> {
 
   public controller: T;
 
+  get id() {
+    return 'RootNode';
+  }
+
   get priority(): number {
-    return 0;
+    return getNodePriority(PRIORITY.ROOT)
   }
 
   get name(): string {
@@ -30,8 +38,13 @@ export class RootNode<T> implements Node<T> {
     this.children = [];
   }
 
+  /**
+   * Every node type will be equal to RootNode
+   * @param {Node<T>} other
+   * @returns {boolean}
+   */
   equals(other: Node<T>): boolean {
-    return (other instanceof RootNode);
+    return (other.id === this.id);
   }
 
   protected findChildMatch(uri: string, params: UriParams) {
@@ -69,7 +82,7 @@ export class RootNode<T> implements Node<T> {
    * Add node as a child node.
    *
    * if no 'tail' after extracting uri segment
-   * then also add controller to this child node.
+   * then also add controller to that child node.
    *
    * if child node already exists:
    * if no tail:
@@ -105,14 +118,14 @@ export class RootNode<T> implements Node<T> {
     const existingChildNode: Node<T> = this.children.find(node => node.equals(childNode));
 
     if (existingChildNode) {
-      if(tail) {
+      if (tail) {
         return existingChildNode.addUriController(tail, controller)
       } else {
         /**
          * No tail
          * if same node already exists and has controller then throw
          */
-        if(existingChildNode.controller){
+        if (existingChildNode.controller) {
 
           throw new Error(`Cannot add node '${childNode.name}' because equal child node already exists in children array ${printNode(existingChildNode)}`);
         } else {

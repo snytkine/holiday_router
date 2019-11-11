@@ -4,6 +4,10 @@ import {
   UriParams
 } from '../interfaces/ifnode'
 import { RootNode } from './rootnode'
+import {
+  getNodePriority,
+  PRIORITY
+} from './nodepriorities'
 
 const TAG = 'ExactMathNode'
 
@@ -40,12 +44,16 @@ export class ExactMatchNode<T> extends RootNode<T> implements Node<T> {
     this.segmentLength = uri.length
   }
 
+  get id() {
+    return 'ExactMatchNode';
+  }
+
   /**
    * ExactMatch node should always have highest priority
    * @returns {number}
    */
   get priority() {
-    return 1000000
+    return getNodePriority(PRIORITY.EXACTMATCH)
   }
 
   get name() {
@@ -53,7 +61,7 @@ export class ExactMatchNode<T> extends RootNode<T> implements Node<T> {
   }
 
   equals(other: Node<T>) {
-    return (other instanceof ExactMatchNode && other.origUriPattern === this.origUriPattern)
+    return (other.id === this.id && other instanceof ExactMatchNode && other.origUriPattern === this.origUriPattern)
   }
 
   findRoute(uri: string, params: UriParams = { pathParams: [] }): RouteMatchResult<T> {
