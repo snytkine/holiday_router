@@ -3,6 +3,10 @@ import {
   RootNode
 } from '../nodes'
 import { expect } from 'chai';
+import {
+  getNodePriority,
+  PRIORITY
+} from '../nodes/nodepriorities'
 
 
 describe('#rootnode.ts', () => {
@@ -17,10 +21,10 @@ describe('#rootnode.ts', () => {
     })
 
 
-    it('#RootNode should have priority 0', () => {
+    it('#RootNode should have priority of ROOT_NODE', () => {
       expect(rootNode.priority)
       .to
-      .equal(0)
+      .equal(getNodePriority(PRIORITY.ROOT))
     })
 
     it('#RootNode should have name "RootNode"', () => {
@@ -29,7 +33,7 @@ describe('#rootnode.ts', () => {
       .equal('RootNode')
     })
 
-    it('#RootNode should .equals should be true if other node is RootNode', () => {
+    it('#RootNode s.equals should be true if other node is RootNode', () => {
 
       const isEqual = rootNode.equals(new RootNode())
       expect(isEqual)
@@ -38,7 +42,7 @@ describe('#rootnode.ts', () => {
         .true
     })
 
-    it('#RootNode should .equals should be false if other node is NOT RootNode', () => {
+    it('#RootNode .equals should be false if other node is NOT RootNode', () => {
 
       const isEqual = rootNode.equals(new ExactMatchNode('someurl'))
       expect(isEqual)
@@ -68,9 +72,9 @@ describe('#rootnode.ts', () => {
       .to
       .equal('rootController')
 
-      expect(root.addUriController('', 'rootController2'))
+      /*expect(root.addUriController('', 'rootController2'))
       .to
-      .equal('rootController')
+      .equal('rootController')*/
 
     })
 

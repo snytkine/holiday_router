@@ -4,10 +4,11 @@ import {
   splitBySeparator
 } from '../lib/index';
 import {expect} from 'chai';
-import { ROUTE_PATH_SEPARATOR } from '../interfaces'
+import { ROUTE_PATH_SEPARATOR, ROUTE_STRING_SERARATOR } from '../interfaces'
 
 let URI1 = 'catalog/category/books/ABCD123'
 let URI2 = 'isbn-1234/info'
+let URI3 = 'orders_pending/ABC123'
 
 describe('#Strlib functions', () => {
 
@@ -38,6 +39,15 @@ describe('#Strlib functions', () => {
       const res = splitBySeparator(URI1, [ROUTE_PATH_SEPARATOR]);
       expect(res.head).to.equal('catalog/')
       expect(res.tail).to.equal('category/books/ABCD123')
+    })
+  })
+
+  describe('#splitBySeparator', () => {
+
+    it('#should split URL by path separator OR ROUTE_STRING_SEPARATOR', () => {
+      const res = splitBySeparator(URI3, [ROUTE_PATH_SEPARATOR, ROUTE_STRING_SERARATOR]);
+      expect(res.head).to.equal('orders_')
+      expect(res.tail).to.equal('pending/ABC123')
     })
   })
 
