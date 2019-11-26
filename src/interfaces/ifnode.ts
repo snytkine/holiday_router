@@ -1,5 +1,3 @@
-
-
 export interface ExtractedPathParam {
   paramName: string
   paramValue: string
@@ -30,7 +28,13 @@ export interface RouteMatch<T> {
  */
 export type RouteMatchResult<T> = RouteMatch<T> | undefined | false
 
-export interface Node<T> {
+export interface IController {
+  equals(controller: IController): boolean
+  priority: number
+  id: string
+}
+
+export interface Node<T extends IController> {
 
   id: string
 
@@ -38,11 +42,13 @@ export interface Node<T> {
 
   name: string
 
-  controller?: T
+  controllers: Array<T>
 
   equals(other: Node<T>): boolean
 
-  findRoute(uri: string, params?: UriParams): RouteMatchResult<T>
+  findRoute?(uri: string, params?: UriParams): RouteMatchResult<T>
+
+  findRoutes(uri: string, params?: UriParams): IterableIterator<RouteMatch<T>>
 
   /**
    * May throw error if addChild fails

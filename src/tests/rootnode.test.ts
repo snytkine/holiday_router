@@ -7,6 +7,7 @@ import {
   getNodePriority,
   PRIORITY
 } from '../nodes/nodepriorities'
+import { UniqueController } from '../lib'
 
 
 describe('#rootnode.ts', () => {
@@ -65,12 +66,13 @@ describe('#rootnode.ts', () => {
     })
 
     it('#RootNode addController with empty url should add controller', () => {
-      const root = new RootNode<string>();
-      root.addUriController('', 'rootController');
+      const root = new RootNode();
+      const ctrl = new UniqueController('rootController')
+      root.addUriController('', ctrl);
 
-      expect(root.controller)
+      expect(root.controllers[0])
       .to
-      .equal('rootController')
+      .equal(ctrl)
 
       /*expect(root.addUriController('', 'rootController2'))
       .to

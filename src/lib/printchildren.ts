@@ -1,7 +1,10 @@
-import { Node } from '../interfaces'
+import {
+  IController,
+  Node
+} from '../interfaces'
 import { printNode } from './printnode'
 
-export const printChildren = <T>(children: Array<Node<T>>, indent: number = 1): string => {
+export const printChildren = <T extends IController>(children: Array<Node<T>>, indent: number = 1): string => {
 
   let ret = '';
 

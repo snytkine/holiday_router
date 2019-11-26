@@ -1,7 +1,8 @@
 import {
+  IController,
   Node,
   ROUTE_PATH_SEPARATOR,
-  ROUTE_STRING_SERARATOR,
+  RouteMatch,
   RouteMatchResult,
   UriParams
 } from '../interfaces'
@@ -16,9 +17,9 @@ import {
 } from './nodepriorities'
 
 
-export class RootNode<T> implements Node<T> {
+export class RootNode<T extends IController> implements Node<T> {
 
-  public controller: T;
+  public controllers: Array<T>;
 
   get id() {
     return 'RootNode';
@@ -36,6 +37,22 @@ export class RootNode<T> implements Node<T> {
 
   constructor() {
     this.children = [];
+    this.controllers = [];
+  }
+
+  /**
+   * @todo use this.controllers instead of passing first arg
+   * @todo rename to makeControllerIterator
+   * @param controllers
+   * @param params
+   */
+  protected* controllersWithParams(controllers: Array<T>, params: UriParams) {
+    for (const controller of controllers) {
+      yield {
+        controller,
+        params
+      }
+    }
   }
 
   /**
@@ -43,24 +60,16 @@ export class RootNode<T> implements Node<T> {
    * @param {Node<T>} other
    * @returns {boolean}
    */
-  equals(other: Node<T>): boolean {
+  equals(other: Node<T>):
+    boolean {
     return (other.id === this.id);
   }
 
-  protected findChildMatch(uri: string, params: UriParams) {
+  protected* findChildMatches(uri: string, params: UriParams): IterableIterator<RouteMatch<T>> {
 
-    let childMatch: RouteMatchResult<T>;
-    let i = 0;
-    /**
-     * Have rest of uri
-     * Loop over children to get result
-     */
-    while (!childMatch && i < this.children.length) {
-      childMatch = this.children[i].findRoute(uri, params)
-      i += 1
+    for (const childNode of this.children) {
+      yield* childNode.findRoutes(uri, params);
     }
-
-    return childMatch;
   }
 
   /**
@@ -71,8 +80,13 @@ export class RootNode<T> implements Node<T> {
    * @param {UriParams} params
    * @returns {RouteMatchResult<T>}
    */
-  public findRoute(uri: string, params?: UriParams): RouteMatchResult<T> {
-    return this.findChildMatch(uri, params);
+  public findRoute(uri: string, params?: UriParams): RouteMatch<T> | false | undefined {
+    return this.findRoutes(uri, params)
+    .next().value;
+  }
+
+  public* findRoutes(uri: string, params ?: UriParams): IterableIterator<RouteMatch<T>> {
+    yield* this.findChildMatches(uri, params);
   }
 
   /**
@@ -99,14 +113,14 @@ export class RootNode<T> implements Node<T> {
   public addUriController(uri: string, controller: T): Node<T> {
 
     if (!uri) {
-      this.controller = controller;
+      //this.controller = controller;
+      this.controllers = [...this.controllers, controller].sort((ctrl1, ctrl2) => ctrl2.priority - ctrl1.priority);
       return this;
     }
 
     let { head, tail } = splitBySeparator(uri, [ROUTE_PATH_SEPARATOR]);
 
     let childNode = makeNode<T>(head);
-
 
     /**
      * Loop over children.
@@ -123,17 +137,17 @@ export class RootNode<T> implements Node<T> {
       } else {
         /**
          * No tail
-         * if same node already exists and has controller then throw
+         * if same node already exists and has equal controller then throw
          */
-        if (existingChildNode.controller) {
+        if (existingChildNode.controllers.find(ctrl => ctrl.equals(controller))) {
 
           throw new Error(`Cannot add node '${childNode.name}' because equal child node already exists in children array ${printNode(existingChildNode)}`);
         } else {
           /**
-           * Same child node exists but does not have controller
+           * Same child node exists but does not have same controller
            * then just add controller to it
            */
-          existingChildNode.controller = controller;
+          existingChildNode.addUriController('', controller);
 
           return existingChildNode;
         }
@@ -150,7 +164,6 @@ export class RootNode<T> implements Node<T> {
   }
 
   public addChild(node: Node<T>) {
-
     this.children = [...this.children, node].sort((node1, node2) => node2.priority - node1.priority);
   }
 

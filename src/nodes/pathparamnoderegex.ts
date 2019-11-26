@@ -1,5 +1,7 @@
 import {
+  IController,
   Node,
+  RouteMatch,
   RouteMatchResult,
   UriParams
 } from '../interfaces'
@@ -17,7 +19,7 @@ import {
 
 const TAG = 'PathParamNodeRegex';
 
-export class PathParamNodeRegex<T> extends PathParamNode<T> implements Node<T> {
+export class PathParamNodeRegex<T extends IController> extends PathParamNode<T> implements Node<T> {
 
 
   public readonly regex: RegExp;
@@ -66,60 +68,101 @@ export class PathParamNodeRegex<T> extends PathParamNode<T> implements Node<T> {
    * @param {UriParams} params
    * @returns {RouteMatchResult<T>}
    */
-  findRoute(uri: string,
-            params: UriParams = {
-              pathParams:  [],
-              regexParams: []
-            }): RouteMatchResult<T> {
+
+  /*findRoute(uri: string,
+   params: UriParams = {
+   pathParams:  [],
+   regexParams: []
+   }): RouteMatchResult<T> {
 
 
 
-    const extractedParam = extractUriParam(uri,  this.prefix, this.postfix);
+   const extractedParam = extractUriParam(uri,  this.prefix, this.postfix);
 
-    if (!extractedParam) {
+   if (!extractedParam) {
 
-      return false;
-    }
+   return false;
+   }
 
-    const regexParams = this.match(extractedParam.param);
+   const regexParams = this.match(extractedParam.param);
 
-    if (!regexParams) {
+   if (!regexParams) {
 
-      return false;
-    }
+   return false;
+   }
 
-    /**
-     *
-     * if only 1 match was extracted then
-     * the order of matched elements is off?
-     * the array will have only one element (at 0)
-     * instead of normal 0 for whole string match and 1 for first extracted match
-     *
-     */
+   /!**
+   *
+   * if only 1 match was extracted then
+   * the order of matched elements is off?
+   * the array will have only one element (at 0)
+   * instead of normal 0 for whole string match and 1 for first extracted match
+   *
+   *!/
 
-    if (!extractedParam.rest) {
+   if (!extractedParam.rest) {
 
-      /**
-       * If no tail left in search string
-       * it means there are no more segments left in string to match
-       * In this case this node is a complete match
-       */
-      if (!this.controller) {
-        return false;
+   /!**
+   * If no tail left in search string
+   * it means there are no more segments left in string to match
+   * In this case this node is a complete match
+   *!/
+   if (!this.controller) {
+   return false;
+   }
+
+   return {
+   controller: this.controller,
+   params:     copyPathParams(params, makeParam(this.paramName, extractedParam.param), makeRegexParam(this.paramName, regexParams))
+   }
+
+   }
+
+   return this.findChildMatch(
+   extractedParam.rest,
+   copyPathParams(params, makeParam(this.paramName, extractedParam.param), makeRegexParam(this.paramName, regexParams))
+   );
+
+   }*/
+
+
+  public* findRoutes(uri: string,
+                     params: UriParams = {
+                       pathParams:  [],
+                       regexParams: []
+                     }): IterableIterator<RouteMatch<T>> {
+
+
+    const extractedParam = extractUriParam(uri, this.prefix, this.postfix);
+
+    if (extractedParam) {
+
+      const regexParams = this.match(extractedParam.param);
+
+      if (regexParams) {
+
+        const copiedParams = copyPathParams(params, makeParam(this.paramName, extractedParam.param), makeRegexParam(this.paramName, regexParams));
+
+        /**
+         *
+         * if only 1 match was extracted then
+         * the order of matched elements is off?
+         * the array will have only one element (at 0)
+         * instead of normal 0 for whole string match and 1 for first extracted match
+         *
+         */
+        if (!extractedParam.rest) {
+          /**
+           * If no tail left in search string
+           * it means there are no more segments left in string to match
+           * In this case this node is a complete match
+           */
+          yield* this.controllersWithParams(this.controllers, copiedParams);
+        } else {
+          yield* this.findChildMatches(extractedParam.rest, copiedParams);
+        }
       }
-
-      return {
-        controller: this.controller,
-        params:     copyPathParams(params, makeParam(this.paramName, extractedParam.param), makeRegexParam(this.paramName, regexParams))
-      }
-
     }
-
-    return this.findChildMatch(
-      extractedParam.rest,
-      copyPathParams(params, makeParam(this.paramName, extractedParam.param), makeRegexParam(this.paramName, regexParams))
-    );
-
   }
 
 

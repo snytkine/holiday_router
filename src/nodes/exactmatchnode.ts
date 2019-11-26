@@ -1,5 +1,7 @@
 import {
+  IController,
   Node,
+  RouteMatch,
   RouteMatchResult,
   UriParams
 } from '../interfaces/ifnode'
@@ -14,7 +16,7 @@ const TAG = 'ExactMathNode'
 /**
  * Node represents uri segment that ends with path separator
  */
-export class ExactMatchNode<T> extends RootNode<T> implements Node<T> {
+export class ExactMatchNode<T extends IController> extends RootNode<T> implements Node<T> {
 
   /**
    * The exact match segment may or may not end with path separator
@@ -34,13 +36,10 @@ export class ExactMatchNode<T> extends RootNode<T> implements Node<T> {
    */
   protected segmentLength: number
 
-  public controller: T
-
 
   constructor(uri: string) {
     super();
     this.origUriPattern = uri
-    this.controller = void 0;
     this.segmentLength = uri.length
   }
 
@@ -64,10 +63,11 @@ export class ExactMatchNode<T> extends RootNode<T> implements Node<T> {
     return (other.id === this.id && other instanceof ExactMatchNode && other.origUriPattern === this.origUriPattern)
   }
 
-  findRoute(uri: string, params: UriParams = { pathParams: [] }): RouteMatchResult<T> {
+  public * findRoutes(uri: string, params: UriParams = { pathParams: [] }): IterableIterator<RouteMatch<T>> {
 
-    let rest: string
-
+    /**
+     * If not starts with origUriPattern then will not yield anything
+     */
     if (uri.startsWith(this.origUriPattern)) {
 
       /**
@@ -82,25 +82,23 @@ export class ExactMatchNode<T> extends RootNode<T> implements Node<T> {
        * if its empty string then we have exact math
        * in which case must have controller
        */
-      rest = uri.substring(this.segmentLength)
-
-      if (!rest) {
-
-        return this.controller && {
-          controller: this.controller,
-          params
-        }
-
-      }
+      const rest = uri.substring(this.segmentLength)
 
       /**
-       * Have rest of uri
-       * Loop over children to get result
+       * uri matched the uri of this node and
+       * there are no additional string
+       * Just yield* to controllers array iterator
        */
-      return this.findChildMatch(rest, params);
+      if (!rest) {
+        yield* this.controllersWithParams(this.controllers, params);
+      } else {
 
-    } else {
-      return false;
+        /**
+         * Have rest of uri
+         * Loop over children to get result
+         */
+        yield* this.findChildMatches(rest, params);
+      }
     }
 
   }

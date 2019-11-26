@@ -20,7 +20,7 @@ export const makeRegexParam = (paramName: string, params: Array<string>): RegexP
 
 /**
  *
- * @param {UriParams} pathParams
+ * @param {UriParams} source
  * @param {ExtractedPathParam} param
  * @param {RegexParams} regexParams
  * @returns {UriParams}

@@ -2,6 +2,7 @@ import {
   BRACKET_CLOSED,
   BRACKET_OPEN,
   CATCH_ALL_PARAM_NAME,
+  IController,
   Node
 } from '../interfaces'
 
@@ -12,9 +13,9 @@ import {
   PathParamNodeRegex,
 } from '../nodes'
 
-export type NodeFactory = <T>(uriSegment: string) => Node<T> | null;
+export type NodeFactory = <T extends IController>(uriSegment: string) => Node<T> | null;
 
-export const makeCatchAllNode: NodeFactory = <T>(uriSegment: string): Node<T> => {
+export const makeCatchAllNode: NodeFactory = <T extends IController>(uriSegment: string): Node<T> => {
 
   /**
    * Supports named catchall parameter
@@ -39,7 +40,7 @@ export const makeCatchAllNode: NodeFactory = <T>(uriSegment: string): Node<T> =>
   return null;
 }
 
-export const makeExactMatchNode: NodeFactory = <T>(uriSegment: string): Node<T> => {
+export const makeExactMatchNode: NodeFactory = <T extends IController>(uriSegment: string): Node<T> => {
 
   if (uriSegment !== CATCH_ALL_PARAM_NAME) {
     return new ExactMatchNode(uriSegment);
@@ -49,7 +50,7 @@ export const makeExactMatchNode: NodeFactory = <T>(uriSegment: string): Node<T> 
 }
 
 
-export const makePathParamNode: NodeFactory = <T>(uriSegment: string): Node<T> => {
+export const makePathParamNode: NodeFactory = <T extends IController>(uriSegment: string): Node<T> => {
 
   /**
    * Prefix = anything except { and } and /
@@ -147,7 +148,7 @@ const factories: Array<NodeFactory> = [
  * @param {string} uri
  * @param {T} controller
  */
-export const makeNode = <T>(uriSegment: string): Node<T> => {
+export const makeNode = <T extends IController>(uriSegment: string): Node<T> => {
 
   let ret: Node<T>;
   let i = 0;

@@ -1,5 +1,7 @@
 import {
+  IController,
   Node,
+  RouteMatch,
   RouteMatchResult,
   UriParams
 } from '../interfaces/ifnode'
@@ -16,7 +18,7 @@ const TAG = 'CatchAllNode';
 /**
  * Node represents uri segment that ends with path separator
  */
-export class CatchAllNode<T> extends RootNode<T> implements Node<T> {
+export class CatchAllNode<T extends IController> extends RootNode<T> implements Node<T> {
 
   private paramName: string;
   /**
@@ -53,7 +55,7 @@ export class CatchAllNode<T> extends RootNode<T> implements Node<T> {
     throw new Error(`CatchAllNode cannot have child nodes.`)
   }
 
-  findRoute(uri: string, params: UriParams = { pathParams: [] }): RouteMatchResult<T> {
+  /*findRoute(uri: string, params: UriParams = { pathParams: [] }): RouteMatchResult<T> {
 
     params.pathParams.push(makeParam(this.paramName, uri));
 
@@ -61,6 +63,13 @@ export class CatchAllNode<T> extends RootNode<T> implements Node<T> {
       controller: this.controller,
       params
     }
+  }*/
+
+  public *findRoutes(uri: string, params: UriParams = { pathParams: [] }): IterableIterator<RouteMatch<T>> {
+
+    params.pathParams.push(makeParam(this.paramName, uri));
+
+    yield * this.controllersWithParams(this.controllers, params);
   }
 
 }
