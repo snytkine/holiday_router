@@ -13,6 +13,9 @@ import {
   getNodePriority,
   PRIORITY
 } from './nodepriorities'
+import Debug from 'debug';
+
+const debug = Debug('GP-URI-ROUTER');
 
 const TAG = 'PathParamNode';
 
@@ -42,7 +45,7 @@ export class PathParamNode<T extends IController> extends RootNode<T> implements
   }
 
   get id() {
-    return 'PathParamNode';
+    return TAG;
   }
 
   get priority() {
@@ -69,15 +72,18 @@ export class PathParamNode<T extends IController> extends RootNode<T> implements
    * @returns {boolean}
    */
   public equals(other: Node<T>) {
-
+    debug('entered equals on node  id="%s" name="%s" with other.id="%s" other.name="%s"', this.id, this.name, other.id, other.name);
     /**
      * If other node is not PathParamNode return false
      */
     if (other.id !== this.id) {
+
       return false
     }
 
-    return (other instanceof PathParamNode && (this.prefix === other.prefix) && (this.postfix === other.postfix));
+    const ret = (other instanceof PathParamNode && (this.prefix === other.prefix) && (this.postfix === other.postfix));
+
+    return ret;
   }
 
   /*

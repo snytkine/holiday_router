@@ -25,7 +25,7 @@ export class PathParamNodeRegex<T extends IController> extends PathParamNode<T> 
   public readonly regex: RegExp;
 
   get id() {
-    return 'PathParamNodeRegex';
+    return TAG;
   }
 
   get priority() {

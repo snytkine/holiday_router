@@ -55,15 +55,6 @@ export class CatchAllNode<T extends IController> extends RootNode<T> implements 
     throw new Error(`CatchAllNode cannot have child nodes.`)
   }
 
-  /*findRoute(uri: string, params: UriParams = { pathParams: [] }): RouteMatchResult<T> {
-
-    params.pathParams.push(makeParam(this.paramName, uri));
-
-    return this.controller && {
-      controller: this.controller,
-      params
-    }
-  }*/
 
   public *findRoutes(uri: string, params: UriParams = { pathParams: [] }): IterableIterator<RouteMatch<T>> {
 

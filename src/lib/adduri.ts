@@ -12,6 +12,8 @@ import {
   PathParamNode,
   PathParamNodeRegex,
 } from '../nodes'
+import Debug from 'debug';
+const debug = Debug('GP-URI-ROUTER');
 
 export type NodeFactory = <T extends IController>(uriSegment: string) => Node<T> | null;
 
@@ -83,6 +85,7 @@ export const makePathParamNode: NodeFactory = <T extends IController>(uriSegment
  */
 export const makePathParamNodeRegex = (uriSegment: string): any => {
 
+  debug('makePathParamNodeRegex entered with uriSegment=%s"', uriSegment)
   /**
    * prefix - anything except { and } and /
    * followed by {
@@ -101,6 +104,7 @@ export const makePathParamNodeRegex = (uriSegment: string): any => {
   const res = re.exec(uriSegment);
 
   if (!res) {
+    debug('makePathParamNodeRegex NOT a match for uriSegment=%s"', uriSegment)
     return null;
   }
 

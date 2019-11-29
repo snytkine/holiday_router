@@ -29,7 +29,7 @@ export interface RouteMatch<T> {
 export type RouteMatchResult<T> = RouteMatch<T> | undefined | false
 
 export interface IController {
-  equals(controller: IController): boolean
+  equals(other: IController): boolean
   priority: number
   id: string
 }
@@ -58,7 +58,15 @@ export interface Node<T extends IController> {
    * @param {Node<T>} node
    * @returns {boolean}
    */
-  addChild(node: Node<T>): void;
+  addChild(node: Node<T>): void
+
+  addChildNode(node: Node<T>): Node<T>
+
+  addController(controller: T): Node<T>
+
+  addRoute(uri: string, controller: T): Node<T>
+
+  getAllControllers(): IterableIterator<T>
 
   /**
    *
@@ -66,7 +74,7 @@ export interface Node<T extends IController> {
    * @param {T} controller
    * @returns {Node<T> | Error}
    */
-  addUriController(uri: string, controller: T): Node<T>;
+  addUriController(uri: string, controller: T, fullUri?: string): Node<T>;
 
   children: Array<Node<T>>;
 }

@@ -1,14 +1,18 @@
 import { IController } from '../interfaces'
 
-const TAG = 'UniqueController';
-
 export class UniqueController<T> implements IController {
 
-  constructor(public value: T, public id: string = TAG) {
+  constructor(public controller: T, public id: string = 'UniqueController') {
   }
 
-  public equals(controller: IController): boolean {
-    return false;
+  /**
+   * To make a contoller unique it must
+   * return true here. This will make it impossible
+   * to add 2 of these controllers to the same node.
+   * @param controller
+   */
+  public equals(other: IController): boolean {
+    return true;
   }
 
   get priority() {
@@ -16,3 +20,26 @@ export class UniqueController<T> implements IController {
   }
 
 }
+
+
+
+export class UniqueStringController implements IController {
+
+  constructor(public controller: string) {
+  }
+
+  get id(){
+    return `UniqueStringController::${this.controller}`
+  }
+
+
+  public equals(other: IController): boolean {
+    return other instanceof UniqueStringController && other.controller === this.controller;
+  }
+
+  get priority() {
+    return 1;
+  }
+
+}
+
