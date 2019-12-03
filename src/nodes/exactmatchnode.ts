@@ -43,7 +43,7 @@ export class ExactMatchNode<T extends IController> extends RootNode<T> implement
     this.segmentLength = uri.length
   }
 
-  get id() {
+  get type() {
     return 'ExactMatchNode';
   }
 
@@ -60,7 +60,7 @@ export class ExactMatchNode<T extends IController> extends RootNode<T> implement
   }
 
   equals(other: Node<T>) {
-    return (other.id === this.id && other instanceof ExactMatchNode && other.origUriPattern === this.origUriPattern)
+    return (other.type === this.type && other instanceof ExactMatchNode && other.origUriPattern === this.origUriPattern)
   }
 
   public * findRoutes(uri: string, params: UriParams = { pathParams: [] }): IterableIterator<RouteMatch<T>> {
@@ -90,7 +90,7 @@ export class ExactMatchNode<T extends IController> extends RootNode<T> implement
        * Just yield* to controllers array iterator
        */
       if (!rest) {
-        yield* this.controllersWithParams(this.controllers, params);
+        yield* this.getRouteMatchIterator(params);
       } else {
 
         /**

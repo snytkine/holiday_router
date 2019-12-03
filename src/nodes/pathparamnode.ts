@@ -44,7 +44,7 @@ export class PathParamNode<T extends IController> extends RootNode<T> implements
     this.prefix = prefix || '';
   }
 
-  get id() {
+  get type() {
     return TAG;
   }
 
@@ -72,11 +72,11 @@ export class PathParamNode<T extends IController> extends RootNode<T> implements
    * @returns {boolean}
    */
   public equals(other: Node<T>) {
-    debug('entered equals on node  id="%s" name="%s" with other.id="%s" other.name="%s"', this.id, this.name, other.id, other.name);
+    debug('entered equals on node  id="%s" name="%s" with other.id="%s" other.name="%s"', this.type, this.name, other.type, other.name);
     /**
      * If other node is not PathParamNode return false
      */
-    if (other.id !== this.id) {
+    if (other.type !== this.type) {
 
       return false
     }
@@ -85,43 +85,6 @@ export class PathParamNode<T extends IController> extends RootNode<T> implements
 
     return ret;
   }
-
-  /*
-
-   public findRoute(uri: string,
-   params: UriParams = {
-   pathParams:  [],
-   regexParams: []
-   }): RouteMatchResult<T> {
-
-   const extractedParam = extractUriParam(uri, this.prefix, this.postfix);
-
-   if (!extractedParam) {
-   return false;
-   }
-
-   if (!extractedParam.rest) {
-
-   /!**
-   * If no tail left in search string
-   * it means there are no more segments left in string to match
-   * In this case this node is a complete match
-   *!/
-   if (!this.controller) {
-   return false;
-   }
-
-   return {
-   controller: this.controller,
-   params:     copyPathParams(params, makeParam(this.paramName, extractedParam.param))
-   }
-
-   }
-
-   return this.findChildMatch(extractedParam.rest, copyPathParams(params, makeParam(this.paramName, extractedParam.param)));
-   }
-   */
-
 
   public* findRoutes(uri: string,
                      params: UriParams = {
@@ -144,7 +107,7 @@ export class PathParamNode<T extends IController> extends RootNode<T> implements
          * it means there are no more segments left in string to match
          * In this case this node is a complete match
          */
-        yield* this.controllersWithParams(this.controllers, copiedParams)
+        yield* this.getRouteMatchIterator(copiedParams)
       } else {
         yield* this.findChildMatches(extractedParam.rest, copiedParams);
       }

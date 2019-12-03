@@ -68,7 +68,7 @@ describe('#rootnode.ts', () => {
     it('#RootNode addController with empty url should add controller', () => {
       const root = new RootNode();
       const ctrl = new UniqueController('rootController')
-      root.addUriController('', ctrl);
+      root.addRoute('', ctrl);
 
       expect(root.controllers[0])
       .to
