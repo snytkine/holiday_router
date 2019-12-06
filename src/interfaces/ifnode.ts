@@ -1,3 +1,5 @@
+import { PARENT_NODE } from './constants'
+
 export interface ExtractedPathParam {
   paramName: string
   paramValue: string
@@ -13,7 +15,7 @@ export interface UriParams {
   regexParams?: Array<RegexParams>
 }
 
-export interface RouteMatch<T extends IController> {
+export interface IRouteMatch<T extends IController> {
   controller: T
   params: UriParams
   node: Node<T>
@@ -31,7 +33,7 @@ export interface IStringMap {
  * in which case if this.controller has not been initialized it will
  * be undefined and so the return value will also be undefined
  */
-export type RouteMatchResult<T extends IController> = RouteMatch<T> | undefined | false
+export type IRouteMatchResult<T extends IController> = void | IRouteMatch<T>
 
 export interface IController {
 
@@ -46,18 +48,6 @@ export interface IController {
    * @param other
    */
   equals(other: IController): boolean
-
-  /**
-   * The router node will call this method with
-   * the full uri pattern that was used in addRoute(uri, controller) method
-   * A controller may use this value for any reason, it does not have to use it at all
-   * The uri pattern may be used for reverse route generation
-   * For example: a controller may have a method like generateUri(params)
-   * then it will use params object to create uri from uri pattern
-   *
-   * @param uri
-   */
-  setUriPattern(uri: string)
 
   /**
    * Multiple controller may exist in the same node, meaning
@@ -83,6 +73,7 @@ export interface IController {
    * it is used primarily for logging and debugging, a way to add a name to controller.
    */
   id: string
+
 }
 
 
@@ -100,9 +91,9 @@ export interface Node<T extends IController> {
 
   equals(other: Node<T>): boolean
 
-  findRoute?(uri: string, params?: UriParams): RouteMatchResult<T>
+  findRoute?(uri: string, params?: UriParams): IRouteMatchResult<T>
 
-  findRoutes(uri: string, params?: UriParams): IterableIterator<RouteMatch<T>>
+  findRoutes(uri: string, params?: UriParams): IterableIterator<IRouteMatch<T>>
 
   /**
    * May throw error if addChild fails
@@ -118,13 +109,28 @@ export interface Node<T extends IController> {
 
   addRoute(uri: string, controller: T): Node<T>
 
-  getAllControllers(): IterableIterator<T>
+  getAllControllers(): IterableIterator<IRouteMatch<T>>
 
-  makeUri(params: IStringMap): string | Error
+  getRouterMatchByControllerId(id: string): IRouteMatchResult<T>
+
+  /**
+   * @TODO
+   * return something like an Try<string>
+   *   then can use flatMap pattern
+   *
+   * @param params
+   */
+  makeUri(params: IStringMap): string
 
   children: Array<Node<T>>;
 
-  parentNode?: Node<T>
+  /**
+   * Having the property of type Symbol is an easy way
+   * to exclude it from JSON.stringify
+   * The parent node cannot be included in JSON because it
+   * will create recursion error
+   */
+  [PARENT_NODE]?: Node<T>
 }
 
 

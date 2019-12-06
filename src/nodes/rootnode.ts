@@ -3,12 +3,14 @@ import {
   IStringMap,
   Node,
   ROUTE_PATH_SEPARATOR,
-  RouteMatch,
-  RouteMatchResult,
-  UriParams
+  IRouteMatch,
+  IRouteMatchResult,
+  UriParams,
+  PARENT_NODE
 } from '../interfaces'
 import {
   makeNode,
+  RouteMatch,
   splitBySeparator
 } from '../lib'
 import {
@@ -17,9 +19,11 @@ import {
 } from './nodepriorities'
 
 import Debug from 'debug';
-const debug = Debug('GP-URI-ROUTER');
+
+const debug = Debug('GP-URI-ROUTER:NODE');
 
 import { SYM_CONTROLLER_URI } from '../constants'
+import { ensureNoDuplicatePathParams_ } from '../lib/makeurl'
 
 /**
  * @todo add getter and setter to parent node
@@ -32,7 +36,7 @@ import { SYM_CONTROLLER_URI } from '../constants'
  */
 export class RootNode<T extends IController> implements Node<T> {
 
-  public parentNode: Node<T>;
+  public [PARENT_NODE]: Node<T>;
 
   public controllers: Array<T>;
 
@@ -63,13 +67,9 @@ export class RootNode<T extends IController> implements Node<T> {
    * @param controllers
    * @param params
    */
-  protected* getRouteMatchIterator(params: UriParams): IterableIterator<RouteMatch<T>> {
+  protected* getRouteMatchIterator(params: UriParams): IterableIterator<IRouteMatch<T>> {
     for (const controller of this.controllers) {
-      yield {
-        controller,
-        params,
-        node: this
-      }
+      yield new RouteMatch(this, controller, params);
     }
   }
 
@@ -82,7 +82,7 @@ export class RootNode<T extends IController> implements Node<T> {
     return (other.type === this.type);
   }
 
-  protected* findChildMatches(uri: string, params: UriParams): IterableIterator<RouteMatch<T>> {
+  protected* findChildMatches(uri: string, params: UriParams): IterableIterator<IRouteMatch<T>> {
 
     for (const childNode of this.children) {
       yield* childNode.findRoutes(uri, params);
@@ -95,24 +95,39 @@ export class RootNode<T extends IController> implements Node<T> {
    *
    * @param {string} uri
    * @param {UriParams} params
-   * @returns {RouteMatchResult<T>}
+   * @returns {IRouteMatchResult<T>}
    */
-  public findRoute(uri: string, params?: UriParams): RouteMatch<T> | undefined {
+  public findRoute(uri: string, params?: UriParams): IRouteMatch<T> | undefined {
     return this.findRoutes(uri, params)
     .next().value;
   }
 
-  public* findRoutes(uri: string, params ?: UriParams): IterableIterator<RouteMatch<T>> {
+  public* findRoutes(uri: string, params ?: UriParams): IterableIterator<IRouteMatch<T>> {
     yield* this.findChildMatches(uri, params);
   }
 
 
-  public* getAllControllers(): IterableIterator<T> {
+  public* getAllControllers(): IterableIterator<IRouteMatch<T>> {
 
-    yield* this.controllers
+    for (const ctrl of this.controllers) {
+      yield new RouteMatch(this, ctrl, { pathParams: [] });
+    }
 
     for (const childNode of this.children) {
       yield* childNode.getAllControllers();
+    }
+  }
+
+  public getRouterMatchByControllerId(id: string): IRouteMatchResult<T> {
+
+    debug('Entered getRouterMatchByControllerId in node "%s" with id="id"', this, id)
+
+    const it = this.getAllControllers();
+    for (const routeMatch of it) {
+      debug('controller="%s"', routeMatch.controller.id);
+      if (routeMatch.controller.id === id) {
+        return routeMatch;
+      }
     }
   }
 
@@ -120,21 +135,16 @@ export class RootNode<T extends IController> implements Node<T> {
 
     debug('Entered addRoute on node="%s" with uri="%s" controller="%s', this.name, uri, controller.id);
 
-    if (!controller[SYM_CONTROLLER_URI]) {
-      controller[SYM_CONTROLLER_URI] = uri;
-      debug('Added SYM_CONTROLLER_URI "%s" to controller "%s"', controller[SYM_CONTROLLER_URI], controller.id)
-    }
-
     if (!uri) {
-      return this.addController(controller, controller[SYM_CONTROLLER_URI]);
+      return this.addController(controller);
     }
 
     const { head, tail } = splitBySeparator(uri, [ROUTE_PATH_SEPARATOR]);
 
     const childNode = makeNode<T>(head);
 
-    return this.addChildNode(childNode).addRoute(tail, controller)
-
+    return this.addChildNode(childNode)
+    .addRoute(tail, controller);
   }
 
 
@@ -147,7 +157,13 @@ export class RootNode<T extends IController> implements Node<T> {
       return existingChildNode;
     }
 
-    node.parentNode = this;
+    node[PARENT_NODE] = this;
+
+    /**
+     * Validate to make sure new node does not have any
+     * pathParam with the same name as any of the parent nodes
+     */
+    ensureNoDuplicatePathParams_(this, node.paramName);
 
     this.children = [...this.children, node].sort((node1, node2) => node2.priority - node1.priority);
 
@@ -155,9 +171,9 @@ export class RootNode<T extends IController> implements Node<T> {
   }
 
 
-  public addController(controller: T, uriPattern: string): Node<T> {
+  public addController(controller: T): Node<T> {
 
-    debug('Entered addController for node="%s" with controller="%s" uriPattern="%s"', this.name, controller.id, uriPattern);
+    debug('Entered addController for node="%s" with controller="%s"', this.name, controller.id);
     /**
      * Must check if existing node equals to this node AND if this node
      * is equals to existing node because it's possible that existing node
@@ -173,18 +189,14 @@ export class RootNode<T extends IController> implements Node<T> {
       throw new Error(error);
     }
 
-    controller.setUriPattern(uriPattern);
-
     this.controllers = [...this.controllers, controller].sort((ctrl1, ctrl2) => ctrl2.priority - ctrl1.priority);
 
     return this;
   }
 
 
-  makeUri(params: IStringMap): string | Error {
-    const ret = '';
-
-    return ret;
+  makeUri(params: IStringMap): string {
+    return '';
   }
 
 }

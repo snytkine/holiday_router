@@ -2,7 +2,7 @@ import {
   IController,
   IStringMap,
   Node,
-  RouteMatch,
+  IRouteMatch,
   UriParams
 } from '../interfaces/ifnode'
 import { RootNode } from './rootnode'
@@ -67,7 +67,7 @@ export class ExactMatchNode<T extends IController> extends RootNode<T> implement
     return (other.type === this.type && other instanceof ExactMatchNode && other.origUriPattern === this.origUriPattern)
   }
 
-  public * findRoutes(uri: string, params: UriParams = { pathParams: [] }): IterableIterator<RouteMatch<T>> {
+  public * findRoutes(uri: string, params: UriParams = { pathParams: [] }): IterableIterator<IRouteMatch<T>> {
 
     /**
      * If not starts with origUriPattern then will not yield anything

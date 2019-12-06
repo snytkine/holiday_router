@@ -2,8 +2,8 @@ import {
   IController,
   IStringMap,
   Node,
-  RouteMatch,
-  RouteMatchResult,
+  IRouteMatch,
+  IRouteMatchResult,
   UriParams
 } from '../interfaces/ifnode'
 import { makeParam, } from '../lib'
@@ -53,17 +53,17 @@ export class CatchAllNode<T extends IController> extends RootNode<T> implements 
   }
 
 
-  public *findRoutes(uri: string, params: UriParams = { pathParams: [] }): IterableIterator<RouteMatch<T>> {
+  public *findRoutes(uri: string, params: UriParams = { pathParams: [] }): IterableIterator<IRouteMatch<T>> {
 
     params.pathParams.push(makeParam(this.paramName, uri));
 
     yield * this.getRouteMatchIterator(params);
   }
 
-  makeUri(params: IStringMap): string | Error {
+  makeUri(params: IStringMap): string {
 
     if(!params.hasOwnProperty(this.paramName)){
-      return new Error(`Cannot generate uri for node ${this.name} because params object missing property ${this.paramName}`)
+      throw new Error(`Cannot generate uri for node ${this.name} because params object missing property ${this.paramName}`)
     }
 
     return params[this.paramName];

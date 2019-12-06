@@ -2,7 +2,7 @@ import {
   IController,
   IStringMap,
   Node,
-  RouteMatch,
+  IRouteMatch,
   UriParams
 } from '../interfaces'
 import { PathParamNode } from './pathparamnode'
@@ -69,7 +69,7 @@ export class PathParamNodeRegex<T extends IController> extends PathParamNode<T> 
                      params: UriParams = {
                        pathParams:  [],
                        regexParams: []
-                     }): IterableIterator<RouteMatch<T>> {
+                     }): IterableIterator<IRouteMatch<T>> {
 
 
     const extractedParam = extractUriParam(uri, this.prefix, this.postfix);
@@ -105,7 +105,7 @@ export class PathParamNodeRegex<T extends IController> extends PathParamNode<T> 
   }
 
 
-  makeUri(params: IStringMap): string | Error {
+  makeUri(params: IStringMap): string {
 
     if (!params.hasOwnProperty(this.paramName)) {
       throw new Error(`Cannot generate uri for node ${this.name} because params object missing property ${this.paramName}`);
