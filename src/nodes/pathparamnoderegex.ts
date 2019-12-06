@@ -1,8 +1,8 @@
 import {
   IController,
+  IStringMap,
   Node,
   RouteMatch,
-  RouteMatchResult,
   UriParams
 } from '../interfaces'
 import { PathParamNode } from './pathparamnode'
@@ -15,7 +15,11 @@ import {
 import {
   getNodePriority,
   PRIORITY
-} from './nodepriorities'
+} from './nodepriorities';
+
+import Debug from 'debug';
+
+const debug = Debug('GP-URI-ROUTER:node:pathparamnoderegex');
 
 const TAG = 'PathParamNodeRegex';
 
@@ -50,6 +54,7 @@ export class PathParamNodeRegex<T extends IController> extends PathParamNode<T> 
   constructor(paramName: string, re: RegExp, postfix: string = '', prefix = '') {
     super(paramName, postfix, prefix);
     this.regex = re;
+    debug('Created node %s this.prefix="%s" this.postfix="%s" this.paramName="%s" this.regex="%s"', TAG, this.prefix, this.postfix, this.paramName, this.regex.source)
   }
 
   private match(uriSegment: string): Array<string> | false {
@@ -99,5 +104,18 @@ export class PathParamNodeRegex<T extends IController> extends PathParamNode<T> 
     }
   }
 
+
+  makeUri(params: IStringMap): string | Error {
+
+    if (!params.hasOwnProperty(this.paramName)) {
+      throw new Error(`Cannot generate uri for node ${this.name} because params object missing property ${this.paramName}`);
+    }
+
+    if (!this.regex.test(params[this.paramName])) {
+      throw new Error(`Cannot generate uri for node ${this.name} because value of param ${this.paramName} does not pass regex ${this.regex.source}`);
+    }
+
+    return `${this.prefix}${params[this.paramName]}${this.postfix}`;
+  }
 
 }

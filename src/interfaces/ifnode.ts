@@ -13,9 +13,14 @@ export interface UriParams {
   regexParams?: Array<RegexParams>
 }
 
-export interface RouteMatch<T> {
+export interface RouteMatch<T extends IController> {
   controller: T
   params: UriParams
+  node: Node<T>
+}
+
+export interface IStringMap {
+  [key: string]: string
 }
 
 /**
@@ -26,7 +31,7 @@ export interface RouteMatch<T> {
  * in which case if this.controller has not been initialized it will
  * be undefined and so the return value will also be undefined
  */
-export type RouteMatchResult<T> = RouteMatch<T> | undefined | false
+export type RouteMatchResult<T extends IController> = RouteMatch<T> | undefined | false
 
 export interface IController {
 
@@ -81,7 +86,6 @@ export interface IController {
 }
 
 
-
 export interface Node<T extends IController> {
 
   type: string
@@ -91,6 +95,8 @@ export interface Node<T extends IController> {
   name: string
 
   controllers: Array<T>
+
+  paramName: string;
 
   equals(other: Node<T>): boolean
 
@@ -114,7 +120,11 @@ export interface Node<T extends IController> {
 
   getAllControllers(): IterableIterator<T>
 
+  makeUri(params: IStringMap): string | Error
+
   children: Array<Node<T>>;
+
+  parentNode?: Node<T>
 }
 
 

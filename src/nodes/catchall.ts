@@ -1,5 +1,6 @@
 import {
   IController,
+  IStringMap,
   Node,
   RouteMatch,
   RouteMatchResult,
@@ -20,7 +21,7 @@ const TAG = 'CatchAllNode';
  */
 export class CatchAllNode<T extends IController> extends RootNode<T> implements Node<T> {
 
-  private paramName: string;
+  public paramName: string;
   /**
    * catchall node has lowest priority because
    * it must be the last node in children array
@@ -57,6 +58,15 @@ export class CatchAllNode<T extends IController> extends RootNode<T> implements 
     params.pathParams.push(makeParam(this.paramName, uri));
 
     yield * this.getRouteMatchIterator(params);
+  }
+
+  makeUri(params: IStringMap): string | Error {
+
+    if(!params.hasOwnProperty(this.paramName)){
+      return new Error(`Cannot generate uri for node ${this.name} because params object missing property ${this.paramName}`)
+    }
+
+    return params[this.paramName];
   }
 
 }

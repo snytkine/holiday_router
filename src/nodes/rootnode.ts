@@ -1,5 +1,6 @@
 import {
   IController,
+  IStringMap,
   Node,
   ROUTE_PATH_SEPARATOR,
   RouteMatch,
@@ -20,10 +21,22 @@ const debug = Debug('GP-URI-ROUTER');
 
 import { SYM_CONTROLLER_URI } from '../constants'
 
-
+/**
+ * @todo add getter and setter to parent node
+ * throw exception is parent was already set - allow setting only once
+ * and may try to use WeakMap<Node<T>> where 'this' will be a key and
+ * parent node a value
+ * this way a reference to parent node will not be counted for garbage collection.
+ * This should not be necessary as V8 GC should easily figure our this case of
+ * circular reference issue, but maybe it will help GC or may it any more efficient?
+ */
 export class RootNode<T extends IController> implements Node<T> {
 
+  public parentNode: Node<T>;
+
   public controllers: Array<T>;
+
+  public paramName = '';
 
   get type() {
     return 'RootNode';
@@ -54,7 +67,8 @@ export class RootNode<T extends IController> implements Node<T> {
     for (const controller of this.controllers) {
       yield {
         controller,
-        params
+        params,
+        node: this
       }
     }
   }
@@ -133,6 +147,8 @@ export class RootNode<T extends IController> implements Node<T> {
       return existingChildNode;
     }
 
+    node.parentNode = this;
+
     this.children = [...this.children, node].sort((node1, node2) => node2.priority - node1.priority);
 
     return node;
@@ -162,6 +178,13 @@ export class RootNode<T extends IController> implements Node<T> {
     this.controllers = [...this.controllers, controller].sort((ctrl1, ctrl2) => ctrl2.priority - ctrl1.priority);
 
     return this;
+  }
+
+
+  makeUri(params: IStringMap): string | Error {
+    const ret = '';
+
+    return ret;
   }
 
 }

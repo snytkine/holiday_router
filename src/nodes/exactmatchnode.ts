@@ -1,8 +1,8 @@
 import {
   IController,
+  IStringMap,
   Node,
   RouteMatch,
-  RouteMatchResult,
   UriParams
 } from '../interfaces/ifnode'
 import { RootNode } from './rootnode'
@@ -10,6 +10,8 @@ import {
   getNodePriority,
   PRIORITY
 } from './nodepriorities'
+import Debug from 'debug';
+const debug = Debug('GP-URI-ROUTER:node:exactmatch');
 
 const TAG = 'ExactMathNode'
 
@@ -41,6 +43,8 @@ export class ExactMatchNode<T extends IController> extends RootNode<T> implement
     super();
     this.origUriPattern = uri
     this.segmentLength = uri.length
+
+    debug('Created node %s this.origUriPattern="%s" this.segmentLength="%s"', TAG, this.origUriPattern, this.segmentLength)
   }
 
   get type() {
@@ -101,6 +105,10 @@ export class ExactMatchNode<T extends IController> extends RootNode<T> implement
       }
     }
 
+  }
+
+  makeUri(params: IStringMap): string {
+    return this.origUriPattern;
   }
 
 }

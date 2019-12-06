@@ -1,12 +1,12 @@
 import {
   Node,
-  RouteMatchResult,
   UriParams,
   makeParam,
   extractUriParam,
   copyPathParams,
   IController,
   RouteMatch,
+  IStringMap,
 } from '../'
 import { RootNode } from './rootnode'
 import {
@@ -14,8 +14,7 @@ import {
   PRIORITY
 } from './nodepriorities'
 import Debug from 'debug';
-
-const debug = Debug('GP-URI-ROUTER');
+const debug = Debug('GP-URI-ROUTER:node:pathparamnode');
 
 const TAG = 'PathParamNode';
 
@@ -26,7 +25,7 @@ const TAG = 'PathParamNode';
  */
 export class PathParamNode<T extends IController> extends RootNode<T> implements Node<T> {
 
-  protected paramName: string;
+  public paramName: string;
 
   public readonly postfix: string;
 
@@ -42,6 +41,7 @@ export class PathParamNode<T extends IController> extends RootNode<T> implements
     this.paramName = paramName.trim();
     this.postfix = postfix || '';
     this.prefix = prefix || '';
+    debug('Created node %s this.prefix="%s" this.postfix="%s" this.paramName="%s"', TAG, this.prefix, this.postfix, this.paramName)
   }
 
   get type() {
@@ -113,6 +113,15 @@ export class PathParamNode<T extends IController> extends RootNode<T> implements
       }
 
     }
+  }
+
+  makeUri(params: IStringMap): string | Error {
+
+    if(!params.hasOwnProperty(this.paramName)){
+      throw new Error(`Cannot generate uri for node ${this.name} because params object missing property ${this.paramName}`)
+    }
+
+    return `${this.prefix}${params[this.paramName]}${this.postfix}`;
   }
 
 }
