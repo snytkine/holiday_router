@@ -94,7 +94,7 @@ export class RootNode<T extends IController> implements Node<T> {
    * @param {UriParams} params
    * @returns {IRouteMatchResult<T>}
    */
-  public findRoute(uri: string, params?: UriParams): IRouteMatch<T> | undefined {
+  public findRoute(uri: string, params?: UriParams): IRouteMatchResult<T> {
     return this.findRoutes(uri, params)
     .next().value;
   }
