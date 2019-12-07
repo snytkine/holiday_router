@@ -4,11 +4,12 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "build": "tsc --pretty"
+    "build": "tsc --pretty",
+    "pretest": "tsc --pretty",
+    "test": "mocha build/tests/"
   },
   "dependencies": {
-    "debug": "^4.1.1",
-    "morgan": "~1.9.0"
+    "debug": "^4.1.1"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
