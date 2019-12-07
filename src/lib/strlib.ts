@@ -94,7 +94,6 @@ export const extractUriParam = (uri: string, prefix: string = '', postfix: strin
     if (ch === ROUTE_PATH_SEPARATOR) {
       break;
     }
-
   }
 
   if (j !== postfixLen) {

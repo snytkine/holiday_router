@@ -31,34 +31,7 @@ export const makeUrl = <T extends IController>(node: Node<T>, params: IStringMap
   return makeUrl(node[PARENT_NODE], params, res);
 }
 
-
-export const ensureNoDuplicatePathParams = <T extends IController>(node: Node<T>) => {
-
-  debug('Entered ensureNoDuplicatePathParams with node="%o"', node)
-  let paramName: string = node.paramName;
-
-  if (!paramName || !node[PARENT_NODE]) {
-    debug('no paramName or no parent in node "%o"', node);
-    return;
-  }
-
-  const _ = (node: Node<T>) => {
-
-    if(!node) return;
-
-    if (node && node.paramName === paramName) {
-      throw new Error(`URI params must be unique. Non-unique param "${paramName}" found in node=${node.name}`);
-    }
-
-    return _(node[PARENT_NODE]);
-  }
-
-  return _(node[PARENT_NODE]);
-
-}
-
-
-export const ensureNoDuplicatePathParams_ = <T extends IController>(node: Node<T>, paramName: string = '') => {
+export const ensureNoDuplicatePathParams = <T extends IController>(node: Node<T>, paramName: string = '') => {
 
   debug('Entered ensureNoDuplicatePathParams_ with paramName="%s" node="%o"', paramName, node)
 
@@ -71,6 +44,5 @@ export const ensureNoDuplicatePathParams_ = <T extends IController>(node: Node<T
     throw new Error(`URI params must be unique. Non-unique param "${paramName}" found in node=${node[PARENT_NODE].name}`);
   }
 
-  return ensureNoDuplicatePathParams_(node[PARENT_NODE], paramName)
-
+  return ensureNoDuplicatePathParams(node[PARENT_NODE], paramName)
 }

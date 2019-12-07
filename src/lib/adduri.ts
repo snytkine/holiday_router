@@ -1,6 +1,4 @@
 import {
-  BRACKET_CLOSED,
-  BRACKET_OPEN,
   CATCH_ALL_PARAM_NAME,
   IController,
   Node
@@ -13,7 +11,7 @@ import {
   PathParamNodeRegex,
 } from '../nodes'
 import Debug from 'debug';
-const debug = Debug('GP-URI-ROUTER');
+const debug = Debug('GP-URI-ROUTER:lib');
 
 export type NodeFactory = <T extends IController>(uriSegment: string) => Node<T> | null;
 

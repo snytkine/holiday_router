@@ -7,23 +7,21 @@ import {
   IRouteMatchResult,
   UriParams,
   PARENT_NODE
-} from '../interfaces'
+} from '../interfaces';
 import {
   makeNode,
+  ensureNoDuplicatePathParams,
   RouteMatch,
   splitBySeparator
 } from '../lib'
 import {
   getNodePriority,
   PRIORITY
-} from './nodepriorities'
-
+} from './nodepriorities';
+import { SYM_CONTROLLER_URI } from '../constants';
 import Debug from 'debug';
 
 const debug = Debug('GP-URI-ROUTER:NODE');
-
-import { SYM_CONTROLLER_URI } from '../constants'
-import { ensureNoDuplicatePathParams_ } from '../lib/makeurl'
 
 /**
  * @todo add getter and setter to parent node
@@ -74,7 +72,6 @@ export class RootNode<T extends IController> implements Node<T> {
   }
 
   /**
-   * Every node type will be equal to RootNode
    * @param {Node<T>} other
    * @returns {boolean}
    */
@@ -163,7 +160,7 @@ export class RootNode<T extends IController> implements Node<T> {
      * Validate to make sure new node does not have any
      * pathParam with the same name as any of the parent nodes
      */
-    ensureNoDuplicatePathParams_(this, node.paramName);
+    ensureNoDuplicatePathParams(this, node.paramName);
 
     this.children = [...this.children, node].sort((node1, node2) => node2.priority - node1.priority);
 
@@ -185,7 +182,6 @@ export class RootNode<T extends IController> implements Node<T> {
 
     if (existingCtrl) {
       const error = `Duplicate_Controller_Error for route "${controller[SYM_CONTROLLER_URI]}" Cannot add controller ${controller.id} to node ${this.name} because equal controller ${existingCtrl.id} already exists`;
-      debug(error)
       throw new Error(error);
     }
 

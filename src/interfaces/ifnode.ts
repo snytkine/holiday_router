@@ -91,8 +91,6 @@ export interface Node<T extends IController> {
 
   equals(other: Node<T>): boolean
 
-  findRoute?(uri: string, params?: UriParams): IRouteMatchResult<T>
-
   findRoutes(uri: string, params?: UriParams): IterableIterator<IRouteMatch<T>>
 
   /**
@@ -105,7 +103,7 @@ export interface Node<T extends IController> {
    */
   addChildNode(node: Node<T>): Node<T>
 
-  addController(controller: T, uriPattern: string): Node<T>
+  addController(controller: T): Node<T>
 
   addRoute(uri: string, controller: T): Node<T>
 

@@ -8,19 +8,12 @@ import { IController } from '../interfaces'
  */
 export class BasicController<T> implements IController {
 
-  private uriPattern: string
-
   constructor(public controller: T, public id: string = 'BasicController', public readonly priority = 1) {
   }
 
   public equals(other: IController) {
     return other instanceof BasicController && other.controller === this.controller;
   }
-
-  public setUriPattern(uriPattern: string){
-    this.uriPattern = uriPattern;
-  }
-
 }
 
 /**
