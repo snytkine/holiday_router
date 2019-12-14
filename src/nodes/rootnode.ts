@@ -20,8 +20,9 @@ import {
 } from './nodepriorities';
 import { SYM_CONTROLLER_URI } from '../constants';
 import Debug from 'debug';
+import { TAG } from '../enums'
 
-const debug = Debug('GP-URI-ROUTER:NODE');
+const debug = Debug('GP-URI-ROUTER:NODE:RootNode');
 
 /**
  * @todo add getter and setter to parent node
@@ -41,7 +42,7 @@ export class RootNode<T extends IController> implements Node<T> {
   public paramName = '';
 
   get type() {
-    return 'RootNode';
+    return TAG.ROOT_NODE;
   }
 
   get priority(): number {
@@ -49,7 +50,7 @@ export class RootNode<T extends IController> implements Node<T> {
   }
 
   get name(): string {
-    return 'RootNode';
+    return TAG.ROOT_NODE;
   }
 
   public children: Array<Node<T>>;
@@ -66,6 +67,8 @@ export class RootNode<T extends IController> implements Node<T> {
    * @param params
    */
   protected* getRouteMatchIterator(params: UriParams): IterableIterator<IRouteMatch<T>> {
+    debug('Entered getRouteMatchIterator with params=%O controllers=%O', params, this.controllers);
+
     for (const controller of this.controllers) {
       yield new RouteMatch(this, controller, params);
     }

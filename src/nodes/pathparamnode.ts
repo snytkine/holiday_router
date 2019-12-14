@@ -7,6 +7,7 @@ import {
   IController,
   IRouteMatch,
   IStringMap,
+  TAG,
 } from '../'
 import { RootNode } from './rootnode'
 import {
@@ -15,8 +16,6 @@ import {
 } from './nodepriorities'
 import Debug from 'debug';
 const debug = Debug('GP-URI-ROUTER:node:pathparamnode');
-
-const TAG = 'PathParamNode';
 
 
 /**
@@ -44,7 +43,7 @@ export class PathParamNode<T extends IController> extends RootNode<T> implements
   }
 
   get type() {
-    return TAG;
+    return TAG.PATHPARAM_NODE;
   }
 
   get priority() {

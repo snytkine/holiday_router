@@ -13,8 +13,10 @@ import {
   getNodePriority,
   PRIORITY
 } from './nodepriorities'
+import { TAG } from '../enums';
+import Debug from 'debug';
 
-const TAG = 'CatchAllNode';
+const debug = Debug('GP-URI-ROUTER:node:catchallnode');
 
 /**
  * Node represents uri segment that ends with path separator
@@ -22,6 +24,7 @@ const TAG = 'CatchAllNode';
 export class CatchAllNode<T extends IController> extends RootNode<T> implements Node<T> {
 
   public paramName: string;
+
   /**
    * catchall node has lowest priority because
    * it must be the last node in children array
@@ -35,7 +38,7 @@ export class CatchAllNode<T extends IController> extends RootNode<T> implements 
   }
 
   get name() {
-    return `${TAG}::${this.paramName}`;
+    return `${TAG.CATCHALL_NODE}::${this.paramName}`;
   }
 
   /**
@@ -53,16 +56,16 @@ export class CatchAllNode<T extends IController> extends RootNode<T> implements 
   }
 
 
-  public *findRoutes(uri: string, params: UriParams = { pathParams: [] }): IterableIterator<IRouteMatch<T>> {
-
+  public* findRoutes(uri: string, params: UriParams = { pathParams: [] }): IterableIterator<IRouteMatch<T>> {
+    debug('Entered %s findRoutes with uri="%s", params=%O controllers=%O', TAG.CATCHALL_NODE, uri, params, this.controllers);
     params.pathParams.push(makeParam(this.paramName, uri));
 
-    yield * this.getRouteMatchIterator(params);
+    yield* this.getRouteMatchIterator(params);
   }
 
   makeUri(params: IStringMap): string {
 
-    if(!params.hasOwnProperty(this.paramName)){
+    if (!params.hasOwnProperty(this.paramName)) {
       throw new Error(`Cannot generate uri for node ${this.name} because params object missing property ${this.paramName}`)
     }
 

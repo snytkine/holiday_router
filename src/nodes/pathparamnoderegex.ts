@@ -18,10 +18,9 @@ import {
 } from './nodepriorities';
 
 import Debug from 'debug';
+import { TAG } from '../enums'
 
 const debug = Debug('GP-URI-ROUTER:node:pathparamnoderegex');
-
-const TAG = 'PathParamNodeRegex';
 
 export class PathParamNodeRegex<T extends IController> extends PathParamNode<T> implements Node<T> {
 
@@ -29,7 +28,7 @@ export class PathParamNodeRegex<T extends IController> extends PathParamNode<T> 
   public readonly regex: RegExp;
 
   get type() {
-    return TAG;
+    return TAG.PATHPARAM_REGEX_NODE;
   }
 
   get priority() {

@@ -11,9 +11,8 @@ import {
   PRIORITY
 } from './nodepriorities'
 import Debug from 'debug';
+import { TAG } from '../enums'
 const debug = Debug('GP-URI-ROUTER:node:exactmatch');
-
-const TAG = 'ExactMathNode'
 
 /**
  * Node represents uri segment that ends with path separator
@@ -48,7 +47,7 @@ export class ExactMatchNode<T extends IController> extends RootNode<T> implement
   }
 
   get type() {
-    return 'ExactMatchNode';
+    return TAG.EXACTMATCH_NODE;
   }
 
   /**

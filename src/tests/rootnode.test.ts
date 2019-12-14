@@ -74,12 +74,7 @@ describe('#rootnode.ts', () => {
       .to
       .equal(ctrl)
 
-      /*expect(root.addUriController('', 'rootController2'))
-      .to
-      .equal('rootController')*/
-
     })
-
 
   })
 })
