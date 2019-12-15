@@ -83,32 +83,106 @@ describe('#CatchAllNode.ts', () => {
       .equal(0)
     })
 
-    it('#CatchAllNode addController with empty url should add controller', () => {
+    it('#CatchAllNode calling addController method twice should add 2 controllers', () => {
+      const node = new CatchAllNode();
       const ctrl = new BasicController('controller1')
+      const ctrl2 = new BasicController('controller2')
+      node.addController(ctrl);
+      node.addController(ctrl2);
+
+      expect(node.controllers.length)
+      .to
+      .equal(2)
+
+      expect(node.controllers[0])
+      .to
+      .equal(ctrl)
+
+      expect(node.controllers[1])
+      .to
+      .equal(ctrl2)
+    })
+
+    it('#CatchAllNode addRoute with empty url should add controller', () => {
+      const ctrl = new BasicController('controller1')
+      const ctrl2 = new BasicController('controller2')
       node1.addRoute('', ctrl);
+      node1.addRoute('', ctrl2);
+
+      expect(node1.controllers.length)
+      .to
+      .equal(2)
 
       expect(node1.controllers[0])
       .to
       .equal(ctrl)
+
+      expect(node1.controllers[1])
+      .to
+      .equal(ctrl2)
     })
 
-    it('#CatchAllNode findRoutes should return iterator with controller1 and passed uri as value of paramName')
-    const ctrl = new BasicController('controller1')
-    node2.addRoute('', ctrl);
-    const routes = node2.findRoutes('/images/recent/small/pic.js');
-    const aRoutes = []
-    //const route1 = routes.next();
-    for (const res of routes) {
-      aRoutes.push(res);
-    }
+    it('#CatchAllNode findRoutes should return iterator with controller1 and passed uri as value of paramName.', () => {
+      const ctrl = new BasicController('controller1')
+      const ctrl2 = new BasicController('controller2')
+      node2.addRoute('', ctrl);
+      node2.addRoute('', ctrl2);
+      const routes = node2.findRoutes('/images/recent/small/pic.js');
+      const routes2 = node2.findRoutes('/anything/random/path/file.html');
+      const aRoutes = Array.from(routes)
+      const aRoutes2 = Array.from(routes2)
 
-    console.dir(aRoutes[0]);
+      expect(aRoutes.length)
+      .to
+      .equal(2)
 
-    expect(aRoutes[0].controller)
-    .to
-    .equal(ctrl)
+      expect(aRoutes[0].controller)
+      .to
+      .equal(ctrl)
 
-    routes.return(true)
+      expect(aRoutes[0].params.pathParams[0].paramName)
+      .to
+      .equal('images')
+
+      expect(aRoutes[0].params.pathParams[0].paramValue)
+      .to
+      .equal('/images/recent/small/pic.js')
+
+      /**
+       * Second RouteMatch should have different controller
+       * but same paramName and paramValue
+       */
+      expect(aRoutes[1].controller)
+      .to
+      .equal(ctrl2)
+
+      expect(aRoutes[1].params.pathParams[0].paramName)
+      .to
+      .equal('images')
+
+      expect(aRoutes[1].params.pathParams[0].paramValue)
+      .to
+      .equal('/images/recent/small/pic.js')
+
+      /**
+       * routes2 iterator should have same controller
+       * and same paramName but paramValue should be
+       * equal to uri passed in findRoute (a different uri)
+       */
+      expect(aRoutes2[0].controller)
+      .to
+      .equal(ctrl)
+
+      expect(aRoutes2[0].params.pathParams[0].paramName)
+      .to
+      .equal('images')
+
+      expect(aRoutes2[0].params.pathParams[0].paramValue)
+      .to
+      .equal('/anything/random/path/file.html')
+
+    })
+
 
   })
 })
