@@ -93,6 +93,8 @@ export interface Node<T extends IController> {
 
   findRoutes(uri: string, params?: UriParams): IterableIterator<IRouteMatch<T>>
 
+  findRoute(uri: string, params?: UriParams): IRouteMatchResult<T>
+
   /**
    * May throw error if addChild fails
    * such as in case of adding a node that equals to
@@ -100,6 +102,9 @@ export interface Node<T extends IController> {
    *
    * @param {Node<T>} node
    * @returns {boolean}
+   *
+   * @todo DO NOT RETURN Node, return void or throw
+   * because it is confusing which node is returned - self or added node
    */
   addChildNode(node: Node<T>): Node<T>
 

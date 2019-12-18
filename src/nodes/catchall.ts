@@ -1,9 +1,8 @@
 import {
   IController,
+  IRouteMatch,
   IStringMap,
   Node,
-  IRouteMatch,
-  IRouteMatchResult,
   UriParams
 } from '../interfaces/ifnode'
 import { makeParam, } from '../lib'
@@ -15,6 +14,10 @@ import {
 } from './nodepriorities'
 import { TAG } from '../enums';
 import Debug from 'debug';
+import {
+  RouterError,
+  RouterErrorCode
+} from '../errors'
 
 const debug = Debug('GP-URI-ROUTER:node:catchallnode');
 
@@ -63,13 +66,26 @@ export class CatchAllNode<T extends IController> extends RootNode<T> implements 
     yield* this.getRouteMatchIterator(params);
   }
 
+  /**
+   * Catchall node cannot have child nodes
+   * Must throw exception
+   *
+   * @param node
+   */
+  addChildNode(node: Node<T>): Node<T> {
+    throw new  RouterError(`Catchall node ${this.name} cannot have child nodes`,
+      RouterErrorCode.ADD_CHILD_CATCHALL)
+  }
+
   makeUri(params: IStringMap): string {
 
     if (!params.hasOwnProperty(this.paramName)) {
-      throw new Error(`Cannot generate uri for node ${this.name} because params object missing property ${this.paramName}`)
+      throw new RouterError(`${this.name}.makeUri params object missing property ${this.paramName}`, RouterErrorCode.MAKE_URI_MISSING_PARAM)
     }
 
     return params[this.paramName];
   }
+
+
 
 }

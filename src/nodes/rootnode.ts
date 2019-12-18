@@ -1,16 +1,16 @@
 import {
   IController,
-  IStringMap,
-  Node,
-  ROUTE_PATH_SEPARATOR,
   IRouteMatch,
   IRouteMatchResult,
-  UriParams,
-  PARENT_NODE
+  IStringMap,
+  Node,
+  PARENT_NODE,
+  ROUTE_PATH_SEPARATOR,
+  UriParams
 } from '../interfaces';
 import {
-  makeNode,
   ensureNoDuplicatePathParams,
+  makeNode,
   RouteMatch,
   splitBySeparator
 } from '../lib'
@@ -21,6 +21,10 @@ import {
 import { SYM_CONTROLLER_URI } from '../constants';
 import Debug from 'debug';
 import { TAG } from '../enums'
+import {
+  RouterError,
+  RouterErrorCode
+} from '../errors'
 
 const debug = Debug('GP-URI-ROUTER:NODE:RootNode');
 
@@ -185,7 +189,7 @@ export class RootNode<T extends IController> implements Node<T> {
 
     if (existingCtrl) {
       const error = `Duplicate_Controller_Error for route "${controller[SYM_CONTROLLER_URI]}" Cannot add controller ${controller.id} to node ${this.name} because equal controller ${existingCtrl.id} already exists`;
-      throw new Error(error);
+      throw new RouterError(error, RouterErrorCode.DUPLICATE_CONTROLLER);
     }
 
     this.controllers = [...this.controllers, controller].sort((ctrl1, ctrl2) => ctrl2.priority - ctrl1.priority);
