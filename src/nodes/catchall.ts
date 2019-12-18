@@ -44,6 +44,10 @@ export class CatchAllNode<T extends IController> extends RootNode<T> implements 
     return `${TAG.CATCHALL_NODE}::${this.paramName}`;
   }
 
+  get type() {
+    return TAG.CATCHALL_NODE
+  }
+
   /**
    * CatchAll node MUST have controller because it cannot have
    * children nodes - that simply would not make sense because

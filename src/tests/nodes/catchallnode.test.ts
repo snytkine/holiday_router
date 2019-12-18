@@ -43,10 +43,16 @@ describe('#CatchAllNode.ts', () => {
       .equal(getNodePriority(PRIORITY.CATCHALL))
     })
 
-    it('CatchAll node should have name CATCH_ALL_PARAM_NAME', () => {
+    it('CatchAllNode should have name CATCH_ALL_PARAM_NAME', () => {
       expect(node1.name)
       .to
       .equal(`${TAG.CATCHALL_NODE}::${CATCH_ALL_PARAM_NAME}`)
+    })
+
+    it('CatchAllNode should have name type TAG.CATCHALL_NODE', () => {
+      expect(node1.type)
+      .to
+      .equal(TAG.CATCHALL_NODE)
     })
 
     it('CatchAll named node should have name passed in constructor', () => {

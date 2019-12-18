@@ -16,6 +16,7 @@ import {
   IRouteMatch,
   PARENT_NODE
 } from '../../interfaces'
+import { TAG } from '../../enums'
 
 
 describe('#rootnode.ts', () => {
@@ -40,6 +41,12 @@ describe('#rootnode.ts', () => {
       expect(rootNode.name)
       .to
       .equal('RootNode')
+    })
+
+    it('RootNode should have type TAG.ROOT_NODE', () => {
+      expect(rootNode.type)
+      .to
+      .equal(TAG.ROOT_NODE)
     })
 
     it('RootNode should have initial empty children array', () => {
@@ -209,7 +216,7 @@ describe('#rootnode.ts', () => {
 
     })
 
-    it('RootNode with child nodes .findRoutes should return iterator with all matches', () => {
+    it('RootNode .findRoutes should return iterator with all matches', () => {
       const node = new RootNode();
       const ctrl = new BasicController('controller1')
       const ctrl2 = new BasicController('controller2')

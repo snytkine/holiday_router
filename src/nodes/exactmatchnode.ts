@@ -27,6 +27,8 @@ export class ExactMatchNode<T extends IController> extends RootNode<T> implement
    * but user was /orders/widgets/123
    * findRoute will receive uri=widgets/ and then
    * rest will be "/" and will attempt to find "/" node in children
+   *
+   * @todo what's the reason for this being public? Try to make it private
    */
   public origUriPattern: string;
 
@@ -59,7 +61,7 @@ export class ExactMatchNode<T extends IController> extends RootNode<T> implement
   }
 
   get name() {
-    return `${TAG}::${this.origUriPattern}`;
+    return `${TAG.EXACTMATCH_NODE}::${this.origUriPattern}`;
   }
 
   equals(other: Node<T>) {
