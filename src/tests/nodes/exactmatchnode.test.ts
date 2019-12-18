@@ -9,7 +9,6 @@ import {
 import { expect } from 'chai'
 import { TAG } from '../../enums'
 import {
-  CATCH_ALL_PARAM_NAME,
   IRouteMatch,
   PARENT_NODE
 } from '../../interfaces'
@@ -34,18 +33,17 @@ describe('#ExactMatchNode.ts', () => {
       .equal(getNodePriority(PRIORITY.EXACTMATCH))
     })
 
+    it('ExactMatchNode should have name type TAG.CATCHALL_NODE', () => {
+      expect(node1.type)
+      .to
+      .equal(TAG.EXACTMATCH_NODE)
+    })
+
 
     it('ExactMatchNode should have name CATCH_ALL_PARAM_NAME', () => {
       expect(node1.name)
       .to
       .equal(`${TAG.EXACTMATCH_NODE}::path1/`)
-    })
-
-
-    it('ExactMatchNode should have name type TAG.CATCHALL_NODE', () => {
-      expect(node1.type)
-      .to
-      .equal(TAG.EXACTMATCH_NODE)
     })
 
 
@@ -94,13 +92,14 @@ describe('#ExactMatchNode.ts', () => {
     })
 
 
-    it('.makeUri should return empty string', () => {
+    it('.makeUri should return value of this node origUriPattern', () => {
       const uri = node1.makeUri({ 'param1': 'value1' });
 
       expect(uri)
       .to
       .equal('path1/')
     })
+
 
     it('.getRouterMatchByControllerId should return matching controller', () => {
       const node = new ExactMatchNode('path1/');
@@ -138,6 +137,7 @@ describe('#ExactMatchNode.ts', () => {
         .equal(RouterErrorCode.DUPLICATE_CONTROLLER)
       }
     })
+
 
     it('.findRoutes should return iterator with all matches', () => {
       const node = new ExactMatchNode('path1/');
@@ -201,6 +201,7 @@ describe('#ExactMatchNode.ts', () => {
       .equal(undefined)
     })
 
+
     it('.addChildNode should add child node', () => {
       const node = new ExactMatchNode('path1/');
       node.addChildNode(new ExactMatchNode('mynode'));
@@ -218,7 +219,6 @@ describe('#ExactMatchNode.ts', () => {
       .to
       .equal(node)
     })
-
 
 
     it('.addRoute with 2 urls that start with same path should add just one child node "/"', () => {
