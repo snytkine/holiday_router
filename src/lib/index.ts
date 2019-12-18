@@ -1,3 +1,4 @@
+export * from './basiccontroller'
 export * from './makeparam'
 export * from './printchildren'
 export * from './printnode'

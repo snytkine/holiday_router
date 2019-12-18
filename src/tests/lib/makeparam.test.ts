@@ -2,14 +2,14 @@ import {
   copyPathParams,
   makeParam,
   makeRegexParam
-} from '../lib'
+} from '../../lib'
 
 export {
   makeParam,
   makeRegexParam
-} from '../lib/makeparam';
+} from '../../lib/makeparam';
 import { expect } from 'chai';
-import { UriParams } from '../interfaces/ifnode'
+import { UriParams } from '../../interfaces/ifnode'
 
 describe('#makeparam.ts', () => {
 

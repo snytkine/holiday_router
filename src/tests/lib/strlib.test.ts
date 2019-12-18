@@ -2,9 +2,9 @@
 import {
   extractUriParam,
   splitBySeparator
-} from '../lib/index';
+} from '../../lib';
 import {expect} from 'chai';
-import { ROUTE_PATH_SEPARATOR, ROUTE_STRING_SERARATOR } from '../interfaces'
+import { ROUTE_PATH_SEPARATOR, ROUTE_STRING_SERARATOR } from '../../interfaces'
 
 let URI1 = 'catalog/category/books/ABCD123'
 let URI2 = 'isbn-1234/info'

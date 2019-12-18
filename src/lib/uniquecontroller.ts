@@ -1,20 +1,5 @@
 import { IController } from '../interfaces'
-
-/**
- * A simple wrapper object to conveniently
- * generate controller objects.
- *
- *
- */
-export class BasicController<T> implements IController {
-
-  constructor(public controller: T, public id: string = 'BasicController', public readonly priority = 1) {
-  }
-
-  public equals(other: IController) {
-    return other instanceof BasicController && other.controller === this.controller;
-  }
-}
+import { BasicController } from './basiccontroller'
 
 /**
  * UniqueController always returns true from equals() method
