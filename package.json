@@ -9,7 +9,10 @@
     "test": "mocha build/tests/"
   },
   "dependencies": {
-    "debug": "^4.1.1"
+    "constantinople": "^3.1.1",
+    "debug": "^4.1.1",
+    "lodash": "4.17.12",
+    "uglify-js": "^2.6.0"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
