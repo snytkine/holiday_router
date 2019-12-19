@@ -276,6 +276,27 @@ describe('#CatchAllNode.ts', () => {
     })
 
 
+    it('.makeUri without param name should throw', () => {
+      const node = new CatchAllNode('images');
+      const ctrl = new BasicController('controller1')
+
+      node.addRoute('', ctrl);
+
+      try {
+        node.makeUri({
+          'param1': 'value1',
+          'order':  '1234'
+        });
+        throw new Error('CatchAllNode.makeUri should throw error with code MAKE_URI_MISSING_PARAM');
+      } catch (e) {
+        expect(e.code)
+        .to
+        .equal(RouterErrorCode.MAKE_URI_MISSING_PARAM)
+      }
+
+    })
+
+
     it('.addChildNode should throw', () => {
       const node = new CatchAllNode('images');
 
