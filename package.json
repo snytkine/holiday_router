@@ -6,7 +6,6 @@
     "start": "node ./bin/www",
     "prebuild": "rm -rf build",
     "build": "tsc --pretty",
-    "pretest": "tsc --pretty",
     "test": "mocha build/tests/ --recursive"
   },
   "dependencies": {
