@@ -18,7 +18,7 @@ import {
   getNodePriority,
   PRIORITY
 } from './nodepriorities';
-import { SYM_CONTROLLER_URI } from '../constants';
+import { SYM_CONTROLLER_URI } from '../interfaces';
 import Debug from 'debug';
 import { TAG } from '../enums'
 import {

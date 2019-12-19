@@ -3,7 +3,7 @@ import {
   Node
 } from '../interfaces'
 import { printChildren } from './index'
-import { SYM_CONTROLLER_URI } from '../constants'
+import { SYM_CONTROLLER_URI } from '../interfaces'
 
 
 export const printControllers = <T extends IController>(controllers: Array<T>, indent: number = 1): string => {

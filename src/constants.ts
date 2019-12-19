@@ -1,1 +1,0 @@
-export const SYM_CONTROLLER_URI=Symbol.for('GP_URI_RUOTER::SYM_CONTROLLER_URI')
