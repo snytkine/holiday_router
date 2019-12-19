@@ -61,7 +61,6 @@ describe('#rootnode.ts', () => {
     })
 
     it('.equals should be true if other node is RootNode', () => {
-
       const isEqual = rootNode.equals(new RootNode())
       expect(isEqual)
         .to
