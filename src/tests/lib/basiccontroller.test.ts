@@ -1,5 +1,4 @@
 import { expect } from 'chai';
-import { RootNode } from '../../nodes'
 import { BasicController } from '../../lib'
 
 describe('#BasicController.ts test', () => {

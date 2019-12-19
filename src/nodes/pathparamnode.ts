@@ -1,22 +1,33 @@
 import {
-  copyPathParams,
-  extractUriParam,
   IController,
   IRouteMatch,
   IStringMap,
-  makeParam,
   Node,
-  RouterError,
-  RouterErrorCode,
-  TAG,
   UriParams,
-} from '../'
+} from '../interfaces'
+
+//  RouterError,
+//   RouterErrorCode,
+//   TAG,
+// makeParam,
+//  copyPathParams,
+//   extractUriParam,
 import { RootNode } from './rootnode'
 import {
   getNodePriority,
   PRIORITY
 } from './nodepriorities'
 import Debug from 'debug';
+import { TAG } from '../enums'
+import {
+  copyPathParams,
+  extractUriParam,
+  makeParam
+} from '../lib'
+import {
+  RouterError,
+  RouterErrorCode
+} from '../errors'
 
 const debug = Debug('GP-URI-ROUTER:node:pathparamnode');
 
@@ -118,7 +129,7 @@ export class PathParamNode<T extends IController> extends RootNode<T> implements
 
   makeUri(params: IStringMap): string {
 
-    if(!params.hasOwnProperty(this.paramName)){
+    if (!params.hasOwnProperty(this.paramName)) {
       throw new RouterError(`Cannot generate uri for node ${this.name} because params object missing property ${this.paramName}`, RouterErrorCode.MAKE_URI_MISSING_PARAM)
     }
 
