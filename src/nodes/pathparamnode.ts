@@ -5,13 +5,6 @@ import {
   Node,
   UriParams,
 } from '../interfaces'
-
-//  RouterError,
-//   RouterErrorCode,
-//   TAG,
-// makeParam,
-//  copyPathParams,
-//   extractUriParam,
 import { RootNode } from './rootnode'
 import {
   getNodePriority,
@@ -20,14 +13,14 @@ import {
 import Debug from 'debug';
 import { TAG } from '../enums'
 import {
-  copyPathParams,
   extractUriParam,
-  makeParam
+  copyPathParams,
+  makeParam,
 } from '../lib'
 import {
   RouterError,
   RouterErrorCode
-} from '../errors'
+} from '../errors';
 
 const debug = Debug('GP-URI-ROUTER:node:pathparamnode');
 

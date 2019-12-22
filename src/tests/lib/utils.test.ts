@@ -1,59 +1,17 @@
-import {
-  copyPathParams,
-  makeParam,
-  makeRegexParam
-} from '../../lib'
 
 import { expect } from 'chai';
-import { UriParams } from '../../interfaces/ifnode'
+import { copyPathParams, makeParam, makeRegexParam } from '../../lib/utils'
+import { UriParams } from '../../interfaces'
 
-describe('#makeparam.ts', () => {
+describe('#utils.ts', () => {
 
-  describe('#makeParam', () => {
-
-    it('#should create param object', () => {
-
-      const param = makeParam('id', '23');
-      expect(param)
-      .to
-      .have
-      .property('paramName', 'id');
-
-      expect(param)
-      .to
-      .have
-      .property('paramValue', '23');
-    })
-  })
-
-  describe('#makeRegexParam', () => {
-
-    it('#should create regex param', () => {
-
-      const param = makeRegexParam('id', ['p1', 'p2']);
-      expect(param)
-      .to
-      .haveOwnProperty('paramName', 'id');
-
-      expect(param)
-      .to
-      .haveOwnProperty('params');
-
-      expect(param.params)
-      .to
-      .have
-      .members(['p1', 'p2']);
-
-    })
-  })
-
-  describe('#copyPathParams', () => {
-    const origparams: UriParams = {
-      pathParams: [makeParam('id', '11')]
-    }
+  describe('#copyPathPrams', () => {
 
     it('#copyPathParams should contain new param. Original pathParam should not be modified', () => {
 
+      const origparams: UriParams = {
+        pathParams: [makeParam('id', '11')]
+      }
       const extraParam = makeParam('model', 'T');
 
       const copiedParams = copyPathParams(origparams, extraParam);
@@ -77,6 +35,10 @@ describe('#makeparam.ts', () => {
     })
 
     it('#copyPathParams with regexParam should contain new param. Original pathParam should not be modified', () => {
+
+      const origparams: UriParams = {
+        pathParams: [makeParam('id', '11')]
+      }
 
       const extraParam = makeParam('model', 'T');
       const regexParam = makeRegexParam('id', ['p1', 'p2']);
@@ -106,6 +68,26 @@ describe('#makeparam.ts', () => {
 
     })
 
+  })
 
+
+  describe('#makeRegexParam', () => {
+
+    it('#should create regex param', () => {
+
+      const param = makeRegexParam('id', ['p1', 'p2']);
+      expect(param)
+      .to
+      .haveOwnProperty('paramName', 'id');
+
+      expect(param)
+      .to
+      .haveOwnProperty('params');
+
+      expect(param.params)
+      .to
+      .have
+      .members(['p1', 'p2']);
+    })
   })
 })

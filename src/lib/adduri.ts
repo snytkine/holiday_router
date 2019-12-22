@@ -48,6 +48,13 @@ export const makeCatchAllNode: NodeFactory = <T extends IController>(uriSegment:
 export const makeExactMatchNode: NodeFactory = <T extends IController>(uriSegment: string): Node<T> => {
 
   if (uriSegment !== CATCH_ALL_PARAM_NAME) {
+    /**
+     * @todo should the uri be validated or should
+     * we allow any characters in the uri segment?
+     * At the very least we should not allow segment to start with PATH_SEPARATOR
+     * but we should allow uriSegment to be a PATH_SEPARATOR
+     * @param uri
+     */
     return new ExactMatchNode(uriSegment);
   }
 

@@ -5,7 +5,6 @@ import {
   Node,
   UriParams
 } from '../interfaces/ifnode'
-import { makeParam, } from '../lib'
 import { RootNode } from './rootnode'
 import { CATCH_ALL_PARAM_NAME } from '../interfaces'
 import {
@@ -18,6 +17,7 @@ import {
   RouterError,
   RouterErrorCode
 } from '../errors'
+import { makeParam } from '../lib'
 
 const debug = Debug('GP-URI-ROUTER:node:catchallnode');
 

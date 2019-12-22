@@ -1,8 +1,8 @@
 import {
   IController,
+  IRouteMatch,
   IStringMap,
   Node,
-  IRouteMatch,
   UriParams
 } from '../interfaces'
 import { PathParamNode } from './pathparamnode'
@@ -10,7 +10,7 @@ import {
   copyPathParams,
   extractUriParam,
   makeParam,
-  makeRegexParam
+  makeRegexParam,
 } from '../lib'
 import {
   getNodePriority,
@@ -19,6 +19,10 @@ import {
 
 import Debug from 'debug';
 import { TAG } from '../enums'
+import {
+  RouterError,
+  RouterErrorCode
+} from '../errors'
 
 const debug = Debug('GP-URI-ROUTER:node:pathparamnoderegex');
 
@@ -107,11 +111,11 @@ export class PathParamNodeRegex<T extends IController> extends PathParamNode<T> 
   makeUri(params: IStringMap): string {
 
     if (!params.hasOwnProperty(this.paramName)) {
-      throw new Error(`Cannot generate uri for node ${this.name} because params object missing property ${this.paramName}`);
+      throw new RouterError(`Cannot generate uri for node ${this.name} because params object missing property ${this.paramName}`, RouterErrorCode.MAKE_URI_MISSING_PARAM);
     }
 
     if (!this.regex.test(params[this.paramName])) {
-      throw new Error(`Cannot generate uri for node ${this.name} because value of param ${this.paramName} does not pass regex ${this.regex.source}`);
+      throw new RouterError(`Cannot generate uri for node ${this.name} because value of param ${this.paramName} does not pass regex ${this.regex.source}`, RouterErrorCode.MAKE_URI_REGEX_FAIL);
     }
 
     return `${this.prefix}${params[this.paramName]}${this.postfix}`;

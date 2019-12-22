@@ -148,6 +148,13 @@ describe('#adduri.ts', () => {
       .equal(`PathParamNodeRegex::'year'::'^([0-9]{4})$'::'model-'::'-current.html'`)
     })
 
+    it('should create PathParamNodeRegex and add $ to end of pattern and ^ to beginning', () => {
+      const res = makePathParamNodeRegex('total-{price:([0-9]{2,4})}-us\\$');
+      const reSource = res.regex.source;
+      expect(reSource.startsWith('^')).to.be.true;
+      expect(reSource.endsWith('$')).to.be.true;
+    })
+
     it('should NOT create Node if segment is NOT valid', () => {
       const res = makePathParamNodeRegex('year:([0-9]{4})');
       expect(res).to.be.null;
@@ -177,6 +184,7 @@ describe('#adduri.ts', () => {
 
       expect(res.name).to.equal(`PathParamNode::id::'invoice-'::'.html'`);
     })
+
   })
 
 })

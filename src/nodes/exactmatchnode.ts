@@ -39,7 +39,6 @@ export class ExactMatchNode<T extends IController> extends RootNode<T> implement
    */
   protected segmentLength: number
 
-
   constructor(uri: string) {
     super();
     this.origUriPattern = uri
