@@ -1,6 +1,7 @@
 import {
   ROUTE_PATH_SEPARATOR
 } from '../interfaces/constants'
+import { ISplitResult } from '../interfaces'
 /*
 
 export const escapeRegExp = (text: string): string => {
@@ -17,7 +18,7 @@ export const escapeRegExp = (text: string): string => {
  * @returns {head, tail} head is first part of string including separator,
  * tail is rest of string
  */
-export const splitBySeparator = (s: string, separators: Array<string>): { head: string, tail: string } => {
+export const splitBySeparator = (s: string, separators: Array<string>): ISplitResult => {
 
   let i,
       ch;

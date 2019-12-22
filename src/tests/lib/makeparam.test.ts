@@ -4,17 +4,15 @@ import {
   makeRegexParam
 } from '../../lib'
 
-export {
-  makeParam,
-  makeRegexParam
-} from '../../lib/makeparam';
 import { expect } from 'chai';
 import { UriParams } from '../../interfaces/ifnode'
 
 describe('#makeparam.ts', () => {
 
   describe('#makeParam', () => {
+
     it('#should create param object', () => {
+
       const param = makeParam('id', '23');
       expect(param)
       .to

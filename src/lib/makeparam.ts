@@ -5,6 +5,7 @@ import {
 } from '../interfaces'
 
 export const makeParam = (paramName: string, paramValue: string): ExtractedPathParam => {
+
   return {
     paramName,
     paramValue
@@ -12,6 +13,7 @@ export const makeParam = (paramName: string, paramValue: string): ExtractedPathP
 }
 
 export const makeRegexParam = (paramName: string, params: Array<string>): RegexParams => {
+
   return {
     paramName,
     params

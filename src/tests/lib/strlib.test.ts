@@ -9,7 +9,7 @@ let URI1 = 'catalog/category/books/ABCD123'
 let URI2 = 'isbn-1234/info'
 let URI3 = 'orders_pending/ABC123'
 
-describe('#Strlib functions', () => {
+describe('#strlib.ts', () => {
 
   describe('#extractUriParam', () => {
     it ('#Should extract param from uri', function () {
