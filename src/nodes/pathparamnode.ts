@@ -73,7 +73,7 @@ export class PathParamNode<T extends IController> extends RootNode<T> implements
   }
 
   get name() {
-    return `${TAG}::${this.paramName}::'${this.prefix}'::'${this.postfix}'`;
+    return `${TAG.PATHPARAM_NODE}::${this.paramName}::'${this.prefix}'::'${this.postfix}'`;
   }
 
   /**

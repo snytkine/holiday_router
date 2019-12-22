@@ -18,7 +18,6 @@ import {
   getNodePriority,
   PRIORITY
 } from './nodepriorities';
-import { SYM_CONTROLLER_URI } from '../interfaces';
 import Debug from 'debug';
 import { TAG } from '../enums'
 import {
@@ -188,7 +187,7 @@ export class RootNode<T extends IController> implements Node<T> {
       ctrl => ctrl.equals(controller) || controller.equals(ctrl));
 
     if (existingCtrl) {
-      const error = `Duplicate_Controller_Error for route "${controller[SYM_CONTROLLER_URI]}" Cannot add controller ${controller.id} to node ${this.name} because equal controller ${existingCtrl.id} already exists`;
+      const error = `Duplicate_Controller_Error. Cannot add controller ${controller.id} to node ${this.name} because equal controller ${existingCtrl.id} already exists`;
       throw new RouterError(error, RouterErrorCode.DUPLICATE_CONTROLLER);
     }
 

@@ -1,11 +1,13 @@
 import {
   ROUTE_PATH_SEPARATOR
 } from '../interfaces/constants'
+/*
 
 export const escapeRegExp = (text: string): string => {
-  // -[\]()*+?.,
+
   return text.replace(/[\\^$|#\s]/g, '\\$&');
 }
+*/
 
 /**
  * Read string until STRING_SEPARATOR or PATH_SEPARATOR char or until end of string.

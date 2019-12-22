@@ -14,4 +14,8 @@ export class BasicController<T> implements IController {
   public equals(other: IController) {
     return other instanceof BasicController && other.controller === this.controller;
   }
+
+  public toString(){
+    return `${this.constructor.name} id=${this.id} priority=${this.priority}`;
+  }
 }

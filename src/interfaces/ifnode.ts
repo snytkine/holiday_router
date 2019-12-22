@@ -74,6 +74,8 @@ export interface IController {
    */
   id: string
 
+  toString(): string;
+
 }
 
 

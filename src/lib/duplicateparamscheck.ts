@@ -4,6 +4,11 @@ import {
   PARENT_NODE
 } from '../interfaces'
 import Debug from 'debug';
+import {
+  RouterError,
+  RouterErrorCode
+} from '../errors'
+
 const debug = Debug('GP-URI-ROUTER:lib');
 
 export const ensureNoDuplicatePathParams = <T extends IController>(node: Node<T>, paramName: string = '') => {
@@ -15,8 +20,9 @@ export const ensureNoDuplicatePathParams = <T extends IController>(node: Node<T>
     return;
   }
 
-  if(node[PARENT_NODE].paramName === paramName){
-    throw new Error(`URI params must be unique. Non-unique param "${paramName}" found in node=${node[PARENT_NODE].name}`);
+  if (node[PARENT_NODE].paramName === paramName) {
+    const errorMessage = `URI params must be unique. Non-unique param "${paramName}" found in node=${node[PARENT_NODE].name}`;
+    throw new RouterError(errorMessage, RouterErrorCode.NON_UNIQUE_PARAM);
   }
 
   return ensureNoDuplicatePathParams(node[PARENT_NODE], paramName)

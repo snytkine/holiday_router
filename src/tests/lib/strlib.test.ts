@@ -1,4 +1,3 @@
-//import * as chai from 'chai';
 import {
   extractUriParam,
   splitBySeparator
