@@ -1,6 +1,5 @@
 import { expect } from 'chai'
 import {
-  PathParamNode,
   PathParamNodeRegex,
   PRIORITY
 } from '../../nodes'

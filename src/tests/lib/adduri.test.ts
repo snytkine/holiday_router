@@ -2,7 +2,8 @@ import { expect } from 'chai';
 import {
   CatchAllNode,
   ExactMatchNode,
-  PathParamNode
+  PathParamNode,
+  PathParamNodeRegex
 } from '../../nodes'
 import { CATCH_ALL_PARAM_NAME } from '../../interfaces'
 import {
@@ -175,6 +176,7 @@ describe('#adduri.ts', () => {
   })
 
   describe('#makeNode test', () => {
+
     it('should create PathParamNode', () => {
       const res = makeNode('invoice-{id}.html');
       expect(res)
@@ -183,6 +185,31 @@ describe('#adduri.ts', () => {
       .instanceOf(PathParamNode);
 
       expect(res.name).to.equal(`PathParamNode::id::'invoice-'::'.html'`);
+    })
+
+
+    it('should create PathParamNodeRegex', () => {
+      const res = makeNode('invoice-{id:[0-9]{2,3}}.html');
+      expect(res)
+      .to
+      .be
+      .instanceOf(PathParamNodeRegex);
+    })
+
+    it('should create CatchAllNode', () => {
+      const res = makeNode('**');
+      expect(res)
+      .to
+      .be
+      .instanceOf(CatchAllNode);
+    })
+
+    it('should create ExactMatchNode', () => {
+      const res = makeNode('invoices/');
+      expect(res)
+      .to
+      .be
+      .instanceOf(ExactMatchNode);
     })
 
   })
