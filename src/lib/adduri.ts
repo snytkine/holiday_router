@@ -11,13 +11,18 @@ import {
   PathParamNodeRegex,
 } from '../nodes'
 import Debug from 'debug';
+import {
+  RouterError,
+  RouterErrorCode
+} from '../errors'
+
 const debug = Debug('GP-URI-ROUTER:lib');
 
 export type NodeFactory = <T extends IController>(uriSegment: string) => Node<T> | null;
 
 export const makeCatchAllNode: NodeFactory = <T extends IController>(uriSegment: string): Node<T> => {
 
-  /**
+  /**uri.
    * Supports named catchall parameter
    * if segment looks like this: /*someParam
    * in which case param name will be someParam
@@ -160,7 +165,7 @@ export const makeNode = <T extends IController>(uriSegment: string): Node<T> => 
   } while (!ret && i++ < factories.length);
 
   if (!ret) {
-    throw new Error(`Failed to create node for uriSegment=${uriSegment}`);
+    throw new RouterError(`Failed to create node for uriSegment=${uriSegment}`, RouterErrorCode.CREATE_NODE_FAILED);
   }
 
   return ret;

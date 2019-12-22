@@ -36,7 +36,7 @@ export class PathParamNodeRegex<T extends IController> extends PathParamNode<T> 
   }
 
   get name() {
-    return `${TAG}::'${this.paramName}'::'${this.regex.source}'::'${this.prefix}'::'${this.postfix}'`;
+    return `${TAG.PATHPARAM_REGEX_NODE}::'${this.paramName}'::'${this.regex.source}'::'${this.prefix}'::'${this.postfix}'`;
   }
 
   equals(other: Node<T>): boolean {
