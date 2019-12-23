@@ -1,6 +1,7 @@
 import {
   IController,
   IRouteMatch,
+  IUriParams,
   Node
 } from '../interfaces'
 
@@ -9,7 +10,7 @@ import {
  */
 export class RouteMatch<T extends IController> implements IRouteMatch<T> {
 
-  constructor(public node: Node<T>, public controller: T, public params = {pathParams: []}){}
+  constructor(public node: Node<T>, public controller: T, public params: IUriParams = {pathParams: []}){}
 
   /**
    * This method is used for logging and debugging

@@ -1,7 +1,7 @@
 import {
-  ExtractedPathParam,
-  RegexParams,
-  UriParams
+  IExtractedPathParam,
+  IRegexParams,
+  IUriParams
 } from '../interfaces'
 
 
@@ -11,9 +11,9 @@ import {
  * @param param
  * @param regexParams
  */
-export function copyPathParams(source: UriParams, param: ExtractedPathParam, regexParams?: RegexParams): UriParams {
+export function copyPathParams(source: IUriParams, param: IExtractedPathParam, regexParams?: IRegexParams): IUriParams {
 
-  const ret: UriParams = { pathParams: [...source.pathParams, param] }
+  const ret: IUriParams = { pathParams: [...source.pathParams, param] }
 
   if (regexParams) {
     if (source.regexParams) {
@@ -26,20 +26,11 @@ export function copyPathParams(source: UriParams, param: ExtractedPathParam, reg
   return ret;
 }
 
-export function makeParam(name: string, value: string): ExtractedPathParam {
 
-  const ret: ExtractedPathParam = {
-    paramName:  name,
-    paramValue: value
-  }
-
-  return ret;
+export class ExtractedPathParam implements IExtractedPathParam {
+  constructor(public readonly paramName: string, public readonly paramValue: string){}
 }
 
-export function makeRegexParam(paramName: string, params: Array<string>): RegexParams {
-
-  return {
-    paramName,
-    params
-  }
+export class RegexParams implements IRegexParams {
+  constructor(public readonly paramName: string, public readonly params: Array<string>){}
 }

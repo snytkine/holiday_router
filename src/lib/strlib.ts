@@ -1,111 +1,95 @@
 import {
-  ROUTE_PATH_SEPARATOR
-} from '../interfaces/constants'
-import { ISplitResult } from '../interfaces'
-/*
+  ISplitResult,
+  UriParamResult,
+  ROUTE_PATH_SEPARATOR,
+} from '../interfaces';
 
-export const escapeRegExp = (text: string): string => {
+export class StrLib {
 
-  return text.replace(/[\\^$|#\s]/g, '\\$&');
-}
-*/
+  public static splitUriByPathSeparator(s: string, separators: Array<string>): ISplitResult {
 
-/**
- * Read string until STRING_SEPARATOR or PATH_SEPARATOR char or until end of string.
- *
- * @param {string} s
- *
- * @returns {head, tail} head is first part of string including separator,
- * tail is rest of string
- */
-export const splitBySeparator = (s: string, separators: Array<string>): ISplitResult => {
-
-  let i,
-      ch;
-  let ret = {
-    head: '',
-    tail: ''
-  }
-
-  for (i = 0; ch = s[i++]; ch !== undefined) {
-    ret.head += ch;
-    if (separators.includes(ch)) {
-      break;
+    let i = 0;
+    const ret = {
+      head: '',
+      tail: ''
     }
+
+    for (const char of s) {
+      ret.head += char;
+      i+=1;
+      if (separators.includes(char)) {
+        break;
+      }
+    }
+
+    ret.tail = s.substring(i);
+
+    return ret;
   }
 
-  ret.tail = s.substring(i);
+  public static extractUriParam(uri: string, prefix: string = '', postfix: string = ''): UriParamResult | null {
 
-  return ret;
-}
+    let param: string = '';
+    let prefixLen = (prefix && prefix.length) || 0;
+    let postfixLen = (postfix && postfix.length) || 0;
+    let acc: string = '';
+    let ch: string = '';
 
-export interface UriParamResult {
-  param: string,
-  rest: string
-}
+    let i = 0;
+    let j = 0;
 
+    /**
+     * First read until match of prefix
+     */
+    while (ch !== undefined && i < prefixLen) {
 
-export const extractUriParam = (uri: string, prefix: string = '', postfix: string = ''): UriParamResult | null => {
+      if (i < prefixLen && prefix[i] !== uri[i]) {
+        /**
+         * Prefix does not match
+         *
+         */
+        return null;
+      }
 
-  let param: string = '';
-  let prefixLen = (prefix && prefix.length) || 0;
-  let postfixLen = (postfix && postfix.length) || 0;
-  let acc: string = '';
-  let ch: string = '';
+      i += 1;
+    }
 
-  let i = 0;
-  let j = 0;
-
-  /**
-   * First read until match of prefix
-   */
-  while (ch !== undefined && i < prefixLen) {
-
-    if (i < prefixLen && prefix[i] !== uri[i]) {
-      /**
-       * Prefix does not match
-       *
-       */
+    /**
+     * If string ended before the prefixLen return false
+     */
+    if (i < prefixLen) {
       return null;
     }
 
-    i += 1;
-  }
 
-  /**
-   * If string ended before the prefixLen return false
-   */
-  if (i < prefixLen) {
-    return null;
-  }
+    while (ch = uri[i]) {
 
+      if (ch === postfix[j]) {
+        acc += ch;
+        j += 1;
+      } else {
+        param += acc;
+        acc = '';
+        j = 0;
+        param += ch;
+      }
 
-  while (ch = uri[i]) {
+      i += 1;
 
-    if (ch === postfix[j]) {
-      acc += ch;
-      j += 1;
-    } else {
-      param += acc;
-      acc = '';
-      j = 0;
-      param += ch;
+      if (ch === ROUTE_PATH_SEPARATOR) {
+        break;
+      }
     }
 
-    i += 1;
-
-    if (ch === ROUTE_PATH_SEPARATOR) {
-      break;
+    if (j !== postfixLen) {
+      return null;
     }
-  }
 
-  if (j !== postfixLen) {
-    return null;
-  }
+    return {
+      param,
+      rest: uri.substr(i)
+    }
 
-  return {
-    param,
-    rest: uri.substr(i)
   }
 
 }

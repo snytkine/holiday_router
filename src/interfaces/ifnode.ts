@@ -1,23 +1,23 @@
 import { PARENT_NODE } from './constants'
 
-export interface ExtractedPathParam {
+export interface IExtractedPathParam {
   paramName: string
   paramValue: string
 }
 
-export interface RegexParams {
+export interface IRegexParams {
   paramName: string,
   params: Array<string>
 }
 
-export interface UriParams {
-  pathParams: Array<ExtractedPathParam>
-  regexParams?: Array<RegexParams>
+export interface IUriParams {
+  pathParams: Array<IExtractedPathParam>
+  regexParams?: Array<IRegexParams>
 }
 
 export interface IRouteMatch<T extends IController> {
   controller: T
-  params: UriParams
+  params: IUriParams
   node: Node<T>
 }
 
@@ -74,6 +74,9 @@ export interface IController {
    */
   id: string
 
+  /**
+   * Used for logging and debugging
+   */
   toString(): string;
 
 }
@@ -93,9 +96,9 @@ export interface Node<T extends IController> {
 
   equals(other: Node<T>): boolean
 
-  findRoutes(uri: string, params?: UriParams): IterableIterator<IRouteMatch<T>>
+  findRoutes(uri: string, params?: IUriParams): IterableIterator<IRouteMatch<T>>
 
-  findRoute(uri: string, params?: UriParams): IRouteMatchResult<T>
+  findRoute(uri: string, params?: IUriParams): IRouteMatchResult<T>
 
   /**
    * May throw error if addChild fails

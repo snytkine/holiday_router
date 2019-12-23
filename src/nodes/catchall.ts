@@ -3,7 +3,7 @@ import {
   IRouteMatch,
   IStringMap,
   Node,
-  UriParams
+  IUriParams
 } from '../interfaces/ifnode'
 import { RootNode } from './rootnode'
 import { CATCH_ALL_PARAM_NAME } from '../interfaces'
@@ -17,7 +17,9 @@ import {
   RouterError,
   RouterErrorCode
 } from '../errors'
-import { makeParam } from '../lib'
+import {
+  ExtractedPathParam,
+} from '../lib'
 
 const debug = Debug('GP-URI-ROUTER:node:catchallnode');
 
@@ -63,9 +65,9 @@ export class CatchAllNode<T extends IController> extends RootNode<T> implements 
   }
 
 
-  public* findRoutes(uri: string, params: UriParams = { pathParams: [] }): IterableIterator<IRouteMatch<T>> {
+  public* findRoutes(uri: string, params: IUriParams = { pathParams: [] }): IterableIterator<IRouteMatch<T>> {
     debug('Entered %s findRoutes with uri="%s", params=%O controllers=%O', TAG.CATCHALL_NODE, uri, params, this.controllers);
-    params.pathParams.push(makeParam(this.paramName, uri));
+    params.pathParams.push(new ExtractedPathParam(this.paramName, uri));
 
     yield* this.getRouteMatchIterator(params);
   }

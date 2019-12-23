@@ -3,25 +3,24 @@ import {
   IRouteMatch,
   IStringMap,
   Node,
-  UriParams,
+  IUriParams,
 } from '../interfaces'
 import { RootNode } from './rootnode'
 import {
   getNodePriority,
   PRIORITY
 } from './nodepriorities'
-import Debug from 'debug';
 import { TAG } from '../enums'
 import {
-  extractUriParam,
   copyPathParams,
-  makeParam,
+  ExtractedPathParam,
+  StrLib,
 } from '../lib'
 import {
   RouterError,
   RouterErrorCode
 } from '../errors';
-
+import Debug from 'debug';
 const debug = Debug('GP-URI-ROUTER:node:pathparamnode');
 
 
@@ -92,19 +91,19 @@ export class PathParamNode<T extends IController> extends RootNode<T> implements
   }
 
   public* findRoutes(uri: string,
-                     params: UriParams = {
+                     params: IUriParams = {
                        pathParams:  [],
                        regexParams: []
                      }): IterableIterator<IRouteMatch<T>> {
 
-    const extractedParam = extractUriParam(uri, this.prefix, this.postfix);
+    const extractedParam = StrLib.extractUriParam(uri, this.prefix, this.postfix);
 
     /**
      * If there are no extractedParam then this generator
      * will not yield anything
      */
     if (extractedParam) {
-      const copiedParams = copyPathParams(params, makeParam(this.paramName, extractedParam.param));
+      const copiedParams = copyPathParams(params, new ExtractedPathParam(this.paramName, extractedParam.param));
 
       if (!extractedParam.rest) {
         /**

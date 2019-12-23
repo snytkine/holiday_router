@@ -6,13 +6,13 @@ import {
   Node,
   PARENT_NODE,
   ROUTE_PATH_SEPARATOR,
-  UriParams
+  IUriParams,
 } from '../interfaces';
 import {
   ensureNoDuplicatePathParams,
   makeNode,
   RouteMatch,
-  splitBySeparator
+  StrLib,
 } from '../lib'
 import {
   getNodePriority,
@@ -69,7 +69,7 @@ export class RootNode<T extends IController> implements Node<T> {
    * @param controllers
    * @param params
    */
-  protected* getRouteMatchIterator(params: UriParams): IterableIterator<IRouteMatch<T>> {
+  protected* getRouteMatchIterator(params: IUriParams): IterableIterator<IRouteMatch<T>> {
     debug('Entered getRouteMatchIterator with params=%O controllers=%O', params, this.controllers);
 
     for (const controller of this.controllers) {
@@ -85,7 +85,7 @@ export class RootNode<T extends IController> implements Node<T> {
     return (other.type === this.type);
   }
 
-  protected* findChildMatches(uri: string, params: UriParams): IterableIterator<IRouteMatch<T>> {
+  protected* findChildMatches(uri: string, params: IUriParams): IterableIterator<IRouteMatch<T>> {
 
     for (const childNode of this.children) {
       yield* childNode.findRoutes(uri, params);
@@ -97,15 +97,15 @@ export class RootNode<T extends IController> implements Node<T> {
    * it can only find match in child nodes.
    *
    * @param {string} uri
-   * @param {UriParams} params
+   * @param {IUriParams} params
    * @returns {IRouteMatchResult<T>}
    */
-  public findRoute(uri: string, params?: UriParams): IRouteMatchResult<T> {
+  public findRoute(uri: string, params?: IUriParams): IRouteMatchResult<T> {
     return this.findRoutes(uri, params)
     .next().value;
   }
 
-  public* findRoutes(uri: string, params ?: UriParams): IterableIterator<IRouteMatch<T>> {
+  public* findRoutes(uri: string, params ?: IUriParams): IterableIterator<IRouteMatch<T>> {
     yield* this.findChildMatches(uri, params);
   }
 
@@ -142,7 +142,7 @@ export class RootNode<T extends IController> implements Node<T> {
       return this.addController(controller);
     }
 
-    const { head, tail } = splitBySeparator(uri, [ROUTE_PATH_SEPARATOR]);
+    const { head, tail } = StrLib.splitUriByPathSeparator(uri, [ROUTE_PATH_SEPARATOR]);
 
     const childNode = makeNode<T>(head);
 

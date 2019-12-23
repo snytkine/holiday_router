@@ -3,27 +3,25 @@ import {
   IRouteMatch,
   IStringMap,
   Node,
-  UriParams
+  IUriParams
 } from '../interfaces'
 import { PathParamNode } from './pathparamnode'
 import {
   copyPathParams,
-  extractUriParam,
-  makeParam,
-  makeRegexParam,
+  ExtractedPathParam,
+  RegexParams,
+  StrLib,
 } from '../lib'
 import {
   getNodePriority,
   PRIORITY
 } from './nodepriorities';
-
-import Debug from 'debug';
 import { TAG } from '../enums'
 import {
   RouterError,
   RouterErrorCode
 } from '../errors'
-
+import Debug from 'debug';
 const debug = Debug('GP-URI-ROUTER:node:pathparamnoderegex');
 
 export class PathParamNodeRegex<T extends IController> extends PathParamNode<T> implements Node<T> {
@@ -69,13 +67,13 @@ export class PathParamNodeRegex<T extends IController> extends PathParamNode<T> 
 
 
   public* findRoutes(uri: string,
-                     params: UriParams = {
+                     params: IUriParams = {
                        pathParams:  [],
                        regexParams: []
                      }): IterableIterator<IRouteMatch<T>> {
 
 
-    const extractedParam = extractUriParam(uri, this.prefix, this.postfix);
+    const extractedParam = StrLib.extractUriParam(uri, this.prefix, this.postfix);
 
     if (extractedParam) {
 
@@ -83,7 +81,7 @@ export class PathParamNodeRegex<T extends IController> extends PathParamNode<T> 
 
       if (regexParams) {
 
-        const copiedParams = copyPathParams(params, makeParam(this.paramName, extractedParam.param), makeRegexParam(this.paramName, regexParams));
+        const copiedParams = copyPathParams(params, new ExtractedPathParam(this.paramName, extractedParam.param), new RegexParams(this.paramName, regexParams));
 
         /**
          *
