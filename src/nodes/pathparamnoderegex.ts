@@ -9,8 +9,8 @@ import { PathParamNode } from './pathparamnode'
 import {
   copyPathParams,
   ExtractedPathParam,
+  Strlib,
   RegexParams,
-  StrLib,
 } from '../lib'
 import {
   getNodePriority,
@@ -73,7 +73,7 @@ export class PathParamNodeRegex<T extends IController> extends PathParamNode<T> 
                      }): IterableIterator<IRouteMatch<T>> {
 
 
-    const extractedParam = StrLib.extractUriParam(uri, this.prefix, this.postfix);
+    const extractedParam = Strlib.extractUriParam(uri, this.prefix, this.postfix);
 
     if (extractedParam) {
 

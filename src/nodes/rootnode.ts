@@ -12,7 +12,7 @@ import {
   ensureNoDuplicatePathParams,
   makeNode,
   RouteMatch,
-  StrLib,
+  Strlib,
 } from '../lib'
 import {
   getNodePriority,
@@ -142,7 +142,7 @@ export class RootNode<T extends IController> implements Node<T> {
       return this.addController(controller);
     }
 
-    const { head, tail } = StrLib.splitUriByPathSeparator(uri, [ROUTE_PATH_SEPARATOR]);
+    const { head, tail } = Strlib.splitUriByPathSeparator(uri, [ROUTE_PATH_SEPARATOR]);
 
     const childNode = makeNode<T>(head);
 

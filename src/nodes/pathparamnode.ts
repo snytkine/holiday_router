@@ -14,7 +14,7 @@ import { TAG } from '../enums'
 import {
   copyPathParams,
   ExtractedPathParam,
-  StrLib,
+  Strlib,
 } from '../lib'
 import {
   RouterError,
@@ -96,7 +96,7 @@ export class PathParamNode<T extends IController> extends RootNode<T> implements
                        regexParams: []
                      }): IterableIterator<IRouteMatch<T>> {
 
-    const extractedParam = StrLib.extractUriParam(uri, this.prefix, this.postfix);
+    const extractedParam = Strlib.extractUriParam(uri, this.prefix, this.postfix);
 
     /**
      * If there are no extractedParam then this generator

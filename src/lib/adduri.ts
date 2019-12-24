@@ -20,30 +20,42 @@ const debug = Debug('GP-URI-ROUTER:lib');
 
 export type NodeFactory = <T extends IController>(uriSegment: string) => Node<T> | null;
 
-export const makeCatchAllNode: NodeFactory = <T extends IController>(uriSegment: string): Node<T> => {
+/**
+ * Supports named catchall parameter
+ * if segment looks like this: /*someParam
+ * in which case param name will be someParam
+ *
+ * otherwise the pattern is ** and  the paramName will be **
+ * @type {RegExp}
+ */
+const CatchAllRe = /^{\*([a-zA-Z0-9-_]+)}$/;
 
-  /**uri.
-   * Supports named catchall parameter
-   * if segment looks like this: /*someParam
-   * in which case param name will be someParam
-   *
-   * otherwise the pattern is ** and  the paramName will be **
-   * @type {RegExp}
-   */
-  const re = /^{\*([a-zA-Z0-9-_]+)}$/
+/**
+ * Prefix = anything except { and } and /
+ * followed by {
+ * followed by optional spaces
+ * followed by param name (alphanumeric with - and _)
+ * followed by optional spaces
+ * followed by }
+ * followed by optional postfix which will often be just path separator or some other string.
+ * @type {RegExp}
+ */
+const PathParamRe = /^([^{}\/]*){(?:\s*)([a-zA-Z0-9-_]+)(?:\s*)}([^{}]*)$/;
 
-  if (uriSegment === CATCH_ALL_PARAM_NAME) {
-    return new CatchAllNode();
-  }
-
-  const res = re.exec(uriSegment);
-
-  if (res && Array.isArray(res) && res[1]) {
-    return new CatchAllNode(res[1])
-  }
-
-  return null;
-}
+/**
+ * prefix - anything except { and } and /
+ * followed by {
+ * optionally followed by spaces
+ * followed by param name (alphanumeric or dash or underscore)
+ * optionally followed by spaces
+ * followed by :
+ * optionally followed by spaces
+ * followed by regex pattern  (anything but must be valid regex pattern or exception is thrown)
+ * followed by postfix = anything except {}
+ *
+ * @type {RegExp}
+ */
+const PathParamRegexRe = /^([^{}\/]*){(?:\s*)([a-zA-Z0-9-_]+)(?:\s*):(.*)}([^{}]*)$/;
 
 export const makeExactMatchNode: NodeFactory = <T extends IController>(uriSegment: string): Node<T> => {
 
@@ -61,22 +73,25 @@ export const makeExactMatchNode: NodeFactory = <T extends IController>(uriSegmen
   return null;
 }
 
+export const makeCatchAllNode: NodeFactory = <T extends IController>(uriSegment: string): Node<T> => {
+
+  if (uriSegment === CATCH_ALL_PARAM_NAME) {
+    return new CatchAllNode();
+  }
+
+  const res = CatchAllRe.exec(uriSegment);
+
+  if (res && Array.isArray(res) && res[1]) {
+    return new CatchAllNode(res[1])
+  }
+
+  return null;
+}
+
 
 export const makePathParamNode: NodeFactory = <T extends IController>(uriSegment: string): Node<T> => {
 
-  /**
-   * Prefix = anything except { and } and /
-   * followed by {
-   * followed by optional spaces
-   * followed by param name (alphanumeric with - and _)
-   * followed by optional spaces
-   * followed by }
-   * followed by optional postfix which will often be just path separator or some other string.
-   * @type {RegExp}
-   */
-  const re = /^([^{}\/]*){(?:\s*)([a-zA-Z0-9-_]+)(?:\s*)}([^{}]*)$/;
-
-  const res = re.exec(uriSegment);
+  const res = PathParamRe.exec(uriSegment);
 
   if (!res) {
     return null;
@@ -96,22 +111,8 @@ export const makePathParamNode: NodeFactory = <T extends IController>(uriSegment
 export const makePathParamNodeRegex = (uriSegment: string): any => {
 
   debug('makePathParamNodeRegex entered with uriSegment=%s"', uriSegment)
-  /**
-   * prefix - anything except { and } and /
-   * followed by {
-   * optionally followed by spaces
-   * followed by param name (alphanumeric or dash or underscore)
-   * optionally followed by spaces
-   * followed by :
-   * optionally followed by spaces
-   * followed by regex pattern  (anything but must be valid regex pattern or exception is thrown)
-   * followed by postfix = anything except {}
-   *
-   * @type {RegExp}
-   */
-  const re = /^([^{}\/]*){(?:\s*)([a-zA-Z0-9-_]+)(?:\s*):(.*)}([^{}]*)$/;
 
-  const res = re.exec(uriSegment);
+  const res = PathParamRegexRe.exec(uriSegment);
 
   if (!res) {
     debug('makePathParamNodeRegex NOT a match for uriSegment=%s"', uriSegment)
@@ -170,10 +171,6 @@ export const makeNode = <T extends IController>(uriSegment: string): Node<T> => 
   do {
     ret = factories[i](uriSegment);
   } while (!ret && i++ < factories.length);
-
-  if (!ret) {
-    throw new RouterError(`Failed to create node for uriSegment=${uriSegment}`, RouterErrorCode.CREATE_NODE_FAILED);
-  }
 
   return ret;
 }

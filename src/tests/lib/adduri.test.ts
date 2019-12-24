@@ -112,7 +112,6 @@ describe('#adduri.ts', () => {
     it('should create PathParamNodeRegex without prefix and postfix when passed uriSeegment is matching a valid regex', () => {
       const res = makePathParamNodeRegex('{year:([0-9]{4})}');
 
-      console.log(res.regex.source)
       expect(res.type)
       .to
       .be

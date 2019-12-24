@@ -1,6 +1,9 @@
 import { expect } from 'chai';
 import { RootNode } from '../../nodes'
-import { BasicController } from '../../lib'
+import {
+  BasicController,
+  makeUrl
+} from '../../lib'
 import { IRouteMatch } from '../../interfaces'
 import { TAG } from '../../enums'
 
@@ -150,6 +153,23 @@ describe('#Integrated Router test', () => {
 
     })
 
+  })
+
+  describe('Makeurl tests', () => {
+
+    it('Should create full url from Route', () => {
+      const ctrl = <IRouteMatch<BasicController<string>>>rootNode.getRouterMatchByControllerId('ctrl3');
+
+      const url = makeUrl(ctrl.node,{
+        'make':    'honda',
+        'model-x': 'crv',
+        'id':      '12345'
+      })
+
+      expect(url)
+      .to
+      .equal('/catalog/toys/cars/honda/mymodel-crv-item/id-12345.html')
+    })
   })
 
 })

@@ -4,9 +4,9 @@ import {
   ROUTE_PATH_SEPARATOR,
 } from '../interfaces';
 
-export class StrLib {
+export module Strlib {
 
-  public static splitUriByPathSeparator(s: string, separators: Array<string>): ISplitResult {
+  export function splitUriByPathSeparator(s: string, separators: Array<string>): ISplitResult {
 
     let i = 0;
     const ret = {
@@ -27,7 +27,7 @@ export class StrLib {
     return ret;
   }
 
-  public static extractUriParam(uri: string, prefix: string = '', postfix: string = ''): UriParamResult | null {
+  export function extractUriParam(uri: string, prefix: string = '', postfix: string = ''): UriParamResult | null {
 
     let param: string = '';
     let prefixLen = (prefix && prefix.length) || 0;
@@ -53,14 +53,6 @@ export class StrLib {
 
       i += 1;
     }
-
-    /**
-     * If string ended before the prefixLen return false
-     */
-    if (i < prefixLen) {
-      return null;
-    }
-
 
     while (ch = uri[i]) {
 

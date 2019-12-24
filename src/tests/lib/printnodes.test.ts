@@ -50,6 +50,41 @@ const PRINT_NODES_RES = `
          || ====================================
      || ====================================`;
 
+const PRINT_NODE_INDENT1_RES = `
+         || ====================================
+         || node=RootNode
+         || priority=1
+         || Controllers=0
+         || children (2) 
+             || ====================================
+             || node=ExactMathNode::path1/
+             || priority=100000000
+             || Controllers=1
+               * Controller UniqueController id=UniqueController priority=1
+             || children (1) 
+                 || ====================================
+                 || node=PathParamNode::category::''::'/'
+                 || priority=10001
+                 || Controllers=0
+                 || children (1) 
+                     || ====================================
+                     || node=PathParamNode::id::'order-'::'.html'
+                     || priority=10011
+                     || Controllers=2
+                       * Controller BasicController id=ctrl2 priority=2
+                       * Controller BasicController id=ctrl1 priority=1
+                     || children (0) 
+                     || ====================================
+                 || ====================================
+             || ====================================
+             || ====================================
+             || node=ExactMathNode::path2/
+             || priority=100000000
+             || Controllers=0
+             || children (0) 
+             || ====================================
+         || ====================================`
+
 describe('#printnodes', () => {
 
   describe('#printcontrollers', () => {
@@ -96,6 +131,13 @@ describe('#printnodes', () => {
       expect(res)
       .to
       .equal(PRINT_NODES_RES)
+    })
+
+    it('#Should print node tree with controllers with custom indent value', () => {
+      const res = printNode(rootNode, 1);
+      expect(res)
+      .to
+      .equal(PRINT_NODE_INDENT1_RES);
     })
   })
 })
