@@ -27,8 +27,11 @@
     "all": true
   },
   "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^2.13.0",
     "constantinople": "^3.1.1",
     "debug": "^4.1.1",
+    "eslint-config-airbnb-typescript": "^6.3.1",
+    "eslint-plugin-import": "^2.19.1",
     "lodash": "4.17.12",
     "source-map-support": "^0.5.16",
     "uglify-js": "^2.6.0"
@@ -40,6 +43,7 @@
     "@types/node": "^12.12.14",
     "chai": "^4.2.0",
     "chai-arrays": "^2.0.0",
+    "eslint": "^6.8.0",
     "mocha": "^6.2.2",
     "nyc": "^14.1.1",
     "typescript": "^3.7.2"

@@ -5,7 +5,6 @@ import {
   makeUrl
 } from '../../lib'
 import { IRouteMatch } from '../../interfaces'
-import { TAG } from '../../enums'
 
 describe('#Integrated Router test', () => {
 

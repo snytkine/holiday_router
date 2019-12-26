@@ -21,6 +21,7 @@ import {
   RouterErrorCode
 } from '../errors';
 import Debug from 'debug';
+
 const debug = Debug('GP-URI-ROUTER:node:pathparamnode');
 
 
@@ -92,7 +93,7 @@ export class PathParamNode<T extends IController> extends RootNode<T> implements
 
   public* findRoutes(uri: string,
                      params: IUriParams = {
-                       pathParams:  [],
+                       pathParams: [],
                        regexParams: []
                      }): IterableIterator<IRouteMatch<T>> {
 

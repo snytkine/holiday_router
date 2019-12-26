@@ -26,7 +26,6 @@ const debug = Debug('GP-URI-ROUTER:node:pathparamnoderegex');
 
 export class PathParamNodeRegex<T extends IController> extends PathParamNode<T> implements Node<T> {
 
-
   public readonly regex: RegExp;
 
   get type() {
