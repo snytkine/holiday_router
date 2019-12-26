@@ -1,10 +1,6 @@
-import {
-  IController,
-  IStringMap,
-  Node,
-  PARENT_NODE
-} from '../interfaces';
 import Debug from 'debug';
+import { IController, IStringMap, Node, PARENT_NODE } from '../interfaces';
+
 const debug = Debug('GP-URI-ROUTER:lib');
 
 /**
@@ -17,9 +13,12 @@ const debug = Debug('GP-URI-ROUTER:lib');
  *
  * @returns string
  */
-export const makeUrl = <T extends IController>(node: Node<T>, params: IStringMap, res: string = ''): string => {
-
-  debug('Entered makeUri with node "%s" params="%o"', node.name, params)
+export const makeUrl = <T extends IController>(
+  node: Node<T>,
+  params: IStringMap,
+  res: string = '',
+): string => {
+  debug('Entered makeUri with node "%s" params="%o"', node.name, params);
 
   res = node.makeUri(params) + res;
 
@@ -28,5 +27,4 @@ export const makeUrl = <T extends IController>(node: Node<T>, params: IStringMap
   }
 
   return makeUrl(node[PARENT_NODE], params, res);
-}
-
+};

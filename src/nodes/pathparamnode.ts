@@ -1,36 +1,18 @@
-import {
-  IController,
-  IRouteMatch,
-  IStringMap,
-  Node,
-  IUriParams,
-} from '../interfaces'
-import { RootNode } from './rootnode'
-import {
-  getNodePriority,
-  PRIORITY
-} from './nodepriorities'
-import { TAG } from '../enums'
-import {
-  copyPathParams,
-  ExtractedPathParam,
-  Strlib,
-} from '../lib'
-import {
-  RouterError,
-  RouterErrorCode
-} from '../errors';
 import Debug from 'debug';
+import { IController, IRouteMatch, IStringMap, Node, IUriParams } from '../interfaces';
+import { RootNode } from './rootnode';
+import { getNodePriority, PRIORITY } from './nodepriorities';
+import { TAG } from '../enums';
+import { copyPathParams, ExtractedPathParam, Strlib } from '../lib';
+import { RouterError, RouterErrorCode } from '../errors';
 
 const debug = Debug('GP-URI-ROUTER:node:pathparamnode');
-
 
 /**
  * Node represents uri segment that
  * extracts pathParam and ends with path separator
  */
 export class PathParamNode<T extends IController> extends RootNode<T> implements Node<T> {
-
   public paramName: string;
 
   public readonly postfix: string;
@@ -46,7 +28,13 @@ export class PathParamNode<T extends IController> extends RootNode<T> implements
     this.paramName = paramName.trim();
     this.postfix = postfix || '';
     this.prefix = prefix || '';
-    debug('Created node %s this.prefix="%s" this.postfix="%s" this.paramName="%s"', TAG, this.prefix, this.postfix, this.paramName)
+    debug(
+      'Created node %s this.prefix="%s" this.postfix="%s" this.paramName="%s"',
+      TAG,
+      this.prefix,
+      this.postfix,
+      this.paramName,
+    );
   }
 
   get type() {
@@ -77,26 +65,35 @@ export class PathParamNode<T extends IController> extends RootNode<T> implements
    * @returns {boolean}
    */
   public equals(other: Node<T>) {
-    debug('entered equals on node  id="%s" name="%s" with other.id="%s" other.name="%s"', this.type, this.name, other.type, other.name);
+    debug(
+      'entered equals on node  id="%s" name="%s" with other.id="%s" other.name="%s"',
+      this.type,
+      this.name,
+      other.type,
+      other.name,
+    );
     /**
      * If other node is not PathParamNode return false
      */
     if (other.type !== this.type) {
-
-      return false
+      return false;
     }
 
-    const ret = (other instanceof PathParamNode && (this.prefix === other.prefix) && (this.postfix === other.postfix));
+    const ret =
+      other instanceof PathParamNode &&
+      this.prefix === other.prefix &&
+      this.postfix === other.postfix;
 
     return ret;
   }
 
-  public* findRoutes(uri: string,
-                     params: IUriParams = {
-                       pathParams: [],
-                       regexParams: []
-                     }): IterableIterator<IRouteMatch<T>> {
-
+  public *findRoutes(
+    uri: string,
+    params: IUriParams = {
+      pathParams: [],
+      regexParams: [],
+    },
+  ): IterableIterator<IRouteMatch<T>> {
     const extractedParam = Strlib.extractUriParam(uri, this.prefix, this.postfix);
 
     /**
@@ -104,7 +101,10 @@ export class PathParamNode<T extends IController> extends RootNode<T> implements
      * will not yield anything
      */
     if (extractedParam) {
-      const copiedParams = copyPathParams(params, new ExtractedPathParam(this.paramName, extractedParam.param));
+      const copiedParams = copyPathParams(
+        params,
+        new ExtractedPathParam(this.paramName, extractedParam.param),
+      );
 
       if (!extractedParam.rest) {
         /**
@@ -112,21 +112,21 @@ export class PathParamNode<T extends IController> extends RootNode<T> implements
          * it means there are no more segments left in string to match
          * In this case this node is a complete match
          */
-        yield* this.getRouteMatchIterator(copiedParams)
+        yield* this.getRouteMatchIterator(copiedParams);
       } else {
         yield* this.findChildMatches(extractedParam.rest, copiedParams);
       }
-
     }
   }
 
   makeUri(params: IStringMap): string {
-
     if (!params.hasOwnProperty(this.paramName)) {
-      throw new RouterError(`Cannot generate uri for node ${this.name} because params object missing property ${this.paramName}`, RouterErrorCode.MAKE_URI_MISSING_PARAM)
+      throw new RouterError(
+        `Cannot generate uri for node ${this.name} because params object missing property ${this.paramName}`,
+        RouterErrorCode.MAKE_URI_MISSING_PARAM,
+      );
     }
 
     return `${this.prefix}${params[this.paramName]}${this.postfix}`;
   }
-
 }

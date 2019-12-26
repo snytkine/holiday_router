@@ -1,20 +1,7 @@
-import {
-  CATCH_ALL_PARAM_NAME,
-  IController,
-  Node
-} from '../interfaces'
-
-import {
-  CatchAllNode,
-  ExactMatchNode,
-  PathParamNode,
-  PathParamNodeRegex,
-} from '../nodes'
 import Debug from 'debug';
-import {
-  RouterError,
-  RouterErrorCode
-} from '../errors'
+import { CATCH_ALL_PARAM_NAME, IController, Node } from '../interfaces';
+
+import { CatchAllNode, ExactMatchNode, PathParamNode, PathParamNodeRegex } from '../nodes';
 
 const debug = Debug('GP-URI-ROUTER:lib');
 
@@ -57,8 +44,9 @@ const PathParamRe = /^([^{}\/]*){(?:\s*)([a-zA-Z0-9-_]+)(?:\s*)}([^{}]*)$/;
  */
 const PathParamRegexRe = /^([^{}\/]*){(?:\s*)([a-zA-Z0-9-_]+)(?:\s*):(.*)}([^{}]*)$/;
 
-export const makeExactMatchNode: NodeFactory = <T extends IController>(uriSegment: string): Node<T> => {
-
+export const makeExactMatchNode: NodeFactory = <T extends IController>(
+  uriSegment: string,
+): Node<T> => {
   if (uriSegment !== CATCH_ALL_PARAM_NAME) {
     /**
      * @todo should the uri be validated or should
@@ -71,10 +59,11 @@ export const makeExactMatchNode: NodeFactory = <T extends IController>(uriSegmen
   }
 
   return null;
-}
+};
 
-export const makeCatchAllNode: NodeFactory = <T extends IController>(uriSegment: string): Node<T> => {
-
+export const makeCatchAllNode: NodeFactory = <T extends IController>(
+  uriSegment: string,
+): Node<T> => {
   if (uriSegment === CATCH_ALL_PARAM_NAME) {
     return new CatchAllNode();
   }
@@ -82,15 +71,15 @@ export const makeCatchAllNode: NodeFactory = <T extends IController>(uriSegment:
   const res = CatchAllRe.exec(uriSegment);
 
   if (res && Array.isArray(res) && res[1]) {
-    return new CatchAllNode(res[1])
+    return new CatchAllNode(res[1]);
   }
 
   return null;
-}
+};
 
-
-export const makePathParamNode: NodeFactory = <T extends IController>(uriSegment: string): Node<T> => {
-
+export const makePathParamNode: NodeFactory = <T extends IController>(
+  uriSegment: string,
+): Node<T> => {
   const res = PathParamRe.exec(uriSegment);
 
   if (!res) {
@@ -100,8 +89,7 @@ export const makePathParamNode: NodeFactory = <T extends IController>(uriSegment
   const [_, prefix, paramName, postfix] = res;
 
   return new PathParamNode(paramName, postfix, prefix);
-
-}
+};
 
 /**
  * @throws SyntaxError if supplied regex pattern is invalid
@@ -109,13 +97,12 @@ export const makePathParamNode: NodeFactory = <T extends IController>(uriSegment
  * @returns {any}
  */
 export const makePathParamNodeRegex = (uriSegment: string): any => {
-
-  debug('makePathParamNodeRegex entered with uriSegment=%s"', uriSegment)
+  debug('makePathParamNodeRegex entered with uriSegment=%s"', uriSegment);
 
   const res = PathParamRegexRe.exec(uriSegment);
 
   if (!res) {
-    debug('makePathParamNodeRegex NOT a match for uriSegment=%s"', uriSegment)
+    debug('makePathParamNodeRegex NOT a match for uriSegment=%s"', uriSegment);
     return null;
   }
 
@@ -130,18 +117,17 @@ export const makePathParamNodeRegex = (uriSegment: string): any => {
    * it is a literal dollar sign, must still add $
    */
   if (!pattern.startsWith('^')) {
-    pattern = '^' + pattern;
+    pattern = `^${pattern}`;
   }
 
   if (!pattern.endsWith('$') || pattern.endsWith('\\$')) {
-    pattern = pattern + '$';
+    pattern += '$';
   }
 
   const nodeRegex = new RegExp(pattern);
 
   return new PathParamNodeRegex(paramName, nodeRegex, postfix, prefix);
-
-}
+};
 
 /**
  * Array of factory functions that can create router node
@@ -164,13 +150,13 @@ const factories: Array<NodeFactory> = [
  * @param {T} controller
  */
 export const makeNode = <T extends IController>(uriSegment: string): Node<T> => {
-
   let ret: Node<T>;
   let i = 0;
 
   do {
     ret = factories[i](uriSegment);
-  } while (!ret && i++ < factories.length);
+    i += 1;
+  } while (!ret && i < factories.length);
 
   return ret;
-}
+};

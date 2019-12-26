@@ -1,5 +1,5 @@
-import { IController } from '../interfaces'
-import { BasicController } from './basiccontroller'
+import { IController } from '../interfaces';
+import { BasicController } from './basiccontroller';
 
 /**
  * UniqueController always returns true from equals() method
@@ -9,8 +9,11 @@ import { BasicController } from './basiccontroller'
  * to any node that already has any other controller
  */
 export class UniqueController<T> extends BasicController<T> implements IController {
-
-  constructor(public controller: T, public readonly id: string = 'UniqueController', public readonly priority = 1) {
+  constructor(
+    public controller: T,
+    public readonly id: string = 'UniqueController',
+    public readonly priority = 1,
+  ) {
     super(controller, id, priority);
   }
 
@@ -25,4 +28,3 @@ export class UniqueController<T> extends BasicController<T> implements IControll
     return true;
   }
 }
-

@@ -1,4 +1,4 @@
-import { IController } from '../interfaces'
+import { IController } from '../interfaces';
 
 /**
  * A simple wrapper object to conveniently
@@ -7,15 +7,17 @@ import { IController } from '../interfaces'
  *
  */
 export class BasicController<T> implements IController {
-
-  constructor(public controller: T, public id: string = 'BasicController', public readonly priority = 1) {
-  }
+  constructor(
+    public controller: T,
+    public id: string = 'BasicController',
+    public readonly priority = 1,
+  ) {}
 
   public equals(other: IController) {
     return other instanceof BasicController && other.controller === this.controller;
   }
 
-  public toString(){
+  public toString() {
     return `${this.constructor.name} id=${this.id} priority=${this.priority}`;
   }
 }

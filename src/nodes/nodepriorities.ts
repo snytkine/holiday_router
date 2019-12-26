@@ -11,9 +11,9 @@ export enum PRIORITY {
   CATCHALL,
   PATHPARAM,
   REGEX,
-  EXACTMATCH
+  EXACTMATCH,
 }
 
 export const getNodePriority = (nodeType: PRIORITY): number => {
-  return Math.pow(100, nodeType);
-}
+  return 100 ** nodeType;
+};

@@ -4,13 +4,17 @@
     "prettier/@typescript-eslint",
     "plugin:prettier/recommended"
   ],
-  "plugins": ["@typescript-eslint"],
+  "plugins": [
+    "@typescript-eslint"
+  ],
   "parser": "@typescript-eslint/parser",
   "rules": {
     "import/no-unresolved": 0,
     "import/extensions": 0,
     "no-unused-vars": "off",
     "no-restricted-syntax": "off",
+    "no-useless-constructor": "off",
+    "no-empty-function": "off",
     "import/prefer-default-export": "warn",
     "@typescript-eslint/no-unused-vars": "warn"
   }

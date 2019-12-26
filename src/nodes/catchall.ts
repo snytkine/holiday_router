@@ -1,25 +1,18 @@
+import Debug from 'debug';
 import {
   IController,
   IRouteMatch,
   IStringMap,
   Node,
-  IUriParams
-} from '../interfaces'
-import { RootNode } from './rootnode'
-import { CATCH_ALL_PARAM_NAME } from '../interfaces'
-import {
-  getNodePriority,
-  PRIORITY
-} from './nodepriorities'
+  IUriParams,
+  CATCH_ALL_PARAM_NAME,
+} from '../interfaces';
+import { RootNode } from './rootnode';
+
+import { getNodePriority, PRIORITY } from './nodepriorities';
 import { TAG } from '../enums';
-import Debug from 'debug';
-import {
-  RouterError,
-  RouterErrorCode
-} from '../errors'
-import {
-  ExtractedPathParam,
-} from '../lib'
+import { RouterError, RouterErrorCode } from '../errors';
+import { ExtractedPathParam } from '../lib';
 
 const debug = Debug('GP-URI-ROUTER:node:catchallnode');
 
@@ -27,7 +20,6 @@ const debug = Debug('GP-URI-ROUTER:node:catchallnode');
  * Node represents uri segment that ends with path separator
  */
 export class CatchAllNode<T extends IController> extends RootNode<T> implements Node<T> {
-
   public paramName: string;
 
   /**
@@ -47,7 +39,7 @@ export class CatchAllNode<T extends IController> extends RootNode<T> implements 
   }
 
   get type() {
-    return TAG.CATCHALL_NODE
+    return TAG.CATCHALL_NODE;
   }
 
   /**
@@ -61,12 +53,20 @@ export class CatchAllNode<T extends IController> extends RootNode<T> implements 
   }
 
   equals(other: Node<T>): boolean {
-    return (other instanceof CatchAllNode);
+    return other instanceof CatchAllNode;
   }
 
-
-  public* findRoutes(uri: string, params: IUriParams = { pathParams: [] }): IterableIterator<IRouteMatch<T>> {
-    debug('Entered %s findRoutes with uri="%s", params=%O controllers=%O', TAG.CATCHALL_NODE, uri, params, this.controllers);
+  public *findRoutes(
+    uri: string,
+    params: IUriParams = { pathParams: [] },
+  ): IterableIterator<IRouteMatch<T>> {
+    debug(
+      'Entered %s findRoutes with uri="%s", params=%O controllers=%O',
+      TAG.CATCHALL_NODE,
+      uri,
+      params,
+      this.controllers,
+    );
     params.pathParams.push(new ExtractedPathParam(this.paramName, uri));
 
     yield* this.getRouteMatchIterator(params);
@@ -79,19 +79,20 @@ export class CatchAllNode<T extends IController> extends RootNode<T> implements 
    * @param node
    */
   addChildNode(node: Node<T>): Node<T> {
-    throw new  RouterError(`Catchall node ${this.name} cannot have child nodes. Attempted to add node ${node.name}`,
-      RouterErrorCode.ADD_CHILD_CATCHALL)
+    throw new RouterError(
+      `Catchall node ${this.name} cannot have child nodes. Attempted to add node ${node.name}`,
+      RouterErrorCode.ADD_CHILD_CATCHALL,
+    );
   }
 
   makeUri(params: IStringMap): string {
-
-    if (!params.hasOwnProperty(this.paramName)) {
-      throw new RouterError(`${this.name}.makeUri params object missing property ${this.paramName}`, RouterErrorCode.MAKE_URI_MISSING_PARAM)
+    if (!params[this.paramName]) {
+      throw new RouterError(
+        `params object passed to makeUri method of ${this.name} node is missing property ${this.paramName}`,
+        RouterErrorCode.MAKE_URI_MISSING_PARAM,
+      );
     }
 
     return params[this.paramName];
   }
-
-
-
 }

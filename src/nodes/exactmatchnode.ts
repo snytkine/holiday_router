@@ -1,24 +1,15 @@
-import {
-  IController,
-  IStringMap,
-  Node,
-  IRouteMatch,
-  IUriParams
-} from '../interfaces/ifnode'
-import { RootNode } from './rootnode'
-import {
-  getNodePriority,
-  PRIORITY
-} from './nodepriorities'
 import Debug from 'debug';
-import { TAG } from '../enums'
+import { IController, IStringMap, Node, IRouteMatch, IUriParams } from '../interfaces/ifnode';
+import { RootNode } from './rootnode';
+import { getNodePriority, PRIORITY } from './nodepriorities';
+import { TAG } from '../enums';
+
 const debug = Debug('GP-URI-ROUTER:node:exactmatch');
 
 /**
  * Node represents uri segment that ends with path separator
  */
 export class ExactMatchNode<T extends IController> extends RootNode<T> implements Node<T> {
-
   /**
    * The exact match segment may or may not end with path separator
    * for example it may be widgets/ or widgets
@@ -37,14 +28,19 @@ export class ExactMatchNode<T extends IController> extends RootNode<T> implement
    * Since the origUriPattern is static in this case the length
    * is constant and we can set it at time of Node creation
    */
-  protected segmentLength: number
+  protected segmentLength: number;
 
   constructor(uri: string) {
     super();
-    this.origUriPattern = uri
-    this.segmentLength = uri.length
+    this.origUriPattern = uri;
+    this.segmentLength = uri.length;
 
-    debug('Created node %s this.origUriPattern="%s" this.segmentLength="%s"', TAG, this.origUriPattern, this.segmentLength)
+    debug(
+      'Created node %s this.origUriPattern="%s" this.segmentLength="%s"',
+      TAG,
+      this.origUriPattern,
+      this.segmentLength,
+    );
   }
 
   get type() {
@@ -56,7 +52,7 @@ export class ExactMatchNode<T extends IController> extends RootNode<T> implement
    * @returns {number}
    */
   get priority() {
-    return getNodePriority(PRIORITY.EXACTMATCH)
+    return getNodePriority(PRIORITY.EXACTMATCH);
   }
 
   get name() {
@@ -64,16 +60,21 @@ export class ExactMatchNode<T extends IController> extends RootNode<T> implement
   }
 
   equals(other: Node<T>) {
-    return (other.type === this.type && other instanceof ExactMatchNode && other.origUriPattern === this.origUriPattern)
+    return (
+      other.type === this.type &&
+      other instanceof ExactMatchNode &&
+      other.origUriPattern === this.origUriPattern
+    );
   }
 
-  public * findRoutes(uri: string, params: IUriParams = { pathParams: [] }): IterableIterator<IRouteMatch<T>> {
-
+  public *findRoutes(
+    uri: string,
+    params: IUriParams = { pathParams: [] },
+  ): IterableIterator<IRouteMatch<T>> {
     /**
      * If not starts with origUriPattern then will not yield anything
      */
     if (uri.startsWith(this.origUriPattern)) {
-
       /**
        * The start of the uri matched this node
        * If this is an exact match (rest will be empty string)
@@ -86,7 +87,7 @@ export class ExactMatchNode<T extends IController> extends RootNode<T> implement
        * if its empty string then we have exact math
        * in which case must have controller
        */
-      const rest = uri.substring(this.segmentLength)
+      const rest = uri.substring(this.segmentLength);
 
       /**
        * uri matched the uri of this node and
@@ -96,7 +97,6 @@ export class ExactMatchNode<T extends IController> extends RootNode<T> implement
       if (!rest) {
         yield* this.getRouteMatchIterator(params);
       } else {
-
         /**
          * Have rest of uri
          * Loop over children to get result
@@ -104,11 +104,9 @@ export class ExactMatchNode<T extends IController> extends RootNode<T> implement
         yield* this.findChildMatches(rest, params);
       }
     }
-
   }
 
   makeUri(params: IStringMap): string {
     return this.origUriPattern;
   }
-
 }
