@@ -4,7 +4,7 @@ import {
   IStringMap,
   Node,
   IUriParams
-} from '../interfaces/ifnode'
+} from '../interfaces'
 import { RootNode } from './rootnode'
 import { CATCH_ALL_PARAM_NAME } from '../interfaces'
 import {
@@ -79,7 +79,7 @@ export class CatchAllNode<T extends IController> extends RootNode<T> implements 
    * @param node
    */
   addChildNode(node: Node<T>): Node<T> {
-    throw new  RouterError(`Catchall node ${this.name} cannot have child nodes`,
+    throw new  RouterError(`Catchall node ${this.name} cannot have child nodes. Attempted to add node ${node.name}`,
       RouterErrorCode.ADD_CHILD_CATCHALL)
   }
 
