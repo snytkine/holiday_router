@@ -12,7 +12,7 @@ import { RootNode } from './rootnode';
 import { getNodePriority, PRIORITY } from './nodepriorities';
 import { TAG } from '../enums';
 import { RouterError, RouterErrorCode } from '../errors';
-import { ExtractedPathParam } from '../lib';
+import { ExtractedPathParam } from '../lib/utils';
 
 const debug = Debug('GP-URI-ROUTER:node:catchallnode');
 
