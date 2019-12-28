@@ -2,7 +2,7 @@ import Debug from 'debug';
 import { IController, IRouteMatch, IStringMap, Node, IUriParams } from '../interfaces';
 import { PathParamNode } from './pathparamnode';
 import { copyPathParams, ExtractedPathParam, Strlib, RegexParams } from '../lib';
-import { getNodePriority, PRIORITY } from './nodepriorities';
+import { PRIORITY } from './nodepriorities';
 import { TAG } from '../enums';
 import { RouterError, RouterErrorCode } from '../errors';
 

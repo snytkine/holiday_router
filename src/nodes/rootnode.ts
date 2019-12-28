@@ -5,11 +5,10 @@ import {
   IRouteMatchResult,
   Node,
   PARENT_NODE,
-  ROUTE_PATH_SEPARATOR,
   IUriParams,
   IStringMap,
 } from '../interfaces';
-import { ensureNoDuplicatePathParams, makeNode, RouteMatch, Strlib } from '../lib';
+import { ensureNoDuplicatePathParams, RouteMatch } from '../lib';
 import { PRIORITY } from './nodepriorities';
 import { TAG } from '../enums';
 import { RouterError, RouterErrorCode } from '../errors';
@@ -128,7 +127,7 @@ export class RootNode<T extends IController> implements Node<T> {
     return undefined;
   }
 
-  public addRoute(uri: string, controller: T): Node<T> {
+  /* public addRoute(uri: string, controller: T): Node<T> {
     debug(
       'Entered addRoute on node="%s" with uri="%s" controller="%s',
       this.name,
@@ -145,9 +144,9 @@ export class RootNode<T extends IController> implements Node<T> {
     const childNode = makeNode<T>(head);
 
     return this.addChildNode(childNode).addRoute(tail, controller);
-  }
+  } */
 
-  public addChildNode(node: Node<T>): Node<T> {
+  public addChildNode(node: Node<T>): void {
     debug('Entered addChildNode on node "%s" with node "%s"', this.name, node.name);
     const existingChildNode: Node<T> = this.children.find(_ => _.equals(node));
     if (existingChildNode) {
@@ -157,13 +156,13 @@ export class RootNode<T extends IController> implements Node<T> {
         existingChildNode.name,
         node.name,
       );
-      return existingChildNode;
+      return;
     }
 
     /**
      * assigning to node[PARENT_NODE] does not play nice with eslint
      */
-    Reflect.defineProperty(node, PARENT_NODE, { value: this });
+    // Reflect.defineProperty(node, PARENT_NODE, { value: this });
 
     /**
      * Validate to make sure new node does not have any
@@ -174,8 +173,6 @@ export class RootNode<T extends IController> implements Node<T> {
     this.children = [...this.children, node].sort(
       (node1, node2) => node2.priority - node1.priority,
     );
-
-    return node;
   }
 
   public addController(controller: T): Node<T> {

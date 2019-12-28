@@ -1,9 +1,9 @@
 export interface ISplitResult {
-    head: string;
-    tail: string;
+  head: string;
+  tail: string;
 }
 
 export interface UriParamResult {
-    param: string;
-    rest: string;
+  param: string;
+  rest: string;
 }
