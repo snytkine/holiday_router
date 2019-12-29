@@ -1,6 +1,6 @@
 import {
   Strlib,
-} from '../../lib';
+} from '../../utils';
 import {expect} from 'chai';
 import { ROUTE_PATH_SEPARATOR, ROUTE_STRING_SERARATOR } from '../../interfaces'
 import { RootNode } from '../../nodes'

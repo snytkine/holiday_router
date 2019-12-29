@@ -78,7 +78,7 @@ describe('#rootnode.ts', () => {
         .false
     })
 
-
+/*
     it('.addRoute with empty url should add controller', () => {
       const root = new RootNode();
       const ctrl = new UniqueController('rootController')
@@ -87,7 +87,7 @@ describe('#rootnode.ts', () => {
       expect(root.controllers[0])
       .to
       .equal(ctrl)
-    })
+    })*/
 
 
     it('.addChildNode should add child node', () => {
@@ -107,7 +107,7 @@ describe('#rootnode.ts', () => {
       .to
       .equal(node)
     })
-
+/*
     it('.addRoute with 2 urls that start with "/" should add just one child node "/"', () => {
       const root = new RootNode();
       const ctrl = new BasicController('controller1', 'ctrl1')
@@ -119,7 +119,7 @@ describe('#rootnode.ts', () => {
       expect(root.children.length)
       .to
       .equal(1)
-    })
+    })*/
 
 
     it('RootNode with no child nodes .findRoute should return undefined', () => {
@@ -140,7 +140,7 @@ describe('#rootnode.ts', () => {
       .equal(undefined)
     })
 
-
+/*
     it('.findRoute on node with child nodes should return matching route from child node', () => {
       const node = new RootNode();
       const ctrl = new BasicController('controller1', 'id1')
@@ -156,7 +156,7 @@ describe('#rootnode.ts', () => {
       expect(res.controller)
       .to
       .equal(ctrl2)
-    })
+    })*/
 
 
     it('RootNode with child nodes .findRoutes should return iterator with matches from child node', () => {
@@ -301,7 +301,7 @@ describe('#rootnode.ts', () => {
       .equal(undefined)
     })
 
-
+/*
     it('.getRouterMatchByControllerId on node with child nodes should return matching controller from child node', () => {
       const node = new RootNode();
       const ctrl = new BasicController('controller1', 'id1')
@@ -318,7 +318,7 @@ describe('#rootnode.ts', () => {
       .to
       .equal(ctrl2)
 
-    })
+    })*/
 
 
   })

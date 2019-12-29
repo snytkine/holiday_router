@@ -3,7 +3,7 @@ import {
   BasicController,
   ExtractedPathParam,
   RouteMatch
-} from '../../lib'
+} from '../../'
 import { ExactMatchNode } from '../../nodes'
 
 describe('#RouteMatch object test', () => {

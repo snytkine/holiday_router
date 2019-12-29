@@ -1,7 +1,7 @@
 import Debug from 'debug';
-import { CATCH_ALL_PARAM_NAME, IController, Node } from '../interfaces';
+import { CATCH_ALL_PARAM_NAME, IController, Node } from './interfaces';
 
-import { CatchAllNode, ExactMatchNode, PathParamNode, PathParamNodeRegex } from '../nodes';
+import { CatchAllNode, ExactMatchNode, PathParamNode, PathParamNodeRegex } from './nodes';
 
 const debug = Debug('GP-URI-ROUTER:lib');
 

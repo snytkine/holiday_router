@@ -3,10 +3,10 @@ import {
   copyPathParams,
   ExtractedPathParam,
   RegexParams,
-} from '../../lib/utils'
+} from '../../utils/copyparams'
 import { IUriParams } from '../../interfaces'
 
-describe('#utils.ts', () => {
+describe('#copyparams.ts', () => {
 
   it('#ExtractedPathParams', () => {
     const params = new ExtractedPathParam('model', 'T');

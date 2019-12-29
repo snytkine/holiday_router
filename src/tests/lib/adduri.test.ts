@@ -12,7 +12,7 @@ import {
   makeNode,
   makePathParamNode,
   makePathParamNodeRegex
-} from '../../lib'
+} from '../../adduri'
 import { TAG } from '../../enums'
 
 describe('#adduri.ts', () => {

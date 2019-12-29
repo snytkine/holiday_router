@@ -193,7 +193,7 @@ describe('#pathparamnode.ts', () => {
       }
     })
 
-
+/*
     it('.addRoute with 2 urls that start with same path should add just one child node "/"', () => {
       const root = new PathParamNode('var1');
       const ctrl = new BasicController('controller1', 'ctrl1')
@@ -205,7 +205,7 @@ describe('#pathparamnode.ts', () => {
       expect(root.children.length)
       .to
       .equal(1)
-    })
+    })*/
 
 
     it('.makeUri on node without prefix and postfix should return value of this node param', () => {

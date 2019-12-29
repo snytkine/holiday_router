@@ -1,7 +1,7 @@
 import Debug from 'debug';
 import { IController, IStringMap, Node, IRouteMatch, IUriParams } from '../interfaces/ifnode';
 import { RootNode } from './rootnode';
-import { getNodePriority, PRIORITY } from './nodepriorities';
+import { PRIORITY } from './nodepriorities';
 import { TAG } from '../enums';
 
 const debug = Debug('GP-URI-ROUTER:node:exactmatch');
@@ -52,7 +52,7 @@ export class ExactMatchNode<T extends IController> extends RootNode<T> implement
    * @returns {number}
    */
   get priority() {
-    return getNodePriority(PRIORITY.EXACTMATCH);
+    return this.getNodePriority(PRIORITY.EXACTMATCH);
   }
 
   get name() {

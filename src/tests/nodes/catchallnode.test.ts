@@ -126,7 +126,7 @@ describe('#CatchAllNode.ts', () => {
       }
 
     })
-
+/*
     it('.addRoute with empty url should add controller', () => {
       const node = new CatchAllNode('images');
       const ctrl = new BasicController('controller1')
@@ -173,10 +173,10 @@ describe('#CatchAllNode.ts', () => {
       .to
       .equal('/images/recent/small/pic.js')
 
-      /**
+      /!**
        * Second RouteMatch should have different controller
        * but same paramName and paramValue
-       */
+       *!/
       expect(aRoutes[1].controller)
       .to
       .equal(ctrl2)
@@ -218,11 +218,11 @@ describe('#CatchAllNode.ts', () => {
       .to
       .equal('/images/recent/small/pic.js')
 
-      /**
+      /!**
        * routes2 iterator should have same controller
        * and same paramName but paramValue should be
        * equal to uri passed in findRoute (a different uri)
-       */
+       *!/
       expect(aRoutes2[0].controller)
       .to
       .equal(ctrl)
@@ -294,7 +294,7 @@ describe('#CatchAllNode.ts', () => {
         .equal(RouterErrorCode.MAKE_URI_MISSING_PARAM)
       }
 
-    })
+    })*/
 
 
     it('.addChildNode should throw', () => {
@@ -310,7 +310,7 @@ describe('#CatchAllNode.ts', () => {
       }
 
     })
-
+/*
     it('.getAllControllers should return iterator with all controllers', () => {
       const node = new CatchAllNode('images');
       const ctrl = new BasicController('controller1')
@@ -333,7 +333,7 @@ describe('#CatchAllNode.ts', () => {
       .to
       .equal(undefined)
 
-    })
+    })*/
 
     it('.getRouterMatchByControllerId should return matching controller', () => {
       const node = new CatchAllNode('images');

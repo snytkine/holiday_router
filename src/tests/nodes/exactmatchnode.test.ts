@@ -220,7 +220,7 @@ describe('#ExactMatchNode.ts', () => {
       .equal(node)
     })
 
-
+/*
     it('.addRoute with 2 urls that start with same path should add just one child node "/"', () => {
       const root = new ExactMatchNode('path1/');
       const ctrl = new BasicController('controller1', 'ctrl1')
@@ -232,7 +232,7 @@ describe('#ExactMatchNode.ts', () => {
       expect(root.children.length)
       .to
       .equal(1)
-    })
+    })*/
 
   })
 })

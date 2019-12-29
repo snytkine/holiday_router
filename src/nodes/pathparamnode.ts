@@ -1,9 +1,10 @@
 import Debug from 'debug';
 import { IController, IRouteMatch, IStringMap, Node, IUriParams } from '../interfaces';
 import { RootNode } from './rootnode';
-import { getNodePriority, PRIORITY } from './nodepriorities';
+import { PRIORITY } from './nodepriorities';
 import { TAG } from '../enums';
-import { copyPathParams, ExtractedPathParam, Strlib } from '../lib';
+import { Strlib, copyPathParams, ExtractedPathParam } from '../utils';
+
 import { RouterError, RouterErrorCode } from '../errors';
 
 const debug = Debug('GP-URI-ROUTER:node:pathparamnode');
@@ -50,7 +51,7 @@ export class PathParamNode<T extends IController> extends RootNode<T> implements
      * @todo param with longer prefix should have priority over shorter prefix
      * example widgets-{id}  should be higher than widget-{id}
      */
-    return getNodePriority(PRIORITY.PATHPARAM) + this.prefix.length + this.postfix.length;
+    return this.getNodePriority(PRIORITY.PATHPARAM) + this.prefix.length + this.postfix.length;
   }
 
   get name() {
@@ -120,7 +121,7 @@ export class PathParamNode<T extends IController> extends RootNode<T> implements
   }
 
   makeUri(params: IStringMap): string {
-    if (!params.hasOwnProperty(this.paramName)) {
+    if (!params[this.paramName]) {
       throw new RouterError(
         `Cannot generate uri for node ${this.name} because params object missing property ${this.paramName}`,
         RouterErrorCode.MAKE_URI_MISSING_PARAM,

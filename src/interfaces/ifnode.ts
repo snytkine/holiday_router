@@ -107,7 +107,7 @@ export interface Node<T extends IController> {
    * @todo DO NOT RETURN Node, return void or throw
    * because it is confusing which node is returned - self or added node
    */
-  addChildNode(node: Node<T>): void;
+  addChildNode(node: Node<T>): Node<T>;
 
   addController(controller: T): Node<T>;
 

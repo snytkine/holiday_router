@@ -9,10 +9,10 @@ import {
 } from '../interfaces';
 import { RootNode } from './rootnode';
 
-import { getNodePriority, PRIORITY } from './nodepriorities';
+import { PRIORITY } from './nodepriorities';
 import { TAG } from '../enums';
 import { RouterError, RouterErrorCode } from '../errors';
-import { ExtractedPathParam } from '../lib/utils';
+import { ExtractedPathParam } from '../utils/copyparams';
 
 const debug = Debug('GP-URI-ROUTER:node:catchallnode');
 
@@ -31,7 +31,7 @@ export class CatchAllNode<T extends IController> extends RootNode<T> implements 
    * @returns {number}
    */
   get priority() {
-    return getNodePriority(PRIORITY.CATCHALL);
+    return this.getNodePriority(PRIORITY.CATCHALL);
   }
 
   get name() {

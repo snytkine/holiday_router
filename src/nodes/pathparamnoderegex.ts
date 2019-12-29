@@ -1,7 +1,7 @@
 import Debug from 'debug';
 import { IController, IRouteMatch, IStringMap, Node, IUriParams } from '../interfaces';
 import { PathParamNode } from './pathparamnode';
-import { copyPathParams, ExtractedPathParam, Strlib, RegexParams } from '../lib';
+import { copyPathParams, ExtractedPathParam, Strlib, RegexParams } from '../utils';
 import { PRIORITY } from './nodepriorities';
 import { TAG } from '../enums';
 import { RouterError, RouterErrorCode } from '../errors';
@@ -94,7 +94,7 @@ export class PathParamNodeRegex<T extends IController> extends PathParamNode<T> 
   }
 
   makeUri(params: IStringMap): string {
-    if (!params.hasOwnProperty(this.paramName)) {
+    if (!params[this.paramName]) {
       throw new RouterError(
         `Cannot generate uri for node ${this.name} because params object missing property ${this.paramName}`,
         RouterErrorCode.MAKE_URI_MISSING_PARAM,

@@ -5,8 +5,8 @@ import {
 } from '../../nodes'
 import {
   BasicController,
-  makeUrl
-} from '../../lib'
+  makeUrl,
+} from '../../'
 
 describe('#makeurl test', () => {
   const node0 = new ExactMatchNode('/')

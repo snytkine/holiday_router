@@ -3,7 +3,7 @@ import {
   printControllers,
   printNode,
   UniqueController
-} from '../../lib'
+} from '../../'
 import { expect } from 'chai';
 import {
   ExactMatchNode,

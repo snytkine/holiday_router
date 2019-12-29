@@ -8,7 +8,8 @@ import {
   IUriParams,
   IStringMap,
 } from '../interfaces';
-import { ensureNoDuplicatePathParams, RouteMatch } from '../lib';
+import { ensureNoDuplicatePathParams } from '../utils';
+import { RouteMatch } from '../lib';
 import { PRIORITY } from './nodepriorities';
 import { TAG } from '../enums';
 import { RouterError, RouterErrorCode } from '../errors';
@@ -35,8 +36,10 @@ export class RootNode<T extends IController> implements Node<T> {
 
   private id: string;
 
+  private basePriority = 100;
+
   protected getNodePriority(nodeType: PRIORITY): number {
-    return 100 ** nodeType;
+    return this.basePriority ** nodeType;
   }
 
   get priority(): number {
@@ -60,9 +63,6 @@ export class RootNode<T extends IController> implements Node<T> {
   }
 
   /**
-   * @todo use this.controllers instead of passing first arg
-   * @todo rename to makeControllerIterator
-   * @param controllers
    * @param params
    */
   protected *getRouteMatchIterator(params: IUriParams): IterableIterator<IRouteMatch<T>> {
@@ -127,26 +127,7 @@ export class RootNode<T extends IController> implements Node<T> {
     return undefined;
   }
 
-  /* public addRoute(uri: string, controller: T): Node<T> {
-    debug(
-      'Entered addRoute on node="%s" with uri="%s" controller="%s',
-      this.name,
-      uri,
-      controller.id,
-    );
-
-    if (!uri) {
-      return this.addController(controller);
-    }
-
-    const { head, tail } = Strlib.splitUriByPathSeparator(uri, [ROUTE_PATH_SEPARATOR]);
-
-    const childNode = makeNode<T>(head);
-
-    return this.addChildNode(childNode).addRoute(tail, controller);
-  } */
-
-  public addChildNode(node: Node<T>): void {
+  public addChildNode(node: Node<T>): Node<T> {
     debug('Entered addChildNode on node "%s" with node "%s"', this.name, node.name);
     const existingChildNode: Node<T> = this.children.find(_ => _.equals(node));
     if (existingChildNode) {
@@ -156,13 +137,9 @@ export class RootNode<T extends IController> implements Node<T> {
         existingChildNode.name,
         node.name,
       );
-      return;
+      return existingChildNode;
     }
-
-    /**
-     * assigning to node[PARENT_NODE] does not play nice with eslint
-     */
-    // Reflect.defineProperty(node, PARENT_NODE, { value: this });
+    debug('No equal child node in this node="%s" for new node "%s"', this.name, node.name);
 
     /**
      * Validate to make sure new node does not have any
@@ -173,6 +150,8 @@ export class RootNode<T extends IController> implements Node<T> {
     this.children = [...this.children, node].sort(
       (node1, node2) => node2.priority - node1.priority,
     );
+
+    return node;
   }
 
   public addController(controller: T): Node<T> {

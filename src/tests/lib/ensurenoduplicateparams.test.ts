@@ -1,5 +1,5 @@
 import { PathParamNode } from '../../nodes'
-import { ensureNoDuplicatePathParams } from '../../lib'
+import { ensureNoDuplicatePathParams } from '../../utils'
 import { expect } from 'chai';
 import { RouterErrorCode } from '../../errors'
 
@@ -19,10 +19,11 @@ describe('#duplicateparamscheck', () => {
         ensureNoDuplicatePathParams(node3, 'id');
         throw new Error('ensureNoDuplicatePathParams must throw error for non-unique paramName "id"')
       } catch(e){
+        console.error(e.message)
         expect(e.code).to.equal(RouterErrorCode.NON_UNIQUE_PARAM)
         expect(e.message).to.equal(`URI params must be unique. Non-unique param "id" found in node=PathParamNode::id::'order-'::'.html'`)
       }
-    })
+    });
 
     it('#Must throw error when any of the parent nodes has same paramName', () => {
 
@@ -30,6 +31,7 @@ describe('#duplicateparamscheck', () => {
         ensureNoDuplicatePathParams(node3, 'person');
         throw new Error('ensureNoDuplicatePathParams must throw error for non-unique paramName "id"')
       } catch(e){
+        console.error(e.message)
         expect(e.code).to.equal(RouterErrorCode.NON_UNIQUE_PARAM)
         expect(e.message).to.equal(`URI params must be unique. Non-unique param "person" found in node=PathParamNode::person::''::'/'`)
       }

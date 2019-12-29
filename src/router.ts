@@ -8,12 +8,13 @@ import {
   ROUTE_PATH_SEPARATOR,
 } from './interfaces';
 import { RootNode } from './nodes';
-import { makeNode, Strlib } from './lib';
+import { Strlib } from './utils';
+import { makeNode } from './adduri';
 
 const debug = Debug('GP-URI-ROUTER:router');
 
 export default class Router<T extends IController> {
-  private rootNode: RootNode<T>;
+  public rootNode: RootNode<T>;
 
   constructor() {
     this.rootNode = new RootNode();
@@ -41,12 +42,13 @@ export default class Router<T extends IController> {
     const childNode = makeNode<T>(head);
     childNode[PARENT_NODE] = parentNode;
 
-    parentNode.addChildNode(childNode);
+    const addedNode = parentNode.addChildNode(childNode);
 
     if (!tail) {
       debug('Router.addRoute() no tail, adding controller to child node "%s"', childNode.name);
-      return childNode.addController(controller);
+      return addedNode.addController(controller);
     }
-    return this.addRoute(tail, controller, childNode);
+
+    return this.addRoute(tail, controller, addedNode);
   }
 }

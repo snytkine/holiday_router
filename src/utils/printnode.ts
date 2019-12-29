@@ -1,5 +1,17 @@
 import { IController, Node } from '../interfaces';
-import { printChildren } from './index';
+
+export const printChildren = <T extends IController>(
+  children: Array<Node<T>>,
+  indent: number = 1,
+): string => {
+  let ret = '';
+
+  for (let i = 0; i < children.length; i++) {
+    ret += `${printNode(children[i], indent + 1)}`;
+  }
+
+  return ret;
+};
 
 export const printControllers = <T extends IController>(
   controllers: Array<T>,
