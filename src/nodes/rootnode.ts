@@ -42,6 +42,11 @@ export class RootNode<T extends IController> implements Node<T> {
     return this.basePriority ** nodeType;
   }
 
+  protected getTag(tag: TAG): string {
+    debug('Entered getTag with tag="%s" basePriority=%s', tag, this.basePriority);
+    return tag.toString();
+  }
+
   get priority(): number {
     return this.getNodePriority(PRIORITY.ROOT);
   }

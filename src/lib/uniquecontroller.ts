@@ -9,6 +9,8 @@ import { BasicController } from './basiccontroller';
  * to any node that already has any other controller
  */
 export class UniqueController<T> extends BasicController<T> implements IController {
+  private readonly isUnique = true;
+
   constructor(
     public controller: T,
     public readonly id: string = 'UniqueController',
@@ -25,6 +27,6 @@ export class UniqueController<T> extends BasicController<T> implements IControll
    * @param controller
    */
   public equals(other: IController): boolean {
-    return true;
+    return this.isUnique;
   }
 }

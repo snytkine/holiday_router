@@ -1,6 +1,5 @@
 import {
   BasicController,
-  printControllers,
   printNode,
   UniqueController
 } from '../../'
@@ -86,27 +85,6 @@ const PRINT_NODE_INDENT1_RES = `
          || ====================================`
 
 describe('#printnodes', () => {
-
-  describe('#printcontrollers', () => {
-    it('#should print array of 2 controllers', () => {
-      const ctrl1 = new BasicController<string>('controller1', 'ctrl1', 1);
-      const ctrl2 = new BasicController<string>('controller1', 'ctrl2', 2);
-
-      const res = printControllers([ctrl1, ctrl2]);
-      expect(res)
-      .to
-      .equal(PRINT_CONTROLLERS_RES)
-    })
-
-    it('#should print empty string if empty array is passed', () => {
-
-      const res = printControllers([]);
-      expect(res)
-      .to
-      .equal('')
-    })
-  })
-
 
   describe('#printnodes', () => {
 

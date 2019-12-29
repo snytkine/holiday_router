@@ -23,11 +23,3 @@ export function copyPathParams(
 
   return ret;
 }
-
-export class ExtractedPathParam implements IExtractedPathParam {
-  constructor(public readonly paramName: string, public readonly paramValue: string) {}
-}
-
-export class RegexParams implements IRegexParams {
-  constructor(public readonly paramName: string, public readonly params: Array<string>) {}
-}

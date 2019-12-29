@@ -3,7 +3,8 @@ import { IController, IRouteMatch, IStringMap, Node, IUriParams } from '../inter
 import { RootNode } from './rootnode';
 import { PRIORITY } from './nodepriorities';
 import { TAG } from '../enums';
-import { Strlib, copyPathParams, ExtractedPathParam } from '../utils';
+import { Strlib, copyPathParams } from '../utils';
+import { ExtractedPathParam } from '../lib';
 
 import { RouterError, RouterErrorCode } from '../errors';
 
@@ -39,7 +40,7 @@ export class PathParamNode<T extends IController> extends RootNode<T> implements
   }
 
   get type() {
-    return TAG.PATHPARAM_NODE;
+    return this.getTag(TAG.PATHPARAM_NODE);
   }
 
   get priority() {

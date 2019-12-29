@@ -20,11 +20,11 @@ export const makeUrl = <T extends IController>(
 ): string => {
   debug('Entered makeUri with node "%s" params="%o"', node.name, params);
 
-  res = node.makeUri(params) + res;
+  const ret = node.makeUri(params) + res;
 
   if (!node[PARENT_NODE]) {
-    return res;
+    return ret;
   }
 
-  return makeUrl(node[PARENT_NODE], params, res);
+  return makeUrl(node[PARENT_NODE], params, ret);
 };

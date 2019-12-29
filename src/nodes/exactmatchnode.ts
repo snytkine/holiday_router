@@ -44,7 +44,7 @@ export class ExactMatchNode<T extends IController> extends RootNode<T> implement
   }
 
   get type() {
-    return TAG.EXACTMATCH_NODE;
+    return this.getTag(TAG.EXACTMATCH_NODE);
   }
 
   /**

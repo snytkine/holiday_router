@@ -12,7 +12,7 @@ import { RootNode } from './rootnode';
 import { PRIORITY } from './nodepriorities';
 import { TAG } from '../enums';
 import { RouterError, RouterErrorCode } from '../errors';
-import { ExtractedPathParam } from '../utils/copyparams';
+import { ExtractedPathParam } from '../lib';
 
 const debug = Debug('GP-URI-ROUTER:node:catchallnode');
 
@@ -39,7 +39,7 @@ export class CatchAllNode<T extends IController> extends RootNode<T> implements 
   }
 
   get type() {
-    return TAG.CATCHALL_NODE;
+    return this.getTag(TAG.CATCHALL_NODE);
   }
 
   /**
@@ -53,7 +53,7 @@ export class CatchAllNode<T extends IController> extends RootNode<T> implements 
   }
 
   equals(other: Node<T>): boolean {
-    return other instanceof CatchAllNode;
+    return other.type === this.type;
   }
 
   public *findRoutes(

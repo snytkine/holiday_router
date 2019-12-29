@@ -4,15 +4,15 @@ import { RouterError, RouterErrorCode } from '../errors';
 
 const debug = Debug('GP-URI-ROUTER:lib');
 
-export const ensureNoDuplicatePathParams = <T extends IController>(
+export default function ensureNoDuplicatePathParams<T extends IController>(
   node: Node<T>,
   paramName: string = '',
-) => {
+): boolean {
   debug('Entered ensureNoDuplicatePathParams_ with paramName="%s" node="%o"', paramName, node);
 
   if (!paramName || !node[PARENT_NODE]) {
     debug('NO paramName or no parent in node "%o"', node);
-    return;
+    return true;
   }
 
   if (node[PARENT_NODE].paramName === paramName) {
@@ -21,4 +21,4 @@ export const ensureNoDuplicatePathParams = <T extends IController>(
   }
 
   return ensureNoDuplicatePathParams(node[PARENT_NODE], paramName);
-};
+}

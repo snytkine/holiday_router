@@ -1,7 +1,8 @@
 import Debug from 'debug';
 import { IController, IRouteMatch, IStringMap, Node, IUriParams } from '../interfaces';
 import { PathParamNode } from './pathparamnode';
-import { copyPathParams, ExtractedPathParam, Strlib, RegexParams } from '../utils';
+import { copyPathParams, Strlib } from '../utils';
+import { ExtractedPathParam, ExtractedRegexParams } from '../lib';
 import { PRIORITY } from './nodepriorities';
 import { TAG } from '../enums';
 import { RouterError, RouterErrorCode } from '../errors';
@@ -12,7 +13,7 @@ export class PathParamNodeRegex<T extends IController> extends PathParamNode<T> 
   public readonly regex: RegExp;
 
   get type() {
-    return TAG.PATHPARAM_REGEX_NODE;
+    return this.getTag(TAG.PATHPARAM_REGEX_NODE);
   }
 
   get priority() {
@@ -68,7 +69,7 @@ export class PathParamNodeRegex<T extends IController> extends PathParamNode<T> 
         const copiedParams = copyPathParams(
           params,
           new ExtractedPathParam(this.paramName, extractedParam.param),
-          new RegexParams(this.paramName, regexParams),
+          new ExtractedRegexParams(this.paramName, regexParams),
         );
 
         /**
