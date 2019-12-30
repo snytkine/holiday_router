@@ -47,7 +47,7 @@ export class PathParamNodeRegex<T extends IController> extends PathParamNode<T> 
     );
   }
 
-  private match(uriSegment: string): Array<string> | false {
+  public match(uriSegment: string): Array<string> | false {
     const res = this.regex.exec(uriSegment);
 
     return res || false;

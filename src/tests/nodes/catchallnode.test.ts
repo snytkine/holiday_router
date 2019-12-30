@@ -1,24 +1,10 @@
-import {
-  CatchAllNode,
-  ExactMatchNode,
-  RootNode
-} from '../../nodes'
 import { expect } from 'chai';
-import {
-  getNodePriority,
-  PRIORITY
-} from '../../nodes/nodepriorities'
-import { BasicController } from '../../lib'
-import {
-  CATCH_ALL_PARAM_NAME,
-  IRouteMatch
-} from '../../interfaces'
-import { TAG } from '../../enums'
-import {
-  RouterError,
-  RouterErrorCode
-} from '../../errors'
-
+import { CatchAllNode, ExactMatchNode } from '../../nodes';
+import { getNodePriority, PRIORITY } from '../../nodes/nodepriorities';
+import { BasicController } from '../../lib';
+import { CATCH_ALL_PARAM_NAME, IRouteMatch } from '../../interfaces';
+import { TAG } from '../../enums';
+import { RouterErrorCode } from '../../errors';
 
 describe('#CatchAllNode.ts', () => {
   describe('#CatchAllNode object test', () => {
@@ -26,107 +12,71 @@ describe('#CatchAllNode.ts', () => {
     /**
      * CatchAllNode with custom name
      */
-    const node2 = new CatchAllNode('images')
-
+    const node2 = new CatchAllNode('images');
 
     it('Created instance should be an instance of  CatchAllNode', () => {
-      expect(node1)
-      .to
-      .be
-      .instanceOf(CatchAllNode)
-    })
-
+      expect(node1).to.be.instanceOf(CatchAllNode);
+    });
 
     it('CatchAllNode should have priority of PRIORITY.CATCHALL', () => {
-      expect(node1.priority)
-      .to
-      .equal(getNodePriority(PRIORITY.CATCHALL))
-    })
+      expect(node1.priority).to.equal(getNodePriority(PRIORITY.CATCHALL));
+    });
 
     it('CatchAllNode should have name CATCH_ALL_PARAM_NAME', () => {
-      expect(node1.name)
-      .to
-      .equal(`${TAG.CATCHALL_NODE}::${CATCH_ALL_PARAM_NAME}`)
-    })
+      expect(node1.name).to.equal(`${TAG.CATCHALL_NODE}::${CATCH_ALL_PARAM_NAME}`);
+    });
 
     it('CatchAllNode should have name type TAG.CATCHALL_NODE', () => {
-      expect(node1.type)
-      .to
-      .equal(TAG.CATCHALL_NODE)
-    })
+      expect(node1.type).to.equal(TAG.CATCHALL_NODE);
+    });
 
     it('CatchAll named node should have name passed in constructor', () => {
-      expect(node2.name)
-      .to
-      .equal(`${TAG.CATCHALL_NODE}::images`)
-    })
+      expect(node2.name).to.equal(`${TAG.CATCHALL_NODE}::images`);
+    });
 
     it('.equals should be true if other node is CatchAllNode', () => {
-
-      const isEqual = node1.equals(node2)
-      expect(isEqual)
-        .to
-        .be
-        .true
-    })
+      const isEqual = node1.equals(node2);
+      expect(isEqual).to.be.true;
+    });
 
     it('.equals should be false if other node is NOT CatchAllNode', () => {
-
-      const isEqual = node1.equals(new ExactMatchNode('someurl'))
-      expect(isEqual)
-        .to
-        .be
-        .false
-    })
+      const isEqual = node1.equals(new ExactMatchNode('someurl'));
+      expect(isEqual).to.be.false;
+    });
 
     it('CatchAllNode should have initial empty children array', () => {
-      expect(Array.isArray(node1.children))
-        .to
-        .be
-        .true
+      expect(Array.isArray(node1.children)).to.be.true;
 
-      expect(node1.children.length)
-      .to
-      .equal(0)
-    })
+      expect(node1.children.length).to.equal(0);
+    });
 
     it('Calling addController method twice should add 2 controllers', () => {
       const node = new CatchAllNode();
-      const ctrl = new BasicController('controller1')
-      const ctrl2 = new BasicController('controller2')
+      const ctrl = new BasicController('controller1');
+      const ctrl2 = new BasicController('controller2');
       node.addController(ctrl);
       node.addController(ctrl2);
 
-      expect(node.controllers.length)
-      .to
-      .equal(2)
+      expect(node.controllers.length).to.equal(2);
 
-      expect(node.controllers[0])
-      .to
-      .equal(ctrl)
+      expect(node.controllers[0]).to.equal(ctrl);
 
-      expect(node.controllers[1])
-      .to
-      .equal(ctrl2)
-    })
-
+      expect(node.controllers[1]).to.equal(ctrl2);
+    });
 
     it('Calling addController method twice with same controller should throw', () => {
       const node = new CatchAllNode();
-      const ctrl = new BasicController('controller1')
+      const ctrl = new BasicController('controller1');
       node.addController(ctrl);
 
       try {
         node.addController(ctrl);
         throw new Error('CatchAllNode.addController should throw DUPLICATE_CONTROLLER error');
-      } catch(e){
-        expect(e.code)
-        .to
-        .equal(RouterErrorCode.DUPLICATE_CONTROLLER)
+      } catch (e) {
+        expect(e.code).to.equal(RouterErrorCode.DUPLICATE_CONTROLLER);
       }
-
-    })
-/*
+    });
+    /*
     it('.addRoute with empty url should add controller', () => {
       const node = new CatchAllNode('images');
       const ctrl = new BasicController('controller1')
@@ -294,8 +244,7 @@ describe('#CatchAllNode.ts', () => {
         .equal(RouterErrorCode.MAKE_URI_MISSING_PARAM)
       }
 
-    })*/
-
+    }) */
 
     it('.addChildNode should throw', () => {
       const node = new CatchAllNode('images');
@@ -304,13 +253,10 @@ describe('#CatchAllNode.ts', () => {
         node.addChildNode(new ExactMatchNode('mynode'));
         throw new Error('CatchAllNode.addChildNode should throw');
       } catch (e) {
-        expect(e.code)
-        .to
-        .equal(RouterErrorCode.ADD_CHILD_CATCHALL)
+        expect(e.code).to.equal(RouterErrorCode.ADD_CHILD_CATCHALL);
       }
-
-    })
-/*
+    });
+    /*
     it('.getAllControllers should return iterator with all controllers', () => {
       const node = new CatchAllNode('images');
       const ctrl = new BasicController('controller1')
@@ -333,31 +279,23 @@ describe('#CatchAllNode.ts', () => {
       .to
       .equal(undefined)
 
-    })*/
+    }) */
 
     it('.getRouterMatchByControllerId should return matching controller', () => {
       const node = new CatchAllNode('images');
-      const ctrl = new BasicController('controller1', 'id1')
-      const ctrl2 = new BasicController('controller2', 'id2')
-      const ctrl3 = new BasicController('controller3', 'id3')
+      const ctrl = new BasicController('controller1', 'id1');
+      const ctrl2 = new BasicController('controller2', 'id2');
+      const ctrl3 = new BasicController('controller3', 'id3');
 
-      node.addController(ctrl)
-      node.addController(ctrl2)
-      node.addController(ctrl3)
+      node.addController(ctrl);
+      node.addController(ctrl2);
+      node.addController(ctrl3);
 
       const res = <IRouteMatch<BasicController<string>>>node.getRouterMatchByControllerId('id2');
 
-      expect(res.node)
-      .to
-      .equal(node)
+      expect(res.node).to.equal(node);
 
-      expect(res.controller)
-      .to
-      .equal(ctrl2)
-
-    })
-
-  })
-
-
-})
+      expect(res.controller).to.equal(ctrl2);
+    });
+  });
+});

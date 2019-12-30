@@ -12,7 +12,23 @@ import { Strlib } from './utils';
 import { makeNode } from './adduri';
 
 const debug = Debug('GP-URI-ROUTER:router');
-
+/**
+ * @TODO rename getRouterMatchByControllerId to getRouteMatchByControllerId
+ * @TODO add makeUri(controllerID, params) it will call getRouteMatchByControllerId and then makeUri(node,params) or throw
+ * @TODO add getRouteMatchByControllerId to router and delegate call to rootNode
+ * @TODO IRouteMatch interface has .controller prop but BasicController also has optional .controller
+ * property this is confusing. What can we rename the controller prop in the IRouteMatch interface?
+ * And also can we use just RouteMatch class without IRouteMatch interface?
+ * @TODO add HttpRouter class that will hold map requestMethod => Router
+ * it will have methods similar to methods in router but will also take RequestMethod as first param
+ * and then will delegate to that router's corresponding method
+ * That will just be a convenience class. A router can achieve multiple request methods
+ * by adding multiple ControllerDetails classes with predicates that check for request method.
+ * The problem with relying on multiple ControllerDetails is that findRoute convenience method
+ * returns only first ControllerDetails instance, so in this implementation cannot use findRoute at all
+ * and must use findRoutes, get iterator and then get first matching ControllerDetails by passing Node's req
+ * object to some type of predicate function.
+ */
 export default class Router<T extends IController> {
   public rootNode: RootNode<T>;
 

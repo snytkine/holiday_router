@@ -1,10 +1,6 @@
 import { expect } from 'chai';
-import {
-  BasicController,
-  ExtractedPathParam,
-  RouteMatch
-} from '../../'
-import { ExactMatchNode } from '../../nodes'
+import { BasicController, ExtractedPathParam, RouteMatch } from '../../lib';
+import { ExactMatchNode } from '../../nodes';
 
 describe('#RouteMatch object test', () => {
   const pathParam1 = new ExtractedPathParam('param1', 'param1value');
@@ -16,15 +12,15 @@ describe('#RouteMatch object test', () => {
   it('#Should create new instance of RouteMatch', () => {
     const res = new RouteMatch(node, controller, uriParams);
     expect(res.controller).to.equal(controller);
-    expect(res.node).to.equal(node)
-    expect(res.params).to.equal(uriParams)
-  })
+    expect(res.node).to.equal(node);
+    expect(res.params).to.equal(uriParams);
+  });
 
   it('#toString returns formatted string', () => {
     const routeMatch = new RouteMatch(node, controller, uriParams);
     const res = routeMatch.toString();
-    expect(res)
-    .to
-    .equal(`RouteMatch node=ExactMathNode::path1 controller=CTRL1 params={"pathParams":[{"paramName":"param1","paramValue":"param1value"},{"paramName":"param2","paramValue":"param2value"}]}`);
-  })
-})
+    expect(res).to.equal(
+      `RouteMatch node=ExactMathNode::path1 controller=CTRL1 params={"pathParams":[{"paramName":"param1","paramValue":"param1value"},{"paramName":"param2","paramValue":"param2value"}]}`,
+    );
+  });
+});

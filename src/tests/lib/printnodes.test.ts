@@ -1,18 +1,7 @@
-import {
-  BasicController,
-  printNode,
-  UniqueController
-} from '../../'
 import { expect } from 'chai';
-import {
-  ExactMatchNode,
-  PathParamNode,
-  RootNode
-} from '../../nodes'
-
-const PRINT_CONTROLLERS_RES = `
-           * Controller BasicController id=ctrl1 priority=1
-           * Controller BasicController id=ctrl2 priority=2`;
+import { BasicController, UniqueController } from '../../lib';
+import { printNode } from '../../utils';
+import { ExactMatchNode, PathParamNode, RootNode } from '../../nodes';
 
 const PRINT_NODES_RES = `
      || ====================================
@@ -82,21 +71,19 @@ const PRINT_NODE_INDENT1_RES = `
              || Controllers=0
              || children (0) 
              || ====================================
-         || ====================================`
+         || ====================================`;
 
 describe('#printnodes', () => {
-
   describe('#printnodes', () => {
-
     const rootNode = new RootNode();
     const node2 = new ExactMatchNode('path1/');
-    node2.addController(new UniqueController('path1 controller'))
+    node2.addController(new UniqueController('path1 controller'));
     const node3 = new ExactMatchNode('path2/');
 
     const node4 = new PathParamNode('category', '/');
     const nodeWithPrefixAndPostfix = new PathParamNode('id', '.html', 'order-');
 
-    nodeWithPrefixAndPostfix.addController(new BasicController('controller1', 'ctrl1',));
+    nodeWithPrefixAndPostfix.addController(new BasicController('controller1', 'ctrl1'));
     nodeWithPrefixAndPostfix.addController(new BasicController('controller2', 'ctrl2', 2));
     node4.addChildNode(nodeWithPrefixAndPostfix);
     node2.addChildNode(node4);
@@ -106,16 +93,12 @@ describe('#printnodes', () => {
 
     it('#Should print node tree with controllers', () => {
       const res = printNode(rootNode);
-      expect(res)
-      .to
-      .equal(PRINT_NODES_RES)
-    })
+      expect(res).to.equal(PRINT_NODES_RES);
+    });
 
     it('#Should print node tree with controllers with custom indent value', () => {
       const res = printNode(rootNode, 1);
-      expect(res)
-      .to
-      .equal(PRINT_NODE_INDENT1_RES);
-    })
-  })
-})
+      expect(res).to.equal(PRINT_NODE_INDENT1_RES);
+    });
+  });
+});
