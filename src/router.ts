@@ -37,6 +37,19 @@ export default class Router<T extends IController> {
       controller.toString(),
       parentNode.name,
     );
+
+    /**
+     * Special case if uri is empty then add controller to rootNode
+     */
+    if (uri.trim() === '') {
+      debug(
+        'Router.addRoute empty uri passed. Adding controller "%s" to rootNode',
+        controller.toString(),
+      );
+
+      return parentNode.addController(controller);
+    }
+
     const { head, tail } = Strlib.splitUriByPathSeparator(uri, [ROUTE_PATH_SEPARATOR]);
 
     const childNode = makeNode<T>(head);

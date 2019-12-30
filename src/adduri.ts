@@ -27,7 +27,7 @@ const CatchAllRe = /^{\*([a-zA-Z0-9-_]+)}$/;
  * followed by optional postfix which will often be just path separator or some other string.
  * @type {RegExp}
  */
-const PathParamRe = /^([^{}\/]*){(?:\s*)([a-zA-Z0-9-_]+)(?:\s*)}([^{}]*)$/;
+const PathParamRe = /^([^{}/]*){(?:\s*)([a-zA-Z0-9-_]+)(?:\s*)}([^{}]*)$/;
 
 /**
  * prefix - anything except { and } and /
@@ -42,7 +42,7 @@ const PathParamRe = /^([^{}\/]*){(?:\s*)([a-zA-Z0-9-_]+)(?:\s*)}([^{}]*)$/;
  *
  * @type {RegExp}
  */
-const PathParamRegexRe = /^([^{}\/]*){(?:\s*)([a-zA-Z0-9-_]+)(?:\s*):(.*)}([^{}]*)$/;
+const PathParamRegexRe = /^([^{}/]*){(?:\s*)([a-zA-Z0-9-_]+)(?:\s*):(.*)}([^{}]*)$/;
 
 export const makeExactMatchNode: NodeFactory = <T extends IController>(
   uriSegment: string,
@@ -86,7 +86,7 @@ export const makePathParamNode: NodeFactory = <T extends IController>(
     return null;
   }
 
-  const [_, prefix, paramName, postfix] = res;
+  const [, prefix, paramName, postfix] = res;
 
   return new PathParamNode(paramName, postfix, prefix);
 };
@@ -106,7 +106,7 @@ export const makePathParamNodeRegex = (uriSegment: string): any => {
     return null;
   }
 
-  const [_, prefix, paramName, restr, postfix] = res;
+  const [, prefix, paramName, restr, postfix] = res;
 
   let pattern = restr.trim();
 

@@ -96,16 +96,8 @@ describe('#pathparamnode.ts', () => {
 
       expect(node.children.length)
       .to
-      .equal(2)
-
-      expect(node.children[0][PARENT_NODE])
-      .to
-      .equal(node)
-
-      expect(node.children[1][PARENT_NODE])
-      .to
-      .equal(node)
-    })
+      .equal(2);
+    });
 
 
     it('.getAllControllers should return iterator with all controllers', () => {

@@ -28,7 +28,7 @@ describe('#rootnode.ts', () => {
       .to
       .be
       .instanceOf(RootNode)
-    })
+    });
 
 
     it('RootNode should have priority of ROOT_NODE', () => {
@@ -76,18 +76,7 @@ describe('#rootnode.ts', () => {
         .to
         .be
         .false
-    })
-
-/*
-    it('.addRoute with empty url should add controller', () => {
-      const root = new RootNode();
-      const ctrl = new UniqueController('rootController')
-      root.addRoute('', ctrl);
-
-      expect(root.controllers[0])
-      .to
-      .equal(ctrl)
-    })*/
+    });
 
 
     it('.addChildNode should add child node', () => {
@@ -97,16 +86,8 @@ describe('#rootnode.ts', () => {
 
       expect(node.children.length)
       .to
-      .equal(2)
-
-      expect(node.children[0][PARENT_NODE])
-      .to
-      .equal(node)
-
-      expect(node.children[1][PARENT_NODE])
-      .to
-      .equal(node)
-    })
+      .equal(2);
+    });
 /*
     it('.addRoute with 2 urls that start with "/" should add just one child node "/"', () => {
       const root = new RootNode();

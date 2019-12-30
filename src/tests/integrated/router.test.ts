@@ -2,10 +2,11 @@ import { expect } from 'chai';
 import { RootNode } from '../../nodes'
 import {
   BasicController,
-  makeUrl
-} from '../../'
+  makeUrl, UniqueController,
+} from '../../';
 import { IRouteMatch } from '../../interfaces'
 import Router from '../../router';
+
 describe('#Integrated Router test', () => {
 
   const uri1 = '/catalog/toys/';
@@ -88,7 +89,7 @@ describe('#Integrated Router test', () => {
         }
       ])
 
-    })
+    });
 
 
     it('should find route with regex params', () => {
@@ -113,7 +114,7 @@ describe('#Integrated Router test', () => {
           paramName:  'year',
           paramValue: '2015'
         }
-      ])
+      ]);
 
       expect(res.params.regexParams)
       .to
@@ -128,7 +129,22 @@ describe('#Integrated Router test', () => {
           params:    ['2015', '2015']
         }
       ])
-    })
+    });
+
+
+    it('.addRoute with 2 urls that start with "/" should add just one child node "/"', () => {
+
+      const router = new Router();
+      const ctrl = new BasicController('controller1', 'ctrl1')
+      const ctrl2 = new BasicController('controller1', 'ctrl2')
+
+      router.addRoute('/path1', ctrl);
+      router.addRoute('/path2', ctrl2);
+
+      expect(router.rootNode.children.length)
+        .to
+        .equal(1)
+    });
 
     it('should not find matching regex route if regex param did not match but find next matching route', () => {
       const res = <IRouteMatch<BasicController<string>>>router.findRoute('/catalog/toys/cars/widget-678yellow/2015');
@@ -140,7 +156,7 @@ describe('#Integrated Router test', () => {
       expect(res.node.name)
       .to
       .equal(`PathParamNode::model::''::''`);
-    })
+    });
 
     it('should not find matching route if uri does not match any added routes', () => {
       const res = <IRouteMatch<BasicController<string>>>router.findRoute('/catalog/books/cars/widget-678yellow/2015');
@@ -149,8 +165,18 @@ describe('#Integrated Router test', () => {
         .to
         .be
         .undefined;
+    });
 
-    })
+
+     it('.addRoute with empty url should add controller', () => {
+     const router = new Router();
+     const ctrl = new UniqueController('rootController')
+     router.addRoute('', ctrl);
+
+     expect(router.rootNode.controllers[0])
+     .to
+     .equal(ctrl)
+     })
 
   })
 /*
