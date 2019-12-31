@@ -1,6 +1,6 @@
 import { IController, Node } from '../interfaces';
 
-export const printNode = <T extends IController>(node: Node<T>, indent: number = 0): string => {
+const printNode = <T extends IController>(node: Node<T>, indent: number = 0): string => {
   const printControllers = <T extends IController>(controllers: Array<T>): string => {
     return controllers.reduce((acc, ctrl) => {
       return `${acc}\n${' '.repeat(6)}${' '.repeat(indent * 4)} * Controller ${ctrl}`;
@@ -21,3 +21,5 @@ export const printNode = <T extends IController>(node: Node<T>, indent: number =
     ${' '.repeat(indent * 4)} || children (${node.children.length}) ${printChildren(node.children)}
     ${' '.repeat(indent * 4)} || ${'='.repeat(36)}`;
 };
+
+export default printNode;

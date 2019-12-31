@@ -3,7 +3,7 @@ import { IController, IRouteMatch, IUriParams, Node } from '../interfaces';
 /**
  * Convenient way to create object of IRouteMatch
  */
-export class RouteMatch<T extends IController> implements IRouteMatch<T> {
+export default class RouteMatch<T extends IController> implements IRouteMatch<T> {
   constructor(
     public node: Node<T>,
     public controller: T,

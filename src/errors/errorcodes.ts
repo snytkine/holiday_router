@@ -1,4 +1,4 @@
-export enum RouterErrorCode {
+enum RouterErrorCode {
   ADD_CHILD = 1000000,
   ADD_CHILD_CATCHALL,
   DUPLICATE_CONTROLLER,
@@ -9,3 +9,5 @@ export enum RouterErrorCode {
   NON_UNIQUE_PARAM,
   CONTROLLER_NOT_FOUND,
 }
+
+export default RouterErrorCode;

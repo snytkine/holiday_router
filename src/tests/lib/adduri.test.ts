@@ -8,7 +8,7 @@ import {
   makePathParamNode,
   makePathParamNodeRegex,
 } from '../../adduri';
-import { TAG } from '../../enums';
+import TAG from '../../enums/nodetags';
 
 describe('#adduri.ts', () => {
   describe('#makeExactMatchNode', () => {

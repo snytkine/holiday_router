@@ -1,15 +1,15 @@
 import Debug from 'debug';
 import { IController, IStringMap, Node, IRouteMatch, IUriParams } from '../interfaces/ifnode';
-import { RootNode } from './rootnode';
+import RootNode from './rootnode';
 import { PRIORITY } from './nodepriorities';
-import { TAG } from '../enums';
+import TAG from '../enums/nodetags';
 
 const debug = Debug('GP-URI-ROUTER:node:exactmatch');
 
 /**
  * Node represents uri segment that ends with path separator
  */
-export class ExactMatchNode<T extends IController> extends RootNode<T> implements Node<T> {
+export default class ExactMatchNode<T extends IController> extends RootNode<T> implements Node<T> {
   /**
    * The exact match segment may or may not end with path separator
    * for example it may be widgets/ or widgets
@@ -111,6 +111,7 @@ export class ExactMatchNode<T extends IController> extends RootNode<T> implement
   }
 
   makeUri(params: IStringMap): string {
+    debug('Entered %s makeUri with params="%o"', this.name, params);
     return this.origUriPattern;
   }
 }

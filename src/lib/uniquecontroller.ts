@@ -1,5 +1,8 @@
+import Debug from 'debug';
 import { IController } from '../interfaces';
-import { BasicController } from './basiccontroller';
+import BasicController from './basiccontroller';
+
+const debug = Debug('GP-URI-ROUTER:NODE:lib');
 
 /**
  * UniqueController always returns true from equals() method
@@ -8,7 +11,7 @@ import { BasicController } from './basiccontroller';
  * already has a UniqueController or to add UniqueController
  * to any node that already has any other controller
  */
-export class UniqueController<T> extends BasicController<T> implements IController {
+export default class UniqueController<T> extends BasicController<T> implements IController {
   private readonly isUnique = true;
 
   constructor(
@@ -27,6 +30,7 @@ export class UniqueController<T> extends BasicController<T> implements IControll
    * @param controller
    */
   public equals(other: IController): boolean {
+    debug('Entered UniqueController.equals with other="%s"', other.id);
     return this.isUnique;
   }
 }

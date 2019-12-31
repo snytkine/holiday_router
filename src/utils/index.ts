@@ -1,5 +1,5 @@
 export { default as ensureNoDuplicatePathParams } from './duplicateparamscheck';
 export * from './makeurl';
-export * from './printnode';
+export { default as printNode } from './printnode';
 export * from './strlib';
-export * from './copyparams';
+export { default as copyPathParams } from './copyparams';

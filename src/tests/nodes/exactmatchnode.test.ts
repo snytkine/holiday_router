@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { ExactMatchNode, getNodePriority, PathParamNode, PRIORITY } from '../../nodes';
-import { TAG } from '../../enums';
+import TAG from '../../enums/nodetags';
 import { IRouteMatch } from '../../interfaces';
 import { BasicController } from '../../lib';
 import { RouterErrorCode } from '../../errors';

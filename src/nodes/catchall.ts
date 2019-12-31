@@ -7,10 +7,10 @@ import {
   IUriParams,
   CATCH_ALL_PARAM_NAME,
 } from '../interfaces';
-import { RootNode } from './rootnode';
+import RootNode from './rootnode';
 
 import { PRIORITY } from './nodepriorities';
-import { TAG } from '../enums';
+import TAG from '../enums/nodetags';
 import { RouterError, RouterErrorCode } from '../errors';
 import { ExtractedPathParam } from '../lib';
 
@@ -19,7 +19,7 @@ const debug = Debug('GP-URI-ROUTER:node:catchallnode');
 /**
  * Node represents uri segment that ends with path separator
  */
-export class CatchAllNode<T extends IController> extends RootNode<T> implements Node<T> {
+export default class CatchAllNode<T extends IController> extends RootNode<T> implements Node<T> {
   public paramName: string;
 
   /**

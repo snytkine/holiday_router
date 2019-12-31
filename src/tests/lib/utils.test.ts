@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { copyPathParams } from '../../utils/copyparams';
+import { copyPathParams } from '../../utils';
 import { ExtractedPathParam, ExtractedRegexParams } from '../../lib';
 import { IUriParams } from '../../interfaces';
 

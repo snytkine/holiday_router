@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { BasicController } from '../../lib/basiccontroller';
+import BasicController from '../../lib/basiccontroller';
 
 describe('#BasicController.ts test', () => {
   describe('#BasicController object test', () => {

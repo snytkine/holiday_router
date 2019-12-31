@@ -209,7 +209,7 @@ describe('#Integrated Router test', () => {
     it('Should throw RouteError if controller not found by id', () => {
       let res: RouterError;
       try {
-        const url = router.makeUri('ctrlX', {
+        router.makeUri('ctrlX', {
           year: '2020',
           id: 'widget-123red',
         });

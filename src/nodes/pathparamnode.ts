@@ -1,8 +1,8 @@
 import Debug from 'debug';
 import { IController, IRouteMatch, IStringMap, Node, IUriParams } from '../interfaces';
-import { RootNode } from './rootnode';
+import RootNode from './rootnode';
 import { PRIORITY } from './nodepriorities';
-import { TAG } from '../enums';
+import TAG from '../enums/nodetags';
 import { Strlib, copyPathParams } from '../utils';
 import { ExtractedPathParam } from '../lib';
 
@@ -14,7 +14,7 @@ const debug = Debug('GP-URI-ROUTER:node:pathparamnode');
  * Node represents uri segment that
  * extracts pathParam and ends with path separator
  */
-export class PathParamNode<T extends IController> extends RootNode<T> implements Node<T> {
+export default class PathParamNode<T extends IController> extends RootNode<T> implements Node<T> {
   public paramName: string;
 
   public readonly postfix: string;

@@ -6,11 +6,11 @@ import { IExtractedPathParam, IRegexParams, IUriParams } from '../interfaces';
  * @param param
  * @param regexParams
  */
-export function copyPathParams(
+export default (
   source: IUriParams,
   param: IExtractedPathParam,
   regexParams?: IRegexParams,
-): IUriParams {
+): IUriParams => {
   const ret: IUriParams = { pathParams: [...source.pathParams, param] };
 
   if (regexParams) {
@@ -22,4 +22,4 @@ export function copyPathParams(
   }
 
   return ret;
-}
+};

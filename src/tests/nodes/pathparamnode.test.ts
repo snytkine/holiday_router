@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { TAG } from '../../enums';
+import TAG from '../../enums/nodetags';
 import { ExactMatchNode, getNodePriority, PathParamNode, PRIORITY } from '../../nodes';
 import { IRouteMatch } from '../../interfaces';
 import { BasicController } from '../../lib';

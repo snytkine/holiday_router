@@ -6,7 +6,7 @@ import { IController } from '../interfaces';
  *
  *
  */
-export class BasicController<T> implements IController {
+export default class BasicController<T> implements IController {
   constructor(
     public controller: T,
     public id: string = 'BasicController',

@@ -11,7 +11,7 @@ import {
 import { ensureNoDuplicatePathParams } from '../utils';
 import { RouteMatch } from '../lib';
 import { PRIORITY } from './nodepriorities';
-import { TAG } from '../enums';
+import TAG from '../enums/nodetags';
 import { RouterError, RouterErrorCode } from '../errors';
 
 const debug = Debug('GP-URI-ROUTER:NODE:RootNode');
@@ -25,7 +25,7 @@ const debug = Debug('GP-URI-ROUTER:NODE:RootNode');
  * This should not be necessary as V8 GC should easily figure our this case of
  * circular reference issue, but maybe it will help GC or may it any more efficient?
  */
-export class RootNode<T extends IController> implements Node<T> {
+export default class RootNode<T extends IController> implements Node<T> {
   public [PARENT_NODE]: Node<T>;
 
   public controllers: Array<T>;

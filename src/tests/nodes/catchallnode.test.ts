@@ -3,7 +3,7 @@ import { CatchAllNode, ExactMatchNode } from '../../nodes';
 import { getNodePriority, PRIORITY } from '../../nodes/nodepriorities';
 import { BasicController } from '../../lib';
 import { CATCH_ALL_PARAM_NAME, IRouteMatch } from '../../interfaces';
-import { TAG } from '../../enums';
+import TAG from '../../enums/nodetags';
 import { RouterError, RouterErrorCode } from '../../errors';
 
 describe('#CatchAllNode.ts', () => {

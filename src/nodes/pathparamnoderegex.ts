@@ -1,15 +1,16 @@
 import Debug from 'debug';
 import { IController, IRouteMatch, IStringMap, Node, IUriParams } from '../interfaces';
-import { PathParamNode } from './pathparamnode';
+import PathParamNode from './pathparamnode';
 import { copyPathParams, Strlib } from '../utils';
 import { ExtractedPathParam, ExtractedRegexParams } from '../lib';
 import { PRIORITY } from './nodepriorities';
-import { TAG } from '../enums';
+import TAG from '../enums/nodetags';
 import { RouterError, RouterErrorCode } from '../errors';
 
 const debug = Debug('GP-URI-ROUTER:node:pathparamnoderegex');
 
-export class PathParamNodeRegex<T extends IController> extends PathParamNode<T> implements Node<T> {
+export default class PathParamNodeRegex<T extends IController> extends PathParamNode<T>
+  implements Node<T> {
   public readonly regex: RegExp;
 
   private readonly template: string;

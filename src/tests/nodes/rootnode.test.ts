@@ -4,7 +4,7 @@ import { getNodePriority, PRIORITY } from '../../nodes/nodepriorities';
 import { BasicController } from '../../lib';
 import { RouterError, RouterErrorCode } from '../../errors';
 import { IRouteMatch } from '../../interfaces';
-import { TAG } from '../../enums';
+import TAG from '../../enums/nodetags';
 
 describe('#rootnode.ts', () => {
   describe('#RootNode object test', () => {
