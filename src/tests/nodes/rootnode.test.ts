@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { ExactMatchNode, RootNode } from '../../nodes';
 import { getNodePriority, PRIORITY } from '../../nodes/nodepriorities';
 import { BasicController } from '../../lib';
-import { RouterErrorCode } from '../../errors';
+import { RouterError, RouterErrorCode } from '../../errors';
 import { IRouteMatch } from '../../interfaces';
 import { TAG } from '../../enums';
 
@@ -49,18 +49,18 @@ describe('#rootnode.ts', () => {
       expect(node.children.length).to.equal(2);
     });
     /*
-    it('.addRoute with 2 urls that start with "/" should add just one child node "/"', () => {
-      const root = new RootNode();
-      const ctrl = new BasicController('controller1', 'ctrl1')
-      const ctrl2 = new BasicController('controller1', 'ctrl2')
+     it('.addRoute with 2 urls that start with "/" should add just one child node "/"', () => {
+     const root = new RootNode();
+     const ctrl = new BasicController('controller1', 'ctrl1')
+     const ctrl2 = new BasicController('controller1', 'ctrl2')
 
-      root.addRoute('/path1', ctrl);
-      root.addRoute('/path2', ctrl2);
+     root.addRoute('/path1', ctrl);
+     root.addRoute('/path2', ctrl2);
 
-      expect(root.children.length)
-      .to
-      .equal(1)
-    }) */
+     expect(root.children.length)
+     .to
+     .equal(1)
+     }) */
 
     it('RootNode with no child nodes .findRoute should return undefined', () => {
       const node = new RootNode();
@@ -77,22 +77,22 @@ describe('#rootnode.ts', () => {
     });
 
     /*
-    it('.findRoute on node with child nodes should return matching route from child node', () => {
-      const node = new RootNode();
-      const ctrl = new BasicController('controller1', 'id1')
-      const ctrl2 = new BasicController('controller2', 'id2')
-      const ctrl3 = new BasicController('controller3', 'id3')
+     it('.findRoute on node with child nodes should return matching route from child node', () => {
+     const node = new RootNode();
+     const ctrl = new BasicController('controller1', 'id1')
+     const ctrl2 = new BasicController('controller2', 'id2')
+     const ctrl3 = new BasicController('controller3', 'id3')
 
-      node.addRoute('/path1', ctrl)
-      node.addRoute('/path1/sub1', ctrl2)
-      node.addRoute('/path2', ctrl3)
+     node.addRoute('/path1', ctrl)
+     node.addRoute('/path1/sub1', ctrl2)
+     node.addRoute('/path2', ctrl3)
 
-      const res = <IRouteMatch<BasicController<string>>>node.findRoute('/path1/sub1');
+     const res = <IRouteMatch<BasicController<string>>>node.findRoute('/path1/sub1');
 
-      expect(res.controller)
-      .to
-      .equal(ctrl2)
-    }) */
+     expect(res.controller)
+     .to
+     .equal(ctrl2)
+     }) */
 
     it('RootNode with child nodes .findRoutes should return iterator with matches from child node', () => {
       const node = new RootNode();
@@ -152,13 +152,13 @@ describe('#rootnode.ts', () => {
       const node = new RootNode();
       const ctrl = new BasicController('controller1');
       node.addController(ctrl);
-
+      let res: RouterError;
       try {
         node.addController(ctrl);
-        throw new Error('RootNode.addController should throw DUPLICATE_CONTROLLER error');
       } catch (e) {
-        expect(e.code).to.equal(RouterErrorCode.DUPLICATE_CONTROLLER);
+        res = e;
       }
+      expect(res.code).to.equal(RouterErrorCode.DUPLICATE_CONTROLLER);
     });
 
     it('.getRouteMatchByControllerId should return matching controller', () => {
@@ -202,22 +202,22 @@ describe('#rootnode.ts', () => {
     });
 
     /*
-    it('.getRouteMatchByControllerId on node with child nodes should return matching controller from child node', () => {
-      const node = new RootNode();
-      const ctrl = new BasicController('controller1', 'id1')
-      const ctrl2 = new BasicController('controller2', 'id2')
-      const ctrl3 = new BasicController('controller3', 'id3')
+     it('.getRouteMatchByControllerId on node with child nodes should return matching controller from child node', () => {
+     const node = new RootNode();
+     const ctrl = new BasicController('controller1', 'id1')
+     const ctrl2 = new BasicController('controller2', 'id2')
+     const ctrl3 = new BasicController('controller3', 'id3')
 
-      node.addRoute('/path1', ctrl)
-      node.addRoute('/path1/sub1', ctrl2)
-      node.addRoute('/path2', ctrl3)
+     node.addRoute('/path1', ctrl)
+     node.addRoute('/path1/sub1', ctrl2)
+     node.addRoute('/path2', ctrl3)
 
-      const res = <IRouteMatch<BasicController<string>>>node.getRouteMatchByControllerId('id2');
+     const res = <IRouteMatch<BasicController<string>>>node.getRouteMatchByControllerId('id2');
 
-      expect(res.controller)
-      .to
-      .equal(ctrl2)
+     expect(res.controller)
+     .to
+     .equal(ctrl2)
 
-    }) */
+     }) */
   });
 });

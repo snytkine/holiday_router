@@ -124,7 +124,7 @@ export class PathParamNodeRegex<T extends IController> extends PathParamNode<T> 
 
     if (!this.regex.test(params[this.paramName])) {
       throw new RouterError(
-        `Cannot generate uri for node ${this.name} because value of param ${this.paramName} does not pass regex ${this.regex.source}`,
+        `Cannot generate uri for node ${this.name} because value of param ${this.paramName} "${params[this.paramName]}" does not pass regex ${this.regex.source}`,
         RouterErrorCode.MAKE_URI_REGEX_FAIL,
       );
     }

@@ -9,10 +9,10 @@ import {
   ROUTE_PATH_SEPARATOR,
 } from './interfaces';
 import { RootNode } from './nodes';
-import { makeUrl, Strlib } from './utils';
+import { makeUriTemplate, makeUrl, Strlib } from './utils';
 import { makeNode } from './adduri';
 import { RouterError, RouterErrorCode } from './errors';
-import { RouteMatch } from './lib';
+import { IRouteInfo } from './interfaces/routeinfo';
 
 const debug = Debug('GP-URI-ROUTER:router');
 /**
@@ -111,7 +111,10 @@ export default class Router<T extends IController> {
    * and pass original uri template, otherwise we cannot recreate
    * full uri template from node since original template is lost in regex node
    */
-  getAllRoutes(): Array<IRouteMatch<T>> {
-    return Array.from(this.rootNode.getAllRoutes());
+  getAllRoutes(): Array<IRouteInfo> {
+    const routes = Array.from(this.rootNode.getAllRoutes());
+    return routes.map(routeMatch => {
+      return { uri: makeUriTemplate(routeMatch.node), controller: routeMatch.controller };
+    });
   }
 }

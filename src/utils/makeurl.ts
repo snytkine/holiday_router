@@ -28,3 +28,19 @@ export const makeUrl = <T extends IController>(
 
   return makeUrl(node[PARENT_NODE], params, ret);
 };
+
+
+export const makeUriTemplate = <T extends IController>(
+  node: Node<T>,
+  res: string = '',
+): string => {
+  debug('Entered makeUriPattern with node "%s"', node.name);
+
+  const ret = node.uriTemplate + res;
+
+  if (!node[PARENT_NODE]) {
+    return ret;
+  }
+
+  return makeUriTemplate(node[PARENT_NODE], ret);
+};

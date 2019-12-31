@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { ExactMatchNode, PathParamNode } from '../../nodes';
-import { BasicController, makeUrl, PARENT_NODE } from '../..';
+import { BasicController, makeUriTemplate, makeUrl, PARENT_NODE } from '../../index';
 
 describe('#makeurl test', () => {
   const node0 = new ExactMatchNode('/');
@@ -17,9 +17,15 @@ describe('#makeurl test', () => {
   nodeWithPrefixAndPostfix[PARENT_NODE] = node1;
   node1[PARENT_NODE] = node0;
 
-  it('should create url from child node and passed params', () => {
+  it('#makeUrl should create url from child node and passed params', () => {
     const res = makeUrl(nodeWithPrefixAndPostfix, { category: 'books', id: '12345' });
 
     expect(res).to.equal('/books/order-12345.html');
+  });
+
+  it('#makeUriTemplate should create original uri template from child node', () => {
+    const res = makeUriTemplate(nodeWithPrefixAndPostfix);
+
+    expect(res).to.equal('/{category}/order-{id}.html');
   });
 });

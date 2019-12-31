@@ -3,7 +3,7 @@ import { TAG } from '../../enums';
 import { ExactMatchNode, getNodePriority, PathParamNode, PRIORITY } from '../../nodes';
 import { IRouteMatch } from '../../interfaces';
 import { BasicController } from '../../lib';
-import { RouterErrorCode } from '../../errors';
+import { RouterError, RouterErrorCode } from '../../errors';
 
 describe('#pathparamnode.ts', () => {
   describe('#PathParamNode object test', () => {
@@ -115,28 +115,14 @@ describe('#pathparamnode.ts', () => {
       const node = new PathParamNode('var1');
       const ctrl = new BasicController('controller1');
       node.addController(ctrl);
-
+      let res: RouterError;
       try {
         node.addController(ctrl);
-        throw new Error('RootNode.addController should throw DUPLICATE_CONTROLLER error');
       } catch (e) {
-        expect(e.code).to.equal(RouterErrorCode.DUPLICATE_CONTROLLER);
+        res = e;
       }
+      expect(res.code).to.equal(RouterErrorCode.DUPLICATE_CONTROLLER);
     });
-
-    /*
-    it('.addRoute with 2 urls that start with same path should add just one child node "/"', () => {
-      const root = new PathParamNode('var1');
-      const ctrl = new BasicController('controller1', 'ctrl1')
-      const ctrl2 = new BasicController('controller1', 'ctrl2')
-
-      root.addRoute('path2/', ctrl);
-      root.addRoute('path2/path3', ctrl2);
-
-      expect(root.children.length)
-      .to
-      .equal(1)
-    }) */
 
     it('.makeUri on node without prefix and postfix should return value of this node param', () => {
       const uri = node1.makeUri({
@@ -157,15 +143,16 @@ describe('#pathparamnode.ts', () => {
     });
 
     it('.makeUri on node without supplying param property should throw', () => {
+      let res: RouterError;
       try {
         nodeWithPrefixAndPostfix.makeUri({
           param1: 'value1',
           order: '1234',
         });
-        throw new Error('RootNode.makeUri should throw error with code MAKE_URI_MISSING_PARAM');
       } catch (e) {
-        expect(e.code).to.equal(RouterErrorCode.MAKE_URI_MISSING_PARAM);
+        res = e;
       }
+      expect(res.code).to.equal(RouterErrorCode.MAKE_URI_MISSING_PARAM);
     });
 
     it('.findRoutes should return iterator with all matches', () => {

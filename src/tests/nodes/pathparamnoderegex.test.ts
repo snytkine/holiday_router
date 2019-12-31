@@ -43,24 +43,26 @@ describe('#pathparamnoderegex node', () => {
 
     it('makeUri should NOT create uri from parameters if required property is missing', () => {
       const node = new PathParamNodeRegex('item-{id:([0-9]+)}/', 'id', new RegExp('([0-9]+)'), '/', 'item-');
+      let res: RouterError;
       try {
         node.makeUri({ item: '12345' });
-        throw new Error('makeUri should throw exception because property "id" is not passed');
       } catch (e) {
-        expect(e).to.be.instanceOf(RouterError);
-        expect(e.code).to.be.equal(RouterErrorCode.MAKE_URI_MISSING_PARAM);
+        res = e;
       }
+      expect(res).to.be.instanceOf(RouterError);
+      expect(res.code).to.be.equal(RouterErrorCode.MAKE_URI_MISSING_PARAM);
     });
 
     it('makeUri should NOT create uri from parameters if passed param not matching regex', () => {
       const node = new PathParamNodeRegex('item-{id:([0-9]+)}/', 'id', new RegExp('([0-9]+)'), '/', 'item-');
+      let res: RouterError;
       try {
         node.makeUri({ id: 'abc' });
-        throw new Error('makeUri should throw exception because property "id" is not passed');
       } catch (e) {
-        expect(e).to.be.instanceOf(RouterError);
-        expect(e.code).to.be.equal(RouterErrorCode.MAKE_URI_REGEX_FAIL);
+        res = e;
       }
+      expect(res).to.be.instanceOf(RouterError);
+      expect(res.code).to.be.equal(RouterErrorCode.MAKE_URI_REGEX_FAIL);
     });
 
     it('.findRoutes should return iterator with all matches', () => {
