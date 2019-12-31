@@ -1,32 +1,16 @@
 import { expect } from 'chai';
-import { copyPathParams } from '../../utils';
+import { Utils } from '../../utils';
 import { ExtractedPathParam, ExtractedRegexParams } from '../../lib';
 import { IUriParams } from '../../interfaces';
 
 describe('#copyparams.ts', () => {
-  it('#ExtractedPathParams', () => {
-    const params = new ExtractedPathParam('model', 'T');
-    expect(params).to.deep.equal({
-      paramName: 'model',
-      paramValue: 'T',
-    });
-  });
-
-  it('#RegexParams', () => {
-    const params = new ExtractedRegexParams('model', ['ABC', '123']);
-    expect(params).to.deep.equal({
-      paramName: 'model',
-      params: ['ABC', '123'],
-    });
-  });
-
   it('#copyPathParams should contain new param. Original pathParam should not be modified', () => {
     const origparams: IUriParams = {
       pathParams: [new ExtractedPathParam('id', '11')],
     };
     const extraParam = new ExtractedPathParam('model', 'T');
 
-    const copiedParams = copyPathParams(origparams, extraParam);
+    const copiedParams = Utils.copyPathParams(origparams, extraParam);
 
     expect(copiedParams.pathParams.length).to.equal(2);
 
@@ -45,7 +29,7 @@ describe('#copyparams.ts', () => {
     const extraParam = new ExtractedPathParam('model', 'T');
     const regexParam = new ExtractedRegexParams('id', ['p1', 'p2']);
 
-    const copiedParams = copyPathParams(origparams, extraParam, regexParam);
+    const copiedParams = Utils.copyPathParams(origparams, extraParam, regexParam);
 
     expect(copiedParams.pathParams.length).to.equal(2);
 

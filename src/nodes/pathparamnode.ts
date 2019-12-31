@@ -3,7 +3,7 @@ import { IController, IRouteMatch, IStringMap, Node, IUriParams } from '../inter
 import RootNode from './rootnode';
 import { PRIORITY } from './nodepriorities';
 import TAG from '../enums/nodetags';
-import { Strlib, copyPathParams } from '../utils';
+import { Strlib, Utils } from '../utils';
 import { ExtractedPathParam } from '../lib';
 
 import { RouterError, RouterErrorCode } from '../errors';
@@ -107,7 +107,7 @@ export default class PathParamNode<T extends IController> extends RootNode<T> im
      * will not yield anything
      */
     if (extractedParam) {
-      const copiedParams = copyPathParams(
+      const copiedParams = Utils.copyPathParams(
         params,
         new ExtractedPathParam(this.paramName, extractedParam.param),
       );
