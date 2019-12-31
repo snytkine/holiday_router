@@ -58,10 +58,10 @@ export class CatchAllNode<T extends IController> extends RootNode<T> implements 
 
   get uriTemplate() {
     let ret = '';
-    if(this.paramName === CATCH_ALL_PARAM_NAME){
+    if (this.paramName === CATCH_ALL_PARAM_NAME) {
       ret = CATCH_ALL_PARAM_NAME;
     } else {
-      ret = `${CATCH_ALL_PARAM_NAME}${this.paramName}`
+      ret = `${CATCH_ALL_PARAM_NAME}${this.paramName}`;
     }
     return ret;
   }

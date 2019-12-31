@@ -156,18 +156,18 @@ describe('#pathparamnode.ts', () => {
     });
 
     it('.findRoutes should return iterator with all matches', () => {
-      const nodeWithPrefixAndPostfix = new PathParamNode('id', '.html', 'order-');
+      const myNode = new PathParamNode('id', '.html', 'order-');
       const ctrl = new BasicController('controller1', 'id1', 2);
       const ctrl2 = new BasicController('controller2', 'id2', 1);
-      nodeWithPrefixAndPostfix.addController(ctrl);
-      nodeWithPrefixAndPostfix.addController(ctrl2);
+      myNode.addController(ctrl);
+      myNode.addController(ctrl2);
 
-      const foundRoutes = nodeWithPrefixAndPostfix.findRoutes('order-1234.html');
+      const foundRoutes = myNode.findRoutes('order-1234.html');
 
       const route1 = foundRoutes.next();
       const route2 = foundRoutes.next();
 
-      expect(route1.value.node).to.equal(nodeWithPrefixAndPostfix);
+      expect(route1.value.node).to.equal(myNode);
 
       expect(route1.value.controller).to.equal(ctrl);
 
@@ -175,47 +175,45 @@ describe('#pathparamnode.ts', () => {
 
       expect(route1.value.params.pathParams[0].paramValue).to.equal('1234');
 
-      expect(route2.value.node).to.equal(nodeWithPrefixAndPostfix);
+      expect(route2.value.node).to.equal(myNode);
 
       expect(route2.value.controller).to.equal(ctrl2);
     });
 
     it('.findRoutes called with non-matching uri should return empty iterator', () => {
-      const nodeWithPrefixAndPostfix = new PathParamNode('id', '.html', 'order-');
+      const myNode = new PathParamNode('id', '.html', 'order-');
       const ctrl = new BasicController('controller1', 'id1', 2);
       const ctrl2 = new BasicController('controller2', 'id2', 1);
-      nodeWithPrefixAndPostfix.addController(ctrl);
-      nodeWithPrefixAndPostfix.addController(ctrl2);
+      myNode.addController(ctrl);
+      myNode.addController(ctrl2);
 
-      const foundRoutes = nodeWithPrefixAndPostfix.findRoutes('1234.html');
+      const foundRoutes = myNode.findRoutes('1234.html');
 
       expect(foundRoutes.next().value).to.equal(undefined);
     });
 
     it('.findRoute uri should return single RouteMatch with highest priority', () => {
-      const nodeWithPrefixAndPostfix = new PathParamNode('id', '.html', 'order-');
+      const myNode = new PathParamNode('id', '.html', 'order-');
       const ctrl = new BasicController('controller1', 'id1', 2);
       const ctrl2 = new BasicController('controller2', 'id2', 1);
-      nodeWithPrefixAndPostfix.addController(ctrl2);
-      nodeWithPrefixAndPostfix.addController(ctrl);
+      myNode.addController(ctrl2);
+      myNode.addController(ctrl);
 
-      const route = <IRouteMatch<BasicController<string>>>(
-        nodeWithPrefixAndPostfix.findRoute('order-1234.html')
-      );
+      const route = <IRouteMatch<BasicController<string>>>myNode.findRoute('order-1234.html');
 
-      expect(route.node).to.equal(nodeWithPrefixAndPostfix);
+      expect(route.node).to.equal(myNode);
 
       expect(route.controller).to.equal(ctrl);
     });
 
     it('.findRoute with non-matching uri should return undefined', () => {
-      const nodeWithPrefixAndPostfix = new PathParamNode('id', '.html', 'order-');
+      const myNode = new PathParamNode('id', '.html', 'order-');
       const ctrl = new BasicController('controller1', 'id1', 2);
       const ctrl2 = new BasicController('controller2', 'id2', 1);
-      nodeWithPrefixAndPostfix.addController(ctrl2);
-      nodeWithPrefixAndPostfix.addController(ctrl);
+      myNode.addController(ctrl2);
+      myNode.addController(ctrl);
 
-      const route = nodeWithPrefixAndPostfix.findRoute('1234.html');
+      const route = myNode.findRoute('1234.html');
 
       expect(route).to.equal(undefined);
     });

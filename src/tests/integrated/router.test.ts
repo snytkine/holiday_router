@@ -30,7 +30,6 @@ describe('#Integrated Router test', () => {
   router.addRoute(uri2, ctrl6);
 
   describe('#findRoute tests', () => {
-
     it('#findRoutes should return iterator of routeMatches', () => {
       const res = router.findRoutes('/catalog/toys/cars/honda/crv');
       const routeMatches = Array.from(res);
@@ -123,14 +122,14 @@ describe('#Integrated Router test', () => {
     });
 
     it('.addRoute with 2 urls that start with "/" should add just one child node "/"', () => {
-      const router = new Router();
-      const ctrl = new BasicController('controller1', 'ctrl1');
-      const ctrl2 = new BasicController('controller1', 'ctrl2');
+      const rtr = new Router();
+      const controller = new BasicController('controller1', 'ctrl1');
+      const controller2 = new BasicController('controller1', 'ctrl2');
 
-      router.addRoute('/path1', ctrl);
-      router.addRoute('/path2', ctrl2);
+      rtr.addRoute('/path1', controller);
+      rtr.addRoute('/path2', controller2);
 
-      expect(router.rootNode.children.length).to.equal(1);
+      expect(rtr.rootNode.children.length).to.equal(1);
     });
 
     it('should not find matching regex route if regex param did not match but find next matching route', () => {
@@ -152,20 +151,22 @@ describe('#Integrated Router test', () => {
     });
 
     it('.addRoute with empty url should add controller', () => {
-      const router = new Router();
-      const ctrl = new UniqueController('rootController');
-      router.addRoute('', ctrl);
+      const rtr = new Router();
+      const controller = new UniqueController('rootController');
+      rtr.addRoute('', controller);
 
-      expect(router.rootNode.controllers[0]).to.equal(ctrl);
+      expect(rtr.rootNode.controllers[0]).to.equal(controller);
     });
   });
 
   describe('#getAllRoutes test', () => {
     it('#Should return array of route objects', () => {
       const res = router.getAllRoutes();
-      expect(res.sort((item1, item2) => {
-        return (item1.controller.id > item2.controller.id) ? 1:-1;
-      })).to.deep.equal([
+      expect(
+        res.sort((item1, item2) => {
+          return item1.controller.id > item2.controller.id ? 1 : -1;
+        }),
+      ).to.deep.equal([
         { uri: uri1, controller: ctrl1 },
         { uri: uri2, controller: ctrl2 },
         { uri: uri3, controller: ctrl3 },
@@ -177,47 +178,40 @@ describe('#Integrated Router test', () => {
   });
 
   describe('#makeUri tests', () => {
-
     it('Should create full url for ctrl2', () => {
       const url = router.makeUri('ctrl2', {
-        'make': 'honda',
-        'model': 'crv',
+        make: 'honda',
+        model: 'crv',
       });
 
-      expect(url)
-        .to
-        .equal('/catalog/toys/cars/honda/crv');
+      expect(url).to.equal('/catalog/toys/cars/honda/crv');
     });
 
     it('Should create full url for ctrl3', () => {
       const url = router.makeUri('ctrl3', {
-        'make': 'toyota',
+        make: 'toyota',
         'model-x': 'rav4',
-        'id': 'xle',
+        id: 'xle',
       });
 
-      expect(url)
-        .to
-        .equal('/catalog/toys/cars/toyota/mymodel-rav4-item/id-xle.html');
+      expect(url).to.equal('/catalog/toys/cars/toyota/mymodel-rav4-item/id-xle.html');
     });
 
     it('Should create full url with regex pattern in url for ctrl4', () => {
       const url = router.makeUri('ctrl4', {
-        'year': '2020',
-        'id': 'widget-123red',
+        year: '2020',
+        id: 'widget-123red',
       });
 
-      expect(url)
-        .to
-        .equal('/catalog/toys/cars/widget-123red/2020');
+      expect(url).to.equal('/catalog/toys/cars/widget-123red/2020');
     });
 
     it('Should throw RouteError if controller not found by id', () => {
       let res: RouterError;
       try {
         const url = router.makeUri('ctrlX', {
-          'year': '2020',
-          'id': 'widget-123red',
+          year: '2020',
+          id: 'widget-123red',
         });
       } catch (e) {
         res = e;
@@ -226,6 +220,5 @@ describe('#Integrated Router test', () => {
       expect(res).to.be.instanceOf(RouterError);
       expect(res.code).to.be.equal(RouterErrorCode.CONTROLLER_NOT_FOUND);
     });
-
   });
 });

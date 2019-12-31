@@ -38,7 +38,7 @@ export default class Router<T extends IController> {
     this.rootNode = new RootNode();
   }
 
-  public* findRoutes(uri: string): IterableIterator<IRouteMatch<T>> {
+  public *findRoutes(uri: string): IterableIterator<IRouteMatch<T>> {
     debug('Entered Router.findRoutes() with uri="%s"', uri);
     yield* this.rootNode.findRoutes(uri);
   }
@@ -70,7 +70,7 @@ export default class Router<T extends IController> {
     /**
      * Special case if uri is empty then add controller to rootNode
      */
-    if (uri.trim()==='') {
+    if (uri.trim() === '') {
       debug(
         'Router.addRoute empty uri passed. Adding controller "%s" to rootNode',
         controller.toString(),
@@ -94,13 +94,15 @@ export default class Router<T extends IController> {
     return this.addRoute(tail, controller, addedNode);
   }
 
-
   makeUri(controllerId: string, params?: IStringMap): string {
     debug('Entered router.makeUri with controllerId="%s", params="%o"', controllerId, params);
     const routeMatch = this.rootNode.getRouteMatchByControllerId(controllerId);
 
     if (!routeMatch) {
-      throw new RouterError(`Controller with id="${controllerId}" not found`, RouterErrorCode.CONTROLLER_NOT_FOUND);
+      throw new RouterError(
+        `Controller with id="${controllerId}" not found`,
+        RouterErrorCode.CONTROLLER_NOT_FOUND,
+      );
     }
 
     return makeUrl(routeMatch.node, params);

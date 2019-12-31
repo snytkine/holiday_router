@@ -85,21 +85,16 @@ describe('#CatchAllNode.ts', () => {
       }
     });
 
-
     it('.makeUri should return uri', () => {
       const node = new CatchAllNode('images');
       const ctrl = new BasicController('controller1');
 
       node.addController(ctrl);
 
-      const uri = node.makeUri({ 'images': '/documents/files/file1.png' });
+      const uri = node.makeUri({ images: '/documents/files/file1.png' });
 
-      expect(uri)
-        .to
-        .equal('/documents/files/file1.png');
-
+      expect(uri).to.equal('/documents/files/file1.png');
     });
-
 
     it('.makeUri without param name should throw', () => {
       const node = new CatchAllNode('images');
@@ -109,18 +104,14 @@ describe('#CatchAllNode.ts', () => {
 
       try {
         node.makeUri({
-          'param1': 'value1',
-          'order': '1234',
+          param1: 'value1',
+          order: '1234',
         });
         throw new Error('CatchAllNode.makeUri should throw error with code MAKE_URI_MISSING_PARAM');
       } catch (e) {
-        expect(e.code)
-          .to
-          .equal(RouterErrorCode.MAKE_URI_MISSING_PARAM);
+        expect(e.code).to.equal(RouterErrorCode.MAKE_URI_MISSING_PARAM);
       }
-
     });
-
 
     it('.findRoutes should return iterator with controller1 and controller2 and passed uri as value of paramName.', () => {
       const node = new CatchAllNode('images');
@@ -132,39 +123,24 @@ describe('#CatchAllNode.ts', () => {
       const routes = node.findRoutes('/images/recent/small/pic.js');
       const aRoutes = Array.from(routes);
 
-      expect(aRoutes.length)
-        .to
-        .equal(2);
+      expect(aRoutes.length).to.equal(2);
 
-      expect(aRoutes[0].controller)
-        .to
-        .equal(ctrl);
+      expect(aRoutes[0].controller).to.equal(ctrl);
 
-      expect(aRoutes[0].params.pathParams[0].paramName)
-        .to
-        .equal('images');
+      expect(aRoutes[0].params.pathParams[0].paramName).to.equal('images');
 
-      expect(aRoutes[0].params.pathParams[0].paramValue)
-        .to
-        .equal('/images/recent/small/pic.js');
+      expect(aRoutes[0].params.pathParams[0].paramValue).to.equal('/images/recent/small/pic.js');
 
       /**
        * Second RouteMatch should have different controller
        * but same paramName and paramValue
        */
-      expect(aRoutes[1].controller)
-        .to
-        .equal(ctrl2);
+      expect(aRoutes[1].controller).to.equal(ctrl2);
 
-      expect(aRoutes[1].params.pathParams[0].paramName)
-        .to
-        .equal('images');
+      expect(aRoutes[1].params.pathParams[0].paramName).to.equal('images');
 
-      expect(aRoutes[1].params.pathParams[0].paramValue)
-        .to
-        .equal('/images/recent/small/pic.js');
+      expect(aRoutes[1].params.pathParams[0].paramValue).to.equal('/images/recent/small/pic.js');
     });
-
 
     it('Calling .findRoutes with different URIs should return same routes but with different paramValue', () => {
       const node = new CatchAllNode('images');
@@ -176,41 +152,27 @@ describe('#CatchAllNode.ts', () => {
       const aRoutes = Array.from(routes);
       const aRoutes2 = Array.from(routes2);
 
-      expect(aRoutes.length)
-        .to
-        .equal(1);
+      expect(aRoutes.length).to.equal(1);
 
-      expect(aRoutes[0].controller)
-        .to
-        .equal(ctrl);
+      expect(aRoutes[0].controller).to.equal(ctrl);
 
-      expect(aRoutes[0].params.pathParams[0].paramName)
-        .to
-        .equal('images');
+      expect(aRoutes[0].params.pathParams[0].paramName).to.equal('images');
 
-      expect(aRoutes[0].params.pathParams[0].paramValue)
-        .to
-        .equal('/images/recent/small/pic.js');
+      expect(aRoutes[0].params.pathParams[0].paramValue).to.equal('/images/recent/small/pic.js');
 
       /**
        * routes2 iterator should have same controller
        * and same paramName but paramValue should be
        * equal to uri passed in findRoute (a different uri)
        */
-      expect(aRoutes2[0].controller)
-        .to
-        .equal(ctrl);
+      expect(aRoutes2[0].controller).to.equal(ctrl);
 
-      expect(aRoutes2[0].params.pathParams[0].paramName)
-        .to
-        .equal('images');
+      expect(aRoutes2[0].params.pathParams[0].paramName).to.equal('images');
 
-      expect(aRoutes2[0].params.pathParams[0].paramValue)
-        .to
-        .equal('/anything/random/path/file.html');
-
+      expect(aRoutes2[0].params.pathParams[0].paramValue).to.equal(
+        '/anything/random/path/file.html',
+      );
     });
-
 
     it('CatchAllNode with 2 controllers .findRoute should return first route match', () => {
       const node = new CatchAllNode('images');
@@ -219,19 +181,15 @@ describe('#CatchAllNode.ts', () => {
       node.addController(ctrl);
       node.addController(ctrl2);
 
-      const foundRoute = <IRouteMatch<BasicController<string>>>node.findRoute('/documents/files/file1.png');
+      const foundRoute = <IRouteMatch<BasicController<string>>>(
+        node.findRoute('/documents/files/file1.png')
+      );
 
-      expect(node.controllers.length)
-        .to
-        .equal(2);
+      expect(node.controllers.length).to.equal(2);
 
-      expect(foundRoute)
-        .to
-        .haveOwnProperty('controller');
+      expect(foundRoute).to.haveOwnProperty('controller');
 
-      expect(foundRoute.controller)
-        .to
-        .equal(ctrl);
+      expect(foundRoute.controller).to.equal(ctrl);
     });
 
     it('.addChildNode should throw', () => {
@@ -239,7 +197,6 @@ describe('#CatchAllNode.ts', () => {
       let res: RouterError;
       try {
         node.addChildNode(new ExactMatchNode('mynode'));
-
       } catch (e) {
         res = e;
       }
@@ -256,17 +213,11 @@ describe('#CatchAllNode.ts', () => {
 
       const res = node.getAllRoutes();
 
-      expect(res.next().value.controller)
-        .to
-        .equal(ctrl);
+      expect(res.next().value.controller).to.equal(ctrl);
 
-      expect(res.next().value.controller)
-        .to
-        .equal(ctrl2);
+      expect(res.next().value.controller).to.equal(ctrl2);
 
-      expect(res.next().value)
-        .to
-        .equal(undefined);
+      expect(res.next().value).to.equal(undefined);
     });
 
     it('.getRouteMatchByControllerId should return matching controller', () => {

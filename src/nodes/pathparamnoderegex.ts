@@ -32,11 +32,11 @@ export class PathParamNodeRegex<T extends IController> extends PathParamNode<T> 
 
   equals(other: Node<T>): boolean {
     return (
-      other.type===this.type &&
+      other.type === this.type &&
       other instanceof PathParamNodeRegex &&
-      this.prefix===other.prefix &&
-      this.postfix===other.postfix &&
-      this.regex.source===other.regex.source
+      this.prefix === other.prefix &&
+      this.postfix === other.postfix &&
+      this.regex.source === other.regex.source
     );
   }
 
@@ -53,7 +53,13 @@ export class PathParamNodeRegex<T extends IController> extends PathParamNode<T> 
    * @param postfix
    * @param prefix
    */
-  constructor(uriPattern: string, paramName: string, re: RegExp, postfix: string = '', prefix: string = '') {
+  constructor(
+    uriPattern: string,
+    paramName: string,
+    re: RegExp,
+    postfix: string = '',
+    prefix: string = '',
+  ) {
     super(paramName, postfix, prefix);
     this.template = uriPattern;
     this.regex = re;
@@ -73,7 +79,7 @@ export class PathParamNodeRegex<T extends IController> extends PathParamNode<T> 
     return res || false;
   }
 
-  public* findRoutes(
+  public *findRoutes(
     uri: string,
     params: IUriParams = {
       pathParams: [],
@@ -124,7 +130,9 @@ export class PathParamNodeRegex<T extends IController> extends PathParamNode<T> 
 
     if (!this.regex.test(params[this.paramName])) {
       throw new RouterError(
-        `Cannot generate uri for node ${this.name} because value of param ${this.paramName} "${params[this.paramName]}" does not pass regex ${this.regex.source}`,
+        `Cannot generate uri for node ${this.name} because value of param ${this.paramName} "${
+          params[this.paramName]
+        }" does not pass regex ${this.regex.source}`,
         RouterErrorCode.MAKE_URI_REGEX_FAIL,
       );
     }
