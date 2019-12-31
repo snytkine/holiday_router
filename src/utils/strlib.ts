@@ -50,7 +50,8 @@ export module Strlib {
       i += 1;
     }
 
-    while ((ch = uri[i])) {
+    while (uri[i]) {
+      ch = uri[i];
       if (ch === postfix[j]) {
         acc += ch;
         j += 1;
