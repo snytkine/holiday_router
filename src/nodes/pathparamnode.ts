@@ -21,6 +21,10 @@ export class PathParamNode<T extends IController> extends RootNode<T> implements
 
   public readonly prefix: string;
 
+  get uriTemplate() {
+    return `${this.prefix}{${this.paramName}}${this.postfix}`;
+  }
+
   /**
    * Uri segment will be something like {string} uri |{region}/ or {region}_ or {region}
    * @param {string} uri |{region}/ or {region}_ or {region}

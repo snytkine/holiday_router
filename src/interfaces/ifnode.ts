@@ -88,6 +88,12 @@ export interface Node<T extends IController> {
 
   controllers: Array<T>;
 
+  /**
+   * Original uri template that was used in addController method call
+   * This way a full uri template can be recreated by following parent nodes.
+   */
+  uriTemplate: string;
+
   paramName: string;
 
   equals(other: Node<T>): boolean;
@@ -113,9 +119,9 @@ export interface Node<T extends IController> {
 
   // addRoute(uri: string, controller: T): Node<T>;
 
-  getAllControllers(): IterableIterator<IRouteMatch<T>>;
+  getAllRoutes(): IterableIterator<IRouteMatch<T>>;
 
-  getRouterMatchByControllerId(id: string): IRouteMatchResult<T>;
+  getRouteMatchByControllerId(id: string): IRouteMatchResult<T>;
 
   /**
    * @TODO

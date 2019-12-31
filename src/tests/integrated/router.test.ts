@@ -141,7 +141,7 @@ describe('#Integrated Router test', () => {
   describe('Makeurl tests', () => {
 
     it('Should create full url from Route', () => {
-      const ctrl = <IRouteMatch<BasicController<string>>>router.getRouterMatchByControllerId('ctrl3');
+      const ctrl = <IRouteMatch<BasicController<string>>>router.getRouteMatchByControllerId('ctrl3');
 
       const url = makeUrl(ctrl.node,{
         'make':    'honda',

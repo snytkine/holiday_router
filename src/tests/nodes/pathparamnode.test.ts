@@ -60,7 +60,7 @@ describe('#pathparamnode.ts', () => {
       expect(node.children.length).to.equal(2);
     });
 
-    it('.getAllControllers should return iterator with all controllers', () => {
+    it('.getAllRoutes should return iterator with all controllers', () => {
       const node = new PathParamNode('var1');
       const ctrl = new BasicController('controller1', 'id1', 2);
       const ctrl2 = new BasicController('controller2', 'id2', 1);
@@ -68,7 +68,7 @@ describe('#pathparamnode.ts', () => {
       node.addController(ctrl);
       node.addController(ctrl2);
 
-      const res = node.getAllControllers();
+      const res = node.getAllRoutes();
 
       expect(res.next().value.controller).to.equal(ctrl);
 
@@ -77,7 +77,7 @@ describe('#pathparamnode.ts', () => {
       expect(res.next().value).to.equal(undefined);
     });
 
-    it('.getAllControllers should return iterator with all controllers', () => {
+    it('.getAllRoutes should return iterator with all controllers', () => {
       const node = new PathParamNode('var1');
       const ctrl = new BasicController('controller1', 'id1', 2);
       const ctrl2 = new BasicController('controller2', 'id2', 1);
@@ -85,7 +85,7 @@ describe('#pathparamnode.ts', () => {
       node.addController(ctrl);
       node.addController(ctrl2);
 
-      const res = node.getAllControllers();
+      const res = node.getAllRoutes();
 
       expect(res.next().value.controller).to.equal(ctrl);
 
@@ -94,7 +94,7 @@ describe('#pathparamnode.ts', () => {
       expect(res.next().value).to.equal(undefined);
     });
 
-    it('.getRouterMatchByControllerId should return matching controller', () => {
+    it('.getRouteMatchByControllerId should return matching controller', () => {
       const node = new PathParamNode('var1');
       const ctrl = new BasicController('controller1', 'id1');
       const ctrl2 = new BasicController('controller2', 'id2');
@@ -104,7 +104,7 @@ describe('#pathparamnode.ts', () => {
       node.addController(ctrl2);
       node.addController(ctrl3);
 
-      const res = <IRouteMatch<BasicController<string>>>node.getRouterMatchByControllerId('id2');
+      const res = <IRouteMatch<BasicController<string>>>node.getRouteMatchByControllerId('id2');
 
       expect(res.node).to.equal(node);
 

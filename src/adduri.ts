@@ -126,7 +126,7 @@ export const makePathParamNodeRegex = (uriSegment: string): any => {
 
   const nodeRegex = new RegExp(pattern);
 
-  return new PathParamNodeRegex(paramName, nodeRegex, postfix, prefix);
+  return new PathParamNodeRegex(uriSegment, paramName, nodeRegex, postfix, prefix);
 };
 
 /**

@@ -17,7 +17,7 @@ export class ExactMatchNode<T extends IController> extends RootNode<T> implement
    * This means that if this exact match segment is widgets
    * but user was /orders/widgets/123
    * findRoute will receive uri=widgets/ and then
-   * rest will be "/" and will attempt to find "/" node in children
+   * rest will be "123" and will attempt to find "123" node in children
    *
    * @todo what's the reason for this being public? Try to make it private
    */
@@ -29,6 +29,10 @@ export class ExactMatchNode<T extends IController> extends RootNode<T> implement
    * is constant and we can set it at time of Node creation
    */
   protected segmentLength: number;
+
+  get uriTemplate() {
+    return this.origUriPattern;
+  }
 
   constructor(uri: string) {
     super();

@@ -257,7 +257,7 @@ describe('#CatchAllNode.ts', () => {
       }
     });
     /*
-    it('.getAllControllers should return iterator with all controllers', () => {
+    it('.getAllRoutes should return iterator with all controllers', () => {
       const node = new CatchAllNode('images');
       const ctrl = new BasicController('controller1')
       const ctrl2 = new BasicController('controller2')
@@ -265,7 +265,7 @@ describe('#CatchAllNode.ts', () => {
       node.addRoute('', ctrl);
       node.addRoute('', ctrl2);
 
-      const res = node.getAllControllers()
+      const res = node.getAllRoutes()
 
       expect(res.next().value.controller)
       .to
@@ -281,7 +281,7 @@ describe('#CatchAllNode.ts', () => {
 
     }) */
 
-    it('.getRouterMatchByControllerId should return matching controller', () => {
+    it('.getRouteMatchByControllerId should return matching controller', () => {
       const node = new CatchAllNode('images');
       const ctrl = new BasicController('controller1', 'id1');
       const ctrl2 = new BasicController('controller2', 'id2');
@@ -291,7 +291,7 @@ describe('#CatchAllNode.ts', () => {
       node.addController(ctrl2);
       node.addController(ctrl3);
 
-      const res = <IRouteMatch<BasicController<string>>>node.getRouterMatchByControllerId('id2');
+      const res = <IRouteMatch<BasicController<string>>>node.getRouteMatchByControllerId('id2');
 
       expect(res.node).to.equal(node);
 

@@ -53,6 +53,12 @@ export class RootNode<T extends IController> implements Node<T> {
 
   public children: Array<Node<T>>;
 
+  private uriPattern: string = '';
+
+  get uriTemplate() {
+    return this.uriPattern;
+  }
+
   constructor() {
     this.children = [];
     this.controllers = [];
@@ -108,20 +114,20 @@ export class RootNode<T extends IController> implements Node<T> {
     yield* this.findChildMatches(uri, params);
   }
 
-  public *getAllControllers(): IterableIterator<IRouteMatch<T>> {
+  public *getAllRoutes(): IterableIterator<IRouteMatch<T>> {
     for (const ctrl of this.controllers) {
-      yield new RouteMatch(this, ctrl, { pathParams: [] });
+      yield new RouteMatch(this, ctrl);
     }
 
     for (const childNode of this.children) {
-      yield* childNode.getAllControllers();
+      yield* childNode.getAllRoutes();
     }
   }
 
-  public getRouterMatchByControllerId(id: string): IRouteMatchResult<T> {
-    debug('Entered getRouterMatchByControllerId in node "%s" with id="id"', this, id);
+  public getRouteMatchByControllerId(id: string): IRouteMatchResult<T> {
+    debug('Entered getRouteMatchByControllerId in node "%s" with id="id"', this, id);
 
-    const it = this.getAllControllers();
+    const it = this.getAllRoutes();
     for (const routeMatch of it) {
       debug('controller="%s"', routeMatch.controller.id);
       if (routeMatch.controller.id === id) {

@@ -12,6 +12,8 @@ const debug = Debug('GP-URI-ROUTER:node:pathparamnoderegex');
 export class PathParamNodeRegex<T extends IController> extends PathParamNode<T> implements Node<T> {
   public readonly regex: RegExp;
 
+  private readonly template: string;
+
   get type() {
     return this.getTag(TAG.PATHPARAM_REGEX_NODE);
   }
@@ -24,18 +26,36 @@ export class PathParamNodeRegex<T extends IController> extends PathParamNode<T> 
     return `${TAG.PATHPARAM_REGEX_NODE}::'${this.paramName}'::'${this.regex.source}'::'${this.prefix}'::'${this.postfix}'`;
   }
 
+  get uriTemplate() {
+    return this.template;
+  }
+
   equals(other: Node<T>): boolean {
     return (
-      other.type === this.type &&
+      other.type===this.type &&
       other instanceof PathParamNodeRegex &&
-      this.prefix === other.prefix &&
-      this.postfix === other.postfix &&
-      this.regex.source === other.regex.source
+      this.prefix===other.prefix &&
+      this.postfix===other.postfix &&
+      this.regex.source===other.regex.source
     );
   }
 
-  constructor(paramName: string, re: RegExp, postfix: string = '', prefix = '') {
+  /**
+   * @todo need to pass original uri template just as it was
+   * provided to the addRoute. We should be able to recreate
+   * original uri template from node by traversing all parent nodes.
+   * We can re-create all original uri templates from all other nodes except
+   * for this one
+   *
+   * @param paramName
+   * @param uriSegment the original uri template that was passed to addRoute
+   * @param re
+   * @param postfix
+   * @param prefix
+   */
+  constructor(uriPattern: string, paramName: string, re: RegExp, postfix: string = '', prefix: string = '') {
     super(paramName, postfix, prefix);
+    this.template = uriPattern;
     this.regex = re;
     debug(
       'Created node %s this.prefix="%s" this.postfix="%s" this.paramName="%s" this.regex="%s"',
@@ -53,7 +73,7 @@ export class PathParamNodeRegex<T extends IController> extends PathParamNode<T> 
     return res || false;
   }
 
-  public *findRoutes(
+  public* findRoutes(
     uri: string,
     params: IUriParams = {
       pathParams: [],

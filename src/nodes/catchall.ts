@@ -56,6 +56,16 @@ export class CatchAllNode<T extends IController> extends RootNode<T> implements 
     return other.type === this.type;
   }
 
+  get uriTemplate() {
+    let ret = '';
+    if(this.paramName === CATCH_ALL_PARAM_NAME){
+      ret = CATCH_ALL_PARAM_NAME;
+    } else {
+      ret = `${CATCH_ALL_PARAM_NAME}${this.paramName}`
+    }
+    return ret;
+  }
+
   public *findRoutes(
     uri: string,
     params: IUriParams = { pathParams: [] },
