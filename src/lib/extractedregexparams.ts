@@ -1,5 +1,12 @@
 import { IRegexParams } from '../interfaces';
 
 export default class RegexParams implements IRegexParams {
-  constructor(public readonly paramName: string, public readonly params: Array<string>) {}
+  public readonly paramName: string;
+
+  public readonly params: Array<string>;
+
+  constructor(paramName: string, params: Array<string>) {
+    this.paramName = paramName;
+    this.params = params;
+  }
 }

@@ -7,11 +7,17 @@ import { IController } from '../interfaces';
  *
  */
 export default class BasicController<T> implements IController {
-  constructor(
-    public controller: T,
-    public id: string = 'BasicController',
-    public readonly priority = 1,
-  ) {}
+  public controller;
+
+  public readonly priority;
+
+  public readonly id;
+
+  constructor(controller: T, id: string = 'BasicController', priority = 1) {
+    this.priority = priority;
+    this.controller = controller;
+    this.id = id;
+  }
 
   public equals(other: IController) {
     return other instanceof BasicController && other.controller === this.controller;
