@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { PathParamNode, PathParamNodeRegex, PRIORITY } from '../../nodes';
+import { PathParamNodeRegex, PRIORITY } from '../../nodes';
 import { RouterError, RouterErrorCode } from '../../errors';
 import { BasicController } from '../../lib';
 
@@ -17,11 +17,7 @@ describe('#pathparamnoderegex node', () => {
     });
 
     it('Created object should be instance of PathParamNodeRegex using empty prefix and postfix', () => {
-      const node = new PathParamNodeRegex(
-        'item-{id:([0-9]+)}/',
-        'id',
-        new RegExp('([0-9]+)')
-      );
+      const node = new PathParamNodeRegex('item-{id:([0-9]+)}/', 'id', new RegExp('([0-9]+)'));
       expect(node).to.be.instanceOf(PathParamNodeRegex);
     });
 
@@ -150,7 +146,6 @@ describe('#pathparamnoderegex node', () => {
       expect(foundRoutes.node.controllers[1]).to.equal(ctrl2);
     });
 
-
     it('.getRouteMatch should return undefined if regex does not match', () => {
       const nodeWithPrefixAndPostfix = new PathParamNodeRegex(
         'order-{id:([0-9]+)}.html',
@@ -186,7 +181,6 @@ describe('#pathparamnoderegex node', () => {
 
       expect(foundRoutes).to.equal(undefined);
     });
-
 
     it('PathParamNodeRegex with child nodes .getRouteMatch should return RouteMatch from child nodes with all matches', () => {
       const nodeWithPrefixAndPostfix = new PathParamNodeRegex(
@@ -235,6 +229,5 @@ describe('#pathparamnoderegex node', () => {
 
       expect(routeMatch).to.equal(undefined);
     });
-
   });
 });

@@ -2,21 +2,22 @@ import { ISplitResult, UriParamResult, ROUTE_PATH_SEPARATOR } from '../interface
 
 export module Strlib {
   export function splitUriByPathSeparator(s: string, separators: Array<string>): ISplitResult {
-    let i = 0;
+    let i: number;
+    let char: string;
     const ret = {
       head: '',
       tail: '',
     };
 
-    for (const char of s) {
+    for (i = 0; i < s.length; i += 1) {
+      char = s[i];
       ret.head += char;
-      i += 1;
       if (separators.includes(char)) {
         break;
       }
     }
 
-    ret.tail = s.substring(i);
+    ret.tail = s.substring(i + 1);
 
     return ret;
   }

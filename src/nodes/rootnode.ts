@@ -103,28 +103,24 @@ export default class RootNode<T extends IController> implements Node<T> {
     return this.findChildMatches(uri, params);
   }
 
-  public *getAllRoutes(): IterableIterator<IRouteMatch<T>> {
-    if (this.controllers) {
-      yield new RouteMatch(this);
-    }
+  public getAllRoutes(): Array<IRouteMatch<T>> {
+    const ret = (this.controllers && [new RouteMatch(this)]) || [];
 
-    for (const childNode of this.children) {
-      yield* childNode.getAllRoutes();
-    }
+    return this.children.reduce((prev, cur) => {
+      return prev.concat(cur.getAllRoutes());
+    }, ret);
   }
 
   public getRouteMatchByControllerId(id: string): IRouteMatchResult<T> {
     debug('Entered getRouteMatchByControllerId in node "%s" with id="id"', this, id);
 
-    const it = this.getAllRoutes();
-    for (const routeMatch of it) {
-      debug('controllers="%o"', routeMatch.node.controllers);
-      if (routeMatch.node.controllers && routeMatch.node.controllers.find(ctrl => ctrl.id === id)) {
-        return routeMatch;
-      }
-    }
+    const allRoutes = this.getAllRoutes();
 
-    return undefined;
+    return allRoutes.find(routeMatch => {
+      return (
+        routeMatch.node.controllers && routeMatch.node.controllers.find(ctrl => ctrl.id === id)
+      );
+    });
   }
 
   public addChildNode(node: Node<T>): Node<T> {

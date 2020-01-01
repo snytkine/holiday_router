@@ -48,19 +48,6 @@ describe('#rootnode.ts', () => {
 
       expect(node.children.length).to.equal(2);
     });
-    /*
-     it('.addRoute with 2 urls that start with "/" should add just one child node "/"', () => {
-     const root = new RootNode();
-     const ctrl = new BasicController('controller1', 'ctrl1')
-     const ctrl2 = new BasicController('controller1', 'ctrl2')
-
-     root.addRoute('/path1', ctrl);
-     root.addRoute('/path2', ctrl2);
-
-     expect(root.children.length)
-     .to
-     .equal(1)
-     }) */
 
     it('RootNode with no child nodes .getRouteMatch should return undefined', () => {
       const node = new RootNode();
@@ -75,24 +62,6 @@ describe('#rootnode.ts', () => {
 
       expect(foundRoute).to.equal(undefined);
     });
-
-    /*
-     it('.findRoute on node with child nodes should return matching route from child node', () => {
-     const node = new RootNode();
-     const ctrl = new BasicController('controller1', 'id1')
-     const ctrl2 = new BasicController('controller2', 'id2')
-     const ctrl3 = new BasicController('controller3', 'id3')
-
-     node.addRoute('/path1', ctrl)
-     node.addRoute('/path1/sub1', ctrl2)
-     node.addRoute('/path2', ctrl3)
-
-     const res = <IRouteMatch<BasicController<string>>>node.findRoute('/path1/sub1');
-
-     expect(res.controller)
-     .to
-     .equal(ctrl2)
-     }) */
 
     it('RootNode with child nodes .getRouteMatch should return RouteMatch with matches from child node', () => {
       const node = new RootNode();
@@ -193,11 +162,11 @@ describe('#rootnode.ts', () => {
       node.addController(ctrl2);
 
       const res = node.getAllRoutes();
-      const { controllers } = res.next().value.node;
+      const { controllers } = res[0].node;
 
       expect(controllers[0]).to.equal(ctrl);
       expect(controllers[1]).to.equal(ctrl2);
-      expect(res.next().value).to.equal(undefined);
+      expect(res[1]).to.equal(undefined);
     });
   });
 });

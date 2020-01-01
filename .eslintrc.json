@@ -9,8 +9,7 @@
   ],
   "parser": "@typescript-eslint/parser",
   "rules": {
-    "no-inner-declarations": "off",
-    "no-restricted-syntax": "off"
+    "no-inner-declarations": "off"
   },
   "overrides": [
     {

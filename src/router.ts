@@ -90,24 +90,16 @@ export default class Router<T extends IController> {
     return makeUrl(routeMatch.node, params);
   }
 
-  /**
-   * @todo need to fix pathparamnoderegex constructor
-   * and pass original uri template, otherwise we cannot recreate
-   * full uri template from node since original template is lost in regex node
-   */
   public getAllRoutes(): Array<IRouteInfo> {
-    const routes = Array.from(this.rootNode.getAllRoutes());
-    const res = routes.map(routeMatch => {
-      return routeMatch.node.controllers.map(
-        controller => new RouteInfo(makeUriTemplate(routeMatch.node), controller),
-      );
-    });
-
-    /**
-     * Flatten array
-     */
-    return res.reduce((prev, curr) => {
-      return prev.concat(curr);
-    });
+    const routes = this.rootNode.getAllRoutes();
+    return routes
+      .map(routeMatch => {
+        return routeMatch.node.controllers.map(
+          controller => new RouteInfo(makeUriTemplate(routeMatch.node), controller),
+        );
+      })
+      .reduce((prev, curr) => {
+        return prev.concat(curr);
+      });
   }
 }

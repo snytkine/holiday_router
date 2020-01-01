@@ -69,11 +69,11 @@ describe('#pathparamnode.ts', () => {
       node.addController(ctrl2);
 
       const res = node.getAllRoutes();
-      const { controllers } = res.next().value.node;
+      const { controllers } = res[0].node;
 
       expect(controllers[0]).to.equal(ctrl);
       expect(controllers[1]).to.equal(ctrl2);
-      expect(res.next().value).to.equal(undefined);
+      expect(res[1]).to.equal(undefined);
     });
 
     it('.getRouteMatchByControllerId should return matching RouteMatch', () => {
@@ -171,7 +171,9 @@ describe('#pathparamnode.ts', () => {
       myNode.addController(ctrl2);
       myNode.addController(ctrl);
 
-      const routeMatch = <IRouteMatch<BasicController<string>>>myNode.getRouteMatch('order-1234.html')
+      const routeMatch = <IRouteMatch<BasicController<string>>>(
+        myNode.getRouteMatch('order-1234.html')
+      );
 
       expect(routeMatch.node).to.equal(myNode);
 
@@ -197,7 +199,6 @@ describe('#pathparamnode.ts', () => {
 
       expect(routeMatch).to.equal(undefined);
     });
-
   });
 
   describe('#PathParamNode with child nodes test', () => {

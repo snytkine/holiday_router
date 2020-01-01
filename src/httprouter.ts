@@ -64,7 +64,7 @@ export default class HttpRouter<T extends IController> {
   public getAllRoutes(): Array<IHttpRouteInfo> {
     const ret = [];
 
-    for (const [httpMethod, router] of this.routers) {
+    this.routers.forEach((router, httpMethod) => {
       ret.push(
         router.getAllRoutes().map(routeInfo => {
           return {
@@ -74,7 +74,7 @@ export default class HttpRouter<T extends IController> {
           };
         }),
       );
-    }
+    });
 
     /**
      * Flatten array

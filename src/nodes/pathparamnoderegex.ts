@@ -107,9 +107,8 @@ export default class PathParamNodeRegex<T extends IController> extends PathParam
           return new RouteMatch(this, copiedParams);
         }
         return this.findChildMatches(extractedParam.rest, copiedParams);
-      } else {
-        debug('PathParamNode "%s" .getRouteMatch no regexParams', this.name)
       }
+      debug('PathParamNode "%s" .getRouteMatch no regexParams', this.name);
     }
 
     debug('PathParamRegex "%s" no extractedParams', this.name);

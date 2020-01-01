@@ -113,31 +113,38 @@ describe('#HttpRouter tests', () => {
     httpRouter.addRoute('post', uri2, ctrl6);
     it('#Should return array of route objects', () => {
       const res = httpRouter.getAllRoutes();
-      expect(res).to.deep.equal([{
-        'uri': '/catalog/toys/',
-        'controller': { 'priority': 1, 'controller': 'CTRL-1', 'id': 'ctrl1' },
-        'method': 'get',
-      }, {
-        'uri': '/catalog/toys/cars/{make}/{model}',
-        'controller': { 'priority': 1, 'controller': 'CTRL-2', 'id': 'ctrl2' },
-        'method': 'get',
-      }, {
-        'uri': '/catalog/toys/',
-        'controller': { 'priority': 1, 'controller': 'CTRL-3', 'id': 'ctrl3' },
-        'method': 'post',
-      }, {
-        'uri': '/catalog/toys/',
-        'controller': { 'priority': 1, 'controller': 'CTRL-5', 'id': 'ctrl5' },
-        'method': 'post',
-      }, {
-        'uri': '/catalog/toys/cars/{make}/{model}',
-        'controller': { 'priority': 1, 'controller': 'CTRL-4', 'id': 'ctrl4' },
-        'method': 'post',
-      }, {
-        'uri': '/catalog/toys/cars/{make}/{model}',
-        'controller': { 'priority': 1, 'controller': 'CTRL-6', 'id': 'ctrl6' },
-        'method': 'post',
-      }]);
+      expect(res).to.deep.equal([
+        {
+          uri: '/catalog/toys/',
+          controller: { priority: 1, controller: 'CTRL-1', id: 'ctrl1' },
+          method: 'get',
+        },
+        {
+          uri: '/catalog/toys/cars/{make}/{model}',
+          controller: { priority: 1, controller: 'CTRL-2', id: 'ctrl2' },
+          method: 'get',
+        },
+        {
+          uri: '/catalog/toys/',
+          controller: { priority: 1, controller: 'CTRL-3', id: 'ctrl3' },
+          method: 'post',
+        },
+        {
+          uri: '/catalog/toys/',
+          controller: { priority: 1, controller: 'CTRL-5', id: 'ctrl5' },
+          method: 'post',
+        },
+        {
+          uri: '/catalog/toys/cars/{make}/{model}',
+          controller: { priority: 1, controller: 'CTRL-4', id: 'ctrl4' },
+          method: 'post',
+        },
+        {
+          uri: '/catalog/toys/cars/{make}/{model}',
+          controller: { priority: 1, controller: 'CTRL-6', id: 'ctrl6' },
+          method: 'post',
+        },
+      ]);
     });
   });
 });

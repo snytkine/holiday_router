@@ -100,10 +100,6 @@ export interface Node<T extends IController> {
 
   getRouteMatch(uri: string, params?: IUriParams): IRouteMatchResult<T>;
 
-  // findRoutes(uri: string, params?: IUriParams): IterableIterator<IRouteMatch<T>>;
-
-  // findRoute(uri: string, params?: IUriParams): IRouteMatchResult<T>;
-
   /**
    * May throw error if addChild fails
    * such as in case of adding a node that equals to
@@ -119,9 +115,7 @@ export interface Node<T extends IController> {
 
   addController(controller: T): Node<T>;
 
-  // addRoute(uri: string, controller: T): Node<T>;
-
-  getAllRoutes(): IterableIterator<IRouteMatch<T>>;
+  getAllRoutes(): Array<IRouteMatch<T>>;
 
   getRouteMatchByControllerId(id: string): IRouteMatchResult<T>;
 
