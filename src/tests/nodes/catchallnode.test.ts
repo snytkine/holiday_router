@@ -76,13 +76,13 @@ describe('#CatchAllNode.ts', () => {
       const node = new CatchAllNode();
       const ctrl = new BasicController('controller1');
       node.addController(ctrl);
-
+      let res: RouterError;
       try {
         node.addController(ctrl);
-        throw new Error('CatchAllNode.addController should throw DUPLICATE_CONTROLLER error');
       } catch (e) {
-        expect(e.code).to.equal(RouterErrorCode.DUPLICATE_CONTROLLER);
+        res = e;
       }
+      expect(res.code).to.equal(RouterErrorCode.DUPLICATE_CONTROLLER);
     });
 
     it('.makeUri should return uri', () => {
@@ -101,95 +101,58 @@ describe('#CatchAllNode.ts', () => {
       const ctrl = new BasicController('controller1');
 
       node.addController(ctrl);
-
+      let res: RouterError;
       try {
         node.makeUri({
           param1: 'value1',
           order: '1234',
         });
-        throw new Error('CatchAllNode.makeUri should throw error with code MAKE_URI_MISSING_PARAM');
       } catch (e) {
-        expect(e.code).to.equal(RouterErrorCode.MAKE_URI_MISSING_PARAM);
+        res = e;
       }
+      expect(res.code).to.equal(RouterErrorCode.MAKE_URI_MISSING_PARAM);
     });
 
-    it('.findRoutes should return iterator with controller1 and controller2 and passed uri as value of paramName.', () => {
+    it('.getRouteMatch should return RouteMatch with controller1 and controller2 and passed uri as value of paramName.', () => {
       const node = new CatchAllNode('images');
       const ctrl = new BasicController('controller1');
       const ctrl2 = new BasicController('controller2');
       node.addController(ctrl);
       node.addController(ctrl2);
 
-      const routes = node.findRoutes('/images/recent/small/pic.js');
-      const aRoutes = Array.from(routes);
+      const routeMatch = node.getRouteMatch('/images/recent/small/pic.js');
 
-      expect(aRoutes.length).to.equal(2);
-
-      expect(aRoutes[0].controller).to.equal(ctrl);
-
-      expect(aRoutes[0].params.pathParams[0].paramName).to.equal('images');
-
-      expect(aRoutes[0].params.pathParams[0].paramValue).to.equal('/images/recent/small/pic.js');
+      expect(routeMatch.node.controllers.length).to.equal(2);
+      expect(routeMatch.node.controllers[0]).to.equal(ctrl);
+      expect(routeMatch.params.pathParams[0].paramName).to.equal('images');
+      expect(routeMatch.params.pathParams[0].paramValue).to.equal('/images/recent/small/pic.js');
 
       /**
        * Second RouteMatch should have different controller
        * but same paramName and paramValue
        */
-      expect(aRoutes[1].controller).to.equal(ctrl2);
-
-      expect(aRoutes[1].params.pathParams[0].paramName).to.equal('images');
-
-      expect(aRoutes[1].params.pathParams[0].paramValue).to.equal('/images/recent/small/pic.js');
+      expect(routeMatch.node.controllers[1]).to.equal(ctrl2);
     });
 
-    it('Calling .findRoutes with different URIs should return same routes but with different paramValue', () => {
+    it('Calling .getRouteMatch with different URIs should return same routes but with different paramValue', () => {
       const node = new CatchAllNode('images');
       const ctrl = new BasicController('controller1');
       node.addController(ctrl);
 
-      const routes = node.findRoutes('/images/recent/small/pic.js');
-      const routes2 = node.findRoutes('/anything/random/path/file.html');
-      const aRoutes = Array.from(routes);
-      const aRoutes2 = Array.from(routes2);
+      const routeMatch = node.getRouteMatch('/images/recent/small/pic.js');
+      const routeMatch2 = node.getRouteMatch('/anything/random/path/file.html');
 
-      expect(aRoutes.length).to.equal(1);
-
-      expect(aRoutes[0].controller).to.equal(ctrl);
-
-      expect(aRoutes[0].params.pathParams[0].paramName).to.equal('images');
-
-      expect(aRoutes[0].params.pathParams[0].paramValue).to.equal('/images/recent/small/pic.js');
+      expect(routeMatch.node.controllers.length).to.equal(1);
+      expect(routeMatch.node.controllers[0]).to.equal(ctrl);
+      expect(routeMatch.params.pathParams[0].paramName).to.equal('images');
+      expect(routeMatch.params.pathParams[0].paramValue).to.equal('/images/recent/small/pic.js');
 
       /**
-       * routes2 iterator should have same controller
+       * routeMatch2  should have same controller
        * and same paramName but paramValue should be
        * equal to uri passed in findRoute (a different uri)
        */
-      expect(aRoutes2[0].controller).to.equal(ctrl);
-
-      expect(aRoutes2[0].params.pathParams[0].paramName).to.equal('images');
-
-      expect(aRoutes2[0].params.pathParams[0].paramValue).to.equal(
-        '/anything/random/path/file.html',
-      );
-    });
-
-    it('CatchAllNode with 2 controllers .findRoute should return first route match', () => {
-      const node = new CatchAllNode('images');
-      const ctrl = new BasicController('controller1');
-      const ctrl2 = new BasicController('controller2');
-      node.addController(ctrl);
-      node.addController(ctrl2);
-
-      const foundRoute = <IRouteMatch<BasicController<string>>>(
-        node.findRoute('/documents/files/file1.png')
-      );
-
-      expect(node.controllers.length).to.equal(2);
-
-      expect(foundRoute).to.haveOwnProperty('controller');
-
-      expect(foundRoute.controller).to.equal(ctrl);
+      expect(routeMatch2.node.controllers[0]).to.equal(ctrl);
     });
 
     it('.addChildNode should throw', () => {
@@ -212,11 +175,10 @@ describe('#CatchAllNode.ts', () => {
       node.addController(ctrl2);
 
       const res = node.getAllRoutes();
+      const controllers = res.next().value.node.controllers;
 
-      expect(res.next().value.controller).to.equal(ctrl);
-
-      expect(res.next().value.controller).to.equal(ctrl2);
-
+      expect(controllers[0]).to.equal(ctrl);
+      expect(controllers[1]).to.equal(ctrl2);
       expect(res.next().value).to.equal(undefined);
     });
 
@@ -234,7 +196,7 @@ describe('#CatchAllNode.ts', () => {
 
       expect(res.node).to.equal(node);
 
-      expect(res.controller).to.equal(ctrl2);
+      expect(res.node.controllers).to.include(ctrl2);
     });
   });
 });

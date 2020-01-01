@@ -1,7 +1,7 @@
 import Debug from 'debug';
 import * as methods from 'methods';
 import Router from './router';
-import { IController, IRouteMatch, IRouteMatchResult, IStringMap, Node } from './interfaces';
+import { IController, IRouteMatch, IRouteMatchResult, IStringMap, IUriParams, Node } from './interfaces';
 import { RouterError } from './errors';
 import RouterErrorCode from './errors/errorcodes';
 import { IHttpRouteInfo } from './interfaces/routeinfo';
@@ -11,30 +11,15 @@ const debug = Debug('GP-URI-ROUTER:router');
 export default class HttpRouter<T extends IController> {
   private routers: Map<string, Router<T>> = new Map();
 
-  /**
-   * Important httpMethod is case sensitive, must be passed in lower case
-   * @param httpMethod
-   * @param uri
-   */
-  public *findRoutes(httpMethod: string, uri: string): IterableIterator<IRouteMatch<T>> {
-    debug('Entered Router.findRoutes() with method="%s" uri="%s"', httpMethod, uri);
+  public getRouteMatch(httpMethod: string, uri: string): IRouteMatchResult<T> {
+    debug('Entered HttpRouter.getRouteMatch with method="%s" uri="%s"', httpMethod, uri);
     const methodRouter = this.routers.get(httpMethod);
     if (!methodRouter) {
-      debug('HttpRouter.findRoutes Http Method "%s" not found in router', httpMethod);
+      debug('HttpRouter.getRouteMatch Http Method "%s" not found in router', httpMethod);
       return undefined;
     }
 
-    return yield* methodRouter.findRoutes(uri);
-  }
-
-  public findRoute(httpMethod: string, uri: string): IRouteMatchResult<T> {
-    debug('Entered Router.findRoute() with method="%s" uri="%s"', httpMethod, uri);
-    const methodRouter = this.routers.get(httpMethod);
-    if (!methodRouter) {
-      debug('HttpRouter.findRoute Http Method "%s" not found in router', httpMethod);
-      return undefined;
-    }
-    return methodRouter.findRoute(uri);
+    return methodRouter.getRouteMatch(uri);
   }
 
   public addRoute(httpMethod: string, uri: string, controller: T): Node<T> {

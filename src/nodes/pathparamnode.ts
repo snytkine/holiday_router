@@ -1,10 +1,10 @@
 import Debug from 'debug';
-import { IController, IRouteMatch, IStringMap, Node, IUriParams } from '../interfaces';
+import { IController, IStringMap, Node, IUriParams, IRouteMatchResult } from '../interfaces';
 import RootNode from './rootnode';
 import { PRIORITY } from './nodepriorities';
 import TAG from '../enums/nodetags';
 import { Strlib, Utils } from '../utils';
-import { ExtractedPathParam } from '../lib';
+import { ExtractedPathParam, RouteMatch } from '../lib';
 
 import { RouterError, RouterErrorCode } from '../errors';
 
@@ -85,21 +85,22 @@ export default class PathParamNode<T extends IController> extends RootNode<T> im
       return false;
     }
 
+    /**
+     * Must also use .type because PathParamNodeRegex is also instanceof PathParamNode
+     * Here using instanceof because otherwise typescript will
+     * complain about other.prefix and other.potfix
+     * if typescript not sure that other node has these props
+     */
     const ret =
       other instanceof PathParamNode &&
+      other.type ===  this.type &&
       this.prefix === other.prefix &&
       this.postfix === other.postfix;
 
     return ret;
   }
 
-  public *findRoutes(
-    uri: string,
-    params: IUriParams = {
-      pathParams: [],
-      regexParams: [],
-    },
-  ): IterableIterator<IRouteMatch<T>> {
+  public getRouteMatch(uri: string, params?: IUriParams): IRouteMatchResult<T> {
     const extractedParam = Strlib.extractUriParam(uri, this.prefix, this.postfix);
 
     /**
@@ -118,12 +119,51 @@ export default class PathParamNode<T extends IController> extends RootNode<T> im
          * it means there are no more segments left in string to match
          * In this case this node is a complete match
          */
+        if (!this.controllers) {
+          return undefined;
+        }
+        return new RouteMatch(this, copiedParams);
+      } else {
+        /**
+         * Have rest of uri
+         * Loop over children to get result
+         */
+        return this.findChildMatches(extractedParam.rest, copiedParams);
+      }
+    }
+  }
+
+  /*public *findRoutes(
+    uri: string,
+    params: IUriParams = {
+      pathParams: [],
+      regexParams: [],
+    },
+  ): IterableIterator<IRouteMatch<T>> {
+    const extractedParam = Strlib.extractUriParam(uri, this.prefix, this.postfix);
+
+    /!**
+     * If there are no extractedParam then this generator
+     * will not yield anything
+     *!/
+    if (extractedParam) {
+      const copiedParams = Utils.copyPathParams(
+        params,
+        new ExtractedPathParam(this.paramName, extractedParam.param),
+      );
+
+      if (!extractedParam.rest) {
+        /!**
+         * If no tail left in search string
+         * it means there are no more segments left in string to match
+         * In this case this node is a complete match
+         *!/
         yield* this.getRouteMatchIterator(copiedParams);
       } else {
         yield* this.findChildMatches(extractedParam.rest, copiedParams);
       }
     }
-  }
+  }*/
 
   makeUri(params: IStringMap): string {
     if (!params[this.paramName]) {

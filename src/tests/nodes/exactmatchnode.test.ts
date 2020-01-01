@@ -46,11 +46,10 @@ describe('#ExactMatchNode.ts', () => {
       node.addController(ctrl2);
 
       const res = node.getAllRoutes();
+      const controllers = res.next().value.node.controllers;
 
-      expect(res.next().value.controller).to.equal(ctrl);
-
-      expect(res.next().value.controller).to.equal(ctrl2);
-
+      expect(controllers[0]).to.equal(ctrl);
+      expect(controllers[1]).to.equal(ctrl2);
       expect(res.next().value).to.equal(undefined);
     });
 
@@ -60,7 +59,7 @@ describe('#ExactMatchNode.ts', () => {
       expect(uri).to.equal('path1/');
     });
 
-    it('.getRouteMatchByControllerId should return matching controller', () => {
+    it('.getRouteMatchByControllerId should return matching RouteMatch', () => {
       const node = new ExactMatchNode('path1/');
       const ctrl = new BasicController('controller1', 'id1');
       const ctrl2 = new BasicController('controller2', 'id2');
@@ -73,8 +72,7 @@ describe('#ExactMatchNode.ts', () => {
       const res = <IRouteMatch<BasicController<string>>>node.getRouteMatchByControllerId('id2');
 
       expect(res.node).to.equal(node);
-
-      expect(res.controller).to.equal(ctrl2);
+      expect(res.node.controllers).to.include(ctrl2);
     });
 
     it('Calling addController method twice with same controller should throw', () => {
@@ -90,51 +88,44 @@ describe('#ExactMatchNode.ts', () => {
       }
     });
 
-    it('.findRoutes should return iterator with all matches', () => {
+    it('.getRouteMatch should return iterator with all matches', () => {
       const node = new ExactMatchNode('path1/');
       const ctrl = new BasicController('controller1', 'id1', 2);
       const ctrl2 = new BasicController('controller2', 'id2', 1);
       node.addController(ctrl);
       node.addController(ctrl2);
 
-      const foundRoutes = node.findRoutes('path1/');
+      const routeMatch = node.getRouteMatch('path1/');
 
-      const route1 = foundRoutes.next();
-      const route2 = foundRoutes.next();
-
-      expect(route1.value.node).to.equal(node);
-
-      expect(route1.value.controller).to.equal(ctrl);
-
-      expect(route2.value.node).to.equal(node);
-
-      expect(route2.value.controller).to.equal(ctrl2);
+      expect(routeMatch.node).to.equal(node);
+      expect(routeMatch.node.controllers[0]).to.equal(ctrl);
+      expect(routeMatch.node.controllers[1]).to.equal(ctrl2);
     });
 
-    it('.findRoute should return first match', () => {
+    it('.getRouteMatch should return first match', () => {
       const node = new ExactMatchNode('path1/');
       const ctrl = new BasicController('controller1', 'id1', 2);
       const ctrl2 = new BasicController('controller2', 'id2', 1);
       node.addController(ctrl);
       node.addController(ctrl2);
 
-      const route = <IRouteMatch<BasicController<string>>>node.findRoute('path1/');
+      const routeMatch = <IRouteMatch<BasicController<string>>>node.getRouteMatch('path1/');
 
-      expect(route.node).to.equal(node);
+      expect(routeMatch.node).to.equal(node);
 
-      expect(route.controller).to.equal(ctrl);
+      expect(routeMatch.node.controllers[0]).to.equal(ctrl);
     });
 
-    it('.findRoute with different URI should return undefined', () => {
+    it('.getRouteMatch with different URI should return undefined', () => {
       const node = new ExactMatchNode('path1/');
       const ctrl = new BasicController('controller1', 'id1', 2);
       const ctrl2 = new BasicController('controller2', 'id2', 1);
       node.addController(ctrl);
       node.addController(ctrl2);
 
-      const route = node.findRoute('path1');
+      const routeMatch = node.getRouteMatch('path1');
 
-      expect(route).to.equal(undefined);
+      expect(routeMatch).to.equal(undefined);
     });
 
     it('.addChildNode should add child node', () => {

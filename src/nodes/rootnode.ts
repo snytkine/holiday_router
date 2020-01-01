@@ -61,7 +61,6 @@ export default class RootNode<T extends IController> implements Node<T> {
 
   constructor() {
     this.children = [];
-    this.controllers = [];
     this.id = TAG.ROOT_NODE;
   }
 
@@ -76,26 +75,38 @@ export default class RootNode<T extends IController> implements Node<T> {
   /**
    * @param params
    */
-  protected *getRouteMatchIterator(params: IUriParams): IterableIterator<IRouteMatch<T>> {
-    debug('Entered getRouteMatchIterator with params=%O controllers=%O', params, this.controllers);
 
-    for (const controller of this.controllers) {
-      yield new RouteMatch(this, controller, params);
-    }
-  }
+  /* protected *getRouteMatchIterator(params: IUriParams): IterableIterator<IRouteMatch<T>> {
+   debug('Entered getRouteMatchIterator with params=%O controllers=%O', params, this.controllers);
+
+   for (const controller of this.controllers) {
+   yield new RouteMatch(this, controller, params);
+   }
+   }*/
 
   /**
    * @param {Node<T>} other
    * @returns {boolean}
    */
   equals(other: Node<T>): boolean {
-    return other.type === this.type;
+    return other.type===this.type;
   }
 
-  protected *findChildMatches(uri: string, params: IUriParams): IterableIterator<IRouteMatch<T>> {
-    for (const childNode of this.children) {
-      yield* childNode.findRoutes(uri, params);
+  /*protected *findChildMatches(uri: string, params: IUriParams): IterableIterator<IRouteMatch<T>> {
+   for (const childNode of this.children) {
+   yield* childNode.findRoutes(uri, params);
+   }
+   }*/
+
+  protected findChildMatches(uri: string, params: IUriParams): IRouteMatchResult<T> {
+    for (let i = 0; i < this.children.length; i += 1) {
+      const routeMatch = this.children[i].getRouteMatch(uri, params);
+      if (routeMatch) {
+        return routeMatch;
+      }
     }
+
+    return undefined;
   }
 
   /**
@@ -106,17 +117,22 @@ export default class RootNode<T extends IController> implements Node<T> {
    * @param {IUriParams} params
    * @returns {IRouteMatchResult<T>}
    */
-  public findRoute(uri: string, params?: IUriParams): IRouteMatchResult<T> {
-    return this.findRoutes(uri, params).next().value;
+  /*public findRoute(uri: string, params?: IUriParams): IRouteMatchResult<T> {
+   return this.findRoutes(uri, params).next().value;
+   }*/
+
+  /*public *findRoutes(uri: string, params?: IUriParams): IterableIterator<IRouteMatch<T>> {
+   yield* this.findChildMatches(uri, params);
+   }*/
+
+  getRouteMatch(uri: string, params?: IUriParams): IRouteMatchResult<T> {
+
+    return this.findChildMatches(uri, params);
   }
 
-  public *findRoutes(uri: string, params?: IUriParams): IterableIterator<IRouteMatch<T>> {
-    yield* this.findChildMatches(uri, params);
-  }
-
-  public *getAllRoutes(): IterableIterator<IRouteMatch<T>> {
-    for (const ctrl of this.controllers) {
-      yield new RouteMatch(this, ctrl);
+  public* getAllRoutes(): IterableIterator<IRouteMatch<T>> {
+    if (this.controllers) {
+      yield new RouteMatch(this);
     }
 
     for (const childNode of this.children) {
@@ -129,8 +145,8 @@ export default class RootNode<T extends IController> implements Node<T> {
 
     const it = this.getAllRoutes();
     for (const routeMatch of it) {
-      debug('controller="%s"', routeMatch.controller.id);
-      if (routeMatch.controller.id === id) {
+      debug('controllers="%o"', routeMatch.node.controllers);
+      if (routeMatch.node.controllers && routeMatch.node.controllers.find(ctrl => ctrl.id===id)) {
         return routeMatch;
       }
     }
@@ -167,6 +183,17 @@ export default class RootNode<T extends IController> implements Node<T> {
 
   public addController(controller: T): Node<T> {
     debug('Entered addController for node="%s" with controller="%s"', this.name, controller.id);
+
+    /**
+     * If controllers has not yet been initialized then create array with
+     * this controller
+     */
+    if (!this.controllers) {
+      debug('Node="%s" addController initializing new controllers array with controller="%s', this.name, controller);
+      this.controllers = [controller];
+
+      return this;
+    }
     /**
      * Must check if existing node equals to this node AND if this node
      * is equals to existing node because it's possible that existing node

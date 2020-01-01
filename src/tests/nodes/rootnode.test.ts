@@ -62,14 +62,14 @@ describe('#rootnode.ts', () => {
      .equal(1)
      }) */
 
-    it('RootNode with no child nodes .findRoute should return undefined', () => {
+    it('RootNode with no child nodes .getRouteMatch should return undefined', () => {
       const node = new RootNode();
       const ctrl = new BasicController('controller1');
       const ctrl2 = new BasicController('controller2');
       node.addController(ctrl);
       node.addController(ctrl2);
 
-      const foundRoute = <IRouteMatch<BasicController<string>>>node.findRoute('');
+      const foundRoute = <IRouteMatch<BasicController<string>>>node.getRouteMatch('');
 
       expect(node.controllers.length).to.equal(2);
 
@@ -94,7 +94,7 @@ describe('#rootnode.ts', () => {
      .equal(ctrl2)
      }) */
 
-    it('RootNode with child nodes .findRoutes should return iterator with matches from child node', () => {
+    it('RootNode with child nodes .getRouteMatch should return RouteMatch with matches from child node', () => {
       const node = new RootNode();
       const child1 = new ExactMatchNode('/uri1');
       const child2 = new ExactMatchNode('/uri2');
@@ -110,42 +110,43 @@ describe('#rootnode.ts', () => {
       node.addChildNode(child1);
       node.addChildNode(child2);
 
-      const foundRoutes = node.findRoutes('/uri2');
-      const aRoutes = Array.from(foundRoutes);
+      const foundRoutes = node.getRouteMatch('/uri2');
 
-      expect(aRoutes.length).to.equal(2);
+      expect(foundRoutes.node.controllers.length).to.equal(2);
 
-      expect(aRoutes[0].node).to.equal(child2);
+      expect(foundRoutes.node).to.equal(child2);
 
-      expect(aRoutes[1].node).to.equal(child2);
+      expect(foundRoutes.node.controllers[0].id).to.equal('id3');
 
-      expect(aRoutes[0].controller.id).to.equal('id3');
-
-      expect(aRoutes[1].controller.id).to.equal('id2');
+      expect(foundRoutes.node.controllers[1].id).to.equal('id2');
     });
 
-    it('RootNode with no child nodes .findRoute should return empty iterator', () => {
+    it('RootNode with no child nodes .getRouteMatch should return undefined', () => {
       const node = new RootNode();
       const ctrl = new BasicController('controller1');
       const ctrl2 = new BasicController('controller2');
       node.addController(ctrl);
       node.addController(ctrl2);
 
-      const foundRoutes = node.findRoutes('');
+      const foundRoutes = node.getRouteMatch('');
 
-      expect(foundRoutes.next().value).to.equal(undefined);
+      expect(foundRoutes).to.equal(undefined);
     });
 
-    it('RootNode .findRoutes should return iterator with all matches', () => {
+    /**
+     * @todo revisit this case - should rootNode return RouteMatch in the
+     * case
+     */
+    it('RootNode .getRouteMatch should return RouteMatch', () => {
       const node = new RootNode();
       const ctrl = new BasicController('controller1');
       const ctrl2 = new BasicController('controller2');
       node.addController(ctrl);
       node.addController(ctrl2);
 
-      const foundRoutes = node.findRoutes('');
+      const foundRoutes = node.getRouteMatch('');
 
-      expect(foundRoutes.next().value).to.equal(undefined);
+      expect(foundRoutes).to.equal(undefined);
     });
 
     it('Calling addController method twice with same controller should throw', () => {
@@ -161,7 +162,7 @@ describe('#rootnode.ts', () => {
       expect(res.code).to.equal(RouterErrorCode.DUPLICATE_CONTROLLER);
     });
 
-    it('.getRouteMatchByControllerId should return matching controller', () => {
+    it('.getRouteMatchByControllerId should return matching RouteMatch', () => {
       const node = new RootNode();
       const ctrl = new BasicController('controller1', 'id1');
       const ctrl2 = new BasicController('controller2', 'id2');
@@ -174,8 +175,7 @@ describe('#rootnode.ts', () => {
       const res = <IRouteMatch<BasicController<string>>>node.getRouteMatchByControllerId('id2');
 
       expect(res.node).to.equal(node);
-
-      expect(res.controller).to.equal(ctrl2);
+      expect(res.node.controllers).to.include(ctrl2);
     });
 
     it('.makeUri should return empty string', () => {
@@ -193,31 +193,12 @@ describe('#rootnode.ts', () => {
       node.addController(ctrl2);
 
       const res = node.getAllRoutes();
+      const controllers = res.next().value.node.controllers;
 
-      expect(res.next().value.controller).to.equal(ctrl);
-
-      expect(res.next().value.controller).to.equal(ctrl2);
-
+      expect(controllers[0]).to.equal(ctrl);
+      expect(controllers[1]).to.equal(ctrl2);
       expect(res.next().value).to.equal(undefined);
     });
 
-    /*
-     it('.getRouteMatchByControllerId on node with child nodes should return matching controller from child node', () => {
-     const node = new RootNode();
-     const ctrl = new BasicController('controller1', 'id1')
-     const ctrl2 = new BasicController('controller2', 'id2')
-     const ctrl3 = new BasicController('controller3', 'id3')
-
-     node.addRoute('/path1', ctrl)
-     node.addRoute('/path1/sub1', ctrl2)
-     node.addRoute('/path2', ctrl3)
-
-     const res = <IRouteMatch<BasicController<string>>>node.getRouteMatchByControllerId('id2');
-
-     expect(res.controller)
-     .to
-     .equal(ctrl2)
-
-     }) */
   });
 });

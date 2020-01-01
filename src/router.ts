@@ -1,9 +1,8 @@
 import Debug from 'debug';
 import {
   IController,
-  IRouteMatch,
   IRouteMatchResult,
-  IStringMap,
+  IStringMap, IUriParams,
   Node,
   PARENT_NODE,
   ROUTE_PATH_SEPARATOR,
@@ -13,6 +12,7 @@ import { makeUriTemplate, makeUrl, Strlib } from './utils';
 import { makeNode } from './utils/adduri';
 import { RouterError, RouterErrorCode } from './errors';
 import { IRouteInfo } from './interfaces/routeinfo';
+import { RouteInfo } from './lib';
 
 const debug = Debug('GP-URI-ROUTER:router');
 /**
@@ -38,14 +38,8 @@ export default class Router<T extends IController> {
     this.rootNode = new RootNode();
   }
 
-  public *findRoutes(uri: string): IterableIterator<IRouteMatch<T>> {
-    debug('Entered Router.findRoutes() with uri="%s"', uri);
-    yield* this.rootNode.findRoutes(uri);
-  }
-
-  public findRoute(uri: string): IRouteMatchResult<T> {
-    debug('Entered Router.findRoute() with uri="%s"', uri);
-    return this.rootNode.findRoutes(uri).next().value;
+  public getRouteMatch(uri: string, params?: IUriParams): IRouteMatchResult<T> {
+    return this.rootNode.getRouteMatch(uri, params);
   }
 
   /**
@@ -70,7 +64,7 @@ export default class Router<T extends IController> {
     /**
      * Special case if uri is empty then add controller to rootNode
      */
-    if (uri.trim() === '') {
+    if (uri.trim()==='') {
       debug(
         'Router.addRoute empty uri passed. Adding controller "%s" to rootNode',
         controller.toString(),
@@ -116,7 +110,8 @@ export default class Router<T extends IController> {
   public getAllRoutes(): Array<IRouteInfo> {
     const routes = Array.from(this.rootNode.getAllRoutes());
     return routes.map(routeMatch => {
-      return { uri: makeUriTemplate(routeMatch.node), controller: routeMatch.controller };
-    });
+      return routeMatch.node.controllers
+        .map(controller => new RouteInfo(makeUriTemplate(routeMatch.node), controller));
+    }).flat(1);
   }
 }

@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import HttpRouter from '../../httprouter';
-import { BasicController } from '../../lib';
+import { BasicController, RouteMatch } from '../../lib';
 import { ExactMatchNode, PathParamNode } from '../../nodes';
 import { RouterError, RouterErrorCode } from '../../errors';
 
@@ -45,7 +45,7 @@ describe('#HttpRouter tests', () => {
     });
   });
 
-  describe('#findRoutes tests', () => {
+  describe('#getRouteMatch tests', () => {
     const httpRouter = new HttpRouter();
     httpRouter.addRoute('get', uri1, ctrl1);
     httpRouter.addRoute('get', uri2, ctrl2);
@@ -54,16 +54,17 @@ describe('#HttpRouter tests', () => {
     httpRouter.addRoute('post', uri1, ctrl5);
     httpRouter.addRoute('post', uri2, ctrl6);
 
-    it('findRoutes should return iterator matching httpMethod and uri', () => {
-      const res = httpRouter.findRoutes('get', '/catalog/toys/cars/honda/crv');
-      const routeMatches = Array.from(res);
-      expect(routeMatches.length).to.equal(1);
-      expect(routeMatches[0].controller.id).to.equal('ctrl2');
+    it('getRouteMatch should return iterator matching httpMethod and uri', () => {
+      const res = <RouteMatch<BasicController<string>>>httpRouter.getRouteMatch('get', '/catalog/toys/cars/honda/crv');
+
+      expect(res).to.be.instanceOf(RouteMatch);
+      expect(res.node.controllers.length).to.equal(1);
+      expect(res.node.controllers[0].controller.id).to.equal('ctrl2');
     });
 
-    it('findRoutes should return undefined if route for httpMethod does not exist for uri', () => {
-      const res = httpRouter.findRoutes('put', '/catalog/toys/cars/honda/crv');
-      expect(res.next().value).to.equal(undefined);
+    it('getRouteMatch should return undefined if route for httpMethod does not exist for uri', () => {
+      const res = httpRouter.getRouteMatch('put', '/catalog/toys/cars/honda/crv');
+      expect(res).to.equal(undefined);
     });
   });
 });

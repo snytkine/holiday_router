@@ -1,8 +1,8 @@
 import Debug from 'debug';
-import { IController, IRouteMatch, IStringMap, Node, IUriParams } from '../interfaces';
+import { IController, IRouteMatch, IStringMap, Node, IUriParams, IRouteMatchResult } from '../interfaces';
 import PathParamNode from './pathparamnode';
 import { Utils, Strlib } from '../utils';
-import { ExtractedPathParam, ExtractedRegexParams } from '../lib';
+import { ExtractedPathParam, ExtractedRegexParams, RouteMatch } from '../lib';
 import { PRIORITY } from './nodepriorities';
 import TAG from '../enums/nodetags';
 import { RouterError, RouterErrorCode } from '../errors';
@@ -42,14 +42,9 @@ export default class PathParamNodeRegex<T extends IController> extends PathParam
   }
 
   /**
-   * @todo need to pass original uri template just as it was
-   * provided to the addRoute. We should be able to recreate
-   * original uri template from node by traversing all parent nodes.
-   * We can re-create all original uri templates from all other nodes except
-   * for this one
    *
+   * @param uriPattern
    * @param paramName
-   * @param uriSegment the original uri template that was passed to addRoute
    * @param re
    * @param postfix
    * @param prefix
@@ -80,13 +75,7 @@ export default class PathParamNodeRegex<T extends IController> extends PathParam
     return res || false;
   }
 
-  public *findRoutes(
-    uri: string,
-    params: IUriParams = {
-      pathParams: [],
-      regexParams: [],
-    },
-  ): IterableIterator<IRouteMatch<T>> {
+  public getRouteMatch(uri: string, params?: IUriParams): IRouteMatchResult<T> {
     const extractedParam = Strlib.extractUriParam(uri, this.prefix, this.postfix);
 
     if (extractedParam) {
@@ -113,12 +102,18 @@ export default class PathParamNodeRegex<T extends IController> extends PathParam
            * it means there are no more segments left in string to match
            * In this case this node is a complete match
            */
-          yield* this.getRouteMatchIterator(copiedParams);
+          if (!this.controllers) {
+            return undefined;
+          }
+
+          return new RouteMatch(this, copiedParams);
         } else {
-          yield* this.findChildMatches(extractedParam.rest, copiedParams);
+          return this.findChildMatches(extractedParam.rest, copiedParams);
         }
       }
     }
+
+    return undefined;
   }
 
   makeUri(params: IStringMap): string {

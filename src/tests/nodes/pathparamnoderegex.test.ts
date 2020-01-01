@@ -132,23 +132,16 @@ describe('#pathparamnoderegex node', () => {
       nodeWithPrefixAndPostfix.addController(ctrl);
       nodeWithPrefixAndPostfix.addController(ctrl2);
 
-      const foundRoutes = nodeWithPrefixAndPostfix.findRoutes('order-1234.html');
-      const route1 = foundRoutes.next();
-      const route2 = foundRoutes.next();
-      expect(route1.value.node).to.equal(nodeWithPrefixAndPostfix);
+      const foundRoutes = nodeWithPrefixAndPostfix.getRouteMatch('order-1234.html');
 
-      expect(route1.value.controller).to.equal(ctrl);
-
-      expect(route1.value.params.pathParams[0].paramName).to.equal('id');
-
-      expect(route1.value.params.pathParams[0].paramValue).to.equal('1234');
-
-      expect(route2.value.node).to.equal(nodeWithPrefixAndPostfix);
-
-      expect(route2.value.controller).to.equal(ctrl2);
+      expect(foundRoutes.node).to.equal(nodeWithPrefixAndPostfix);
+      expect(foundRoutes.node.controllers[0]).to.equal(ctrl);
+      expect(foundRoutes.params.pathParams[0].paramName).to.equal('id');
+      expect(foundRoutes.params.pathParams[0].paramValue).to.equal('1234');
+      expect(foundRoutes.node.controllers[1]).to.equal(ctrl2);
     });
 
-    it('PathParamNodeRegex with child nodes .findRoutes should return iterator from child nodes with all matches', () => {
+    it('PathParamNodeRegex with child nodes .getRouteMatch should return RouteMatch from child nodes with all matches', () => {
       const nodeWithPrefixAndPostfix = new PathParamNodeRegex(
         'order-{id:([0-9]+)}/',
         'id',
@@ -167,20 +160,19 @@ describe('#pathparamnoderegex node', () => {
       node2.addController(ctrl);
       nodeWithPrefixAndPostfix.addChildNode(node2);
 
-      const foundRoutes = nodeWithPrefixAndPostfix.findRoutes('order-1234/customer-NICK.html');
-      const route1 = foundRoutes.next();
+      const foundRoutes = nodeWithPrefixAndPostfix.getRouteMatch('order-1234/customer-NICK.html');
 
-      expect(route1.value.node).to.equal(node2);
+      expect(foundRoutes.node).to.equal(node2);
 
-      expect(route1.value.controller).to.equal(ctrl);
+      expect(foundRoutes.node.controllers[0]).to.equal(ctrl);
 
-      expect(route1.value.params.pathParams[0].paramName).to.equal('id');
+      expect(foundRoutes.params.pathParams[0].paramName).to.equal('id');
 
-      expect(route1.value.params.pathParams[0].paramValue).to.equal('1234');
+      expect(foundRoutes.params.pathParams[0].paramValue).to.equal('1234');
 
-      expect(route1.value.params.pathParams[1].paramName).to.equal('name');
+      expect(foundRoutes.params.pathParams[1].paramName).to.equal('name');
 
-      expect(route1.value.params.pathParams[1].paramValue).to.equal('NICK');
+      expect(foundRoutes.params.pathParams[1].paramValue).to.equal('NICK');
     });
   });
 });

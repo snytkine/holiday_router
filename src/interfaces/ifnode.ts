@@ -16,7 +16,7 @@ export interface IUriParams {
 }
 
 export interface IRouteMatch<T extends IController> {
-  controller: T;
+  //controllers: Array<T>;
   params: IUriParams;
   node: Node<T>;
 }
@@ -33,7 +33,7 @@ export interface IStringMap {
  * in which case if this.controller has not been initialized it will
  * be undefined and so the return value will also be undefined
  */
-export type IRouteMatchResult<T extends IController> = void | IRouteMatch<T>;
+export type IRouteMatchResult<T extends IController> = undefined | IRouteMatch<T>;
 
 export interface IController {
   /**
@@ -86,7 +86,7 @@ export interface Node<T extends IController> {
 
   name: string;
 
-  controllers: Array<T>;
+  controllers?: Array<T>;
 
   /**
    * Original uri template that was used in addController method call
@@ -98,9 +98,11 @@ export interface Node<T extends IController> {
 
   equals(other: Node<T>): boolean;
 
-  findRoutes(uri: string, params?: IUriParams): IterableIterator<IRouteMatch<T>>;
+  getRouteMatch(uri: string, params?: IUriParams): IRouteMatchResult<T>;
 
-  findRoute(uri: string, params?: IUriParams): IRouteMatchResult<T>;
+  //findRoutes(uri: string, params?: IUriParams): IterableIterator<IRouteMatch<T>>;
+
+  //findRoute(uri: string, params?: IUriParams): IRouteMatchResult<T>;
 
   /**
    * May throw error if addChild fails

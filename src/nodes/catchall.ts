@@ -5,14 +5,14 @@ import {
   IStringMap,
   Node,
   IUriParams,
-  CATCH_ALL_PARAM_NAME,
+  CATCH_ALL_PARAM_NAME, IRouteMatchResult,
 } from '../interfaces';
 import RootNode from './rootnode';
 
 import { PRIORITY } from './nodepriorities';
 import TAG from '../enums/nodetags';
 import { RouterError, RouterErrorCode } from '../errors';
-import { ExtractedPathParam } from '../lib';
+import { ExtractedPathParam, RouteMatch } from '../lib';
 
 const debug = Debug('GP-URI-ROUTER:node:catchallnode');
 
@@ -66,10 +66,8 @@ export default class CatchAllNode<T extends IController> extends RootNode<T> imp
     return ret;
   }
 
-  public *findRoutes(
-    uri: string,
-    params: IUriParams = { pathParams: [] },
-  ): IterableIterator<IRouteMatch<T>> {
+  public getRouteMatch(uri: string, params: IUriParams = {pathParams: []}): IRouteMatchResult<T> {
+
     debug(
       'Entered %s findRoutes with uri="%s", params=%O controllers=%O',
       TAG.CATCHALL_NODE,
@@ -77,9 +75,15 @@ export default class CatchAllNode<T extends IController> extends RootNode<T> imp
       params,
       this.controllers,
     );
+
+    /**
+     * Here we don't need to copy params because we not going
+     * to pass params to any child node's getRouteMatch
+     * since catchall node always returns RouteMatch for any uri
+     */
     params.pathParams.push(new ExtractedPathParam(this.paramName, uri));
 
-    yield* this.getRouteMatchIterator(params);
+    return new RouteMatch(this, params);
   }
 
   /**
