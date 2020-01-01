@@ -148,7 +148,7 @@ describe('#Integrated Router test', () => {
 
     it('should not find matching route if uri does not match any added routes', () => {
       const res = <IRouteMatch<BasicController<string>>>(
-        router.findRoute('/catalog/toys/cars/widget-678-yellow/2015')
+        router.findRoute('/catalog/something/cars/widget-678-yellow/2015')
       );
 
       expect(res).to.be.undefined;
