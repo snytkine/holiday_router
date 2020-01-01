@@ -44,9 +44,9 @@ const PathParamRe = /^([^{}/]*){(?:\s*)([a-zA-Z0-9-_]+)(?:\s*)}([^{}]*)$/;
  */
 const PathParamRegexRe = /^([^{}/]*){(?:\s*)([a-zA-Z0-9-_]+)(?:\s*):(.*)}([^{}]*)$/;
 
-export const makeExactMatchNode: NodeFactory = <T extends IController>(
+export const makeExactMatchNode = <T extends IController>(
   uriSegment: string,
-): Node<T> => {
+): ExactMatchNode<T> | null => {
   if (uriSegment !== CATCH_ALL_PARAM_NAME) {
     /**
      * @todo should the uri be validated or should
@@ -61,9 +61,9 @@ export const makeExactMatchNode: NodeFactory = <T extends IController>(
   return null;
 };
 
-export const makeCatchAllNode: NodeFactory = <T extends IController>(
+export const makeCatchAllNode = <T extends IController>(
   uriSegment: string,
-): Node<T> => {
+): CatchAllNode<T> | null => {
   if (uriSegment === CATCH_ALL_PARAM_NAME) {
     return new CatchAllNode();
   }
@@ -77,9 +77,9 @@ export const makeCatchAllNode: NodeFactory = <T extends IController>(
   return null;
 };
 
-export const makePathParamNode: NodeFactory = <T extends IController>(
+export const makePathParamNode = <T extends IController>(
   uriSegment: string,
-): Node<T> => {
+): PathParamNode<T> | null => {
   const res = PathParamRe.exec(uriSegment);
 
   if (!res) {
@@ -96,7 +96,7 @@ export const makePathParamNode: NodeFactory = <T extends IController>(
  * @param {string} uriSegment
  * @returns {any}
  */
-export const makePathParamNodeRegex = (uriSegment: string): any => {
+export const makePathParamNodeRegex = <T extends IController>(uriSegment: string): PathParamNodeRegex<T> | null => {
   debug('makePathParamNodeRegex entered with uriSegment=%s"', uriSegment);
 
   const res = PathParamRegexRe.exec(uriSegment);
@@ -145,9 +145,7 @@ const factories: Array<NodeFactory> = [
 /**
  * Created new node(s) and append as child to parentNode
  *
- * @param {Node<T>} node
- * @param {string} uri
- * @param {T} controller
+ * @param {string} uriSegment
  */
 export const makeNode = <T extends IController>(uriSegment: string): Node<T> => {
   let ret: Node<T>;
