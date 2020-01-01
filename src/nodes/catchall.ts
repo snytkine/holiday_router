@@ -1,11 +1,11 @@
 import Debug from 'debug';
 import {
   IController,
-  IRouteMatch,
   IStringMap,
   Node,
   IUriParams,
-  CATCH_ALL_PARAM_NAME, IRouteMatchResult,
+  CATCH_ALL_PARAM_NAME,
+  IRouteMatchResult,
 } from '../interfaces';
 import RootNode from './rootnode';
 
@@ -66,8 +66,7 @@ export default class CatchAllNode<T extends IController> extends RootNode<T> imp
     return ret;
   }
 
-  public getRouteMatch(uri: string, params: IUriParams = {pathParams: []}): IRouteMatchResult<T> {
-
+  public getRouteMatch(uri: string, params: IUriParams = { pathParams: [] }): IRouteMatchResult<T> {
     debug(
       'Entered %s findRoutes with uri="%s", params=%O controllers=%O',
       TAG.CATCHALL_NODE,

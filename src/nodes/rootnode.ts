@@ -73,30 +73,12 @@ export default class RootNode<T extends IController> implements Node<T> {
   }
 
   /**
-   * @param params
-   */
-
-  /* protected *getRouteMatchIterator(params: IUriParams): IterableIterator<IRouteMatch<T>> {
-   debug('Entered getRouteMatchIterator with params=%O controllers=%O', params, this.controllers);
-
-   for (const controller of this.controllers) {
-   yield new RouteMatch(this, controller, params);
-   }
-   }*/
-
-  /**
    * @param {Node<T>} other
    * @returns {boolean}
    */
   equals(other: Node<T>): boolean {
-    return other.type===this.type;
+    return other.type === this.type;
   }
-
-  /*protected *findChildMatches(uri: string, params: IUriParams): IterableIterator<IRouteMatch<T>> {
-   for (const childNode of this.children) {
-   yield* childNode.findRoutes(uri, params);
-   }
-   }*/
 
   protected findChildMatches(uri: string, params: IUriParams): IRouteMatchResult<T> {
     for (let i = 0; i < this.children.length; i += 1) {
@@ -117,20 +99,11 @@ export default class RootNode<T extends IController> implements Node<T> {
    * @param {IUriParams} params
    * @returns {IRouteMatchResult<T>}
    */
-  /*public findRoute(uri: string, params?: IUriParams): IRouteMatchResult<T> {
-   return this.findRoutes(uri, params).next().value;
-   }*/
-
-  /*public *findRoutes(uri: string, params?: IUriParams): IterableIterator<IRouteMatch<T>> {
-   yield* this.findChildMatches(uri, params);
-   }*/
-
   getRouteMatch(uri: string, params?: IUriParams): IRouteMatchResult<T> {
-
     return this.findChildMatches(uri, params);
   }
 
-  public* getAllRoutes(): IterableIterator<IRouteMatch<T>> {
+  public *getAllRoutes(): IterableIterator<IRouteMatch<T>> {
     if (this.controllers) {
       yield new RouteMatch(this);
     }
@@ -146,7 +119,7 @@ export default class RootNode<T extends IController> implements Node<T> {
     const it = this.getAllRoutes();
     for (const routeMatch of it) {
       debug('controllers="%o"', routeMatch.node.controllers);
-      if (routeMatch.node.controllers && routeMatch.node.controllers.find(ctrl => ctrl.id===id)) {
+      if (routeMatch.node.controllers && routeMatch.node.controllers.find(ctrl => ctrl.id === id)) {
         return routeMatch;
       }
     }
@@ -189,7 +162,11 @@ export default class RootNode<T extends IController> implements Node<T> {
      * this controller
      */
     if (!this.controllers) {
-      debug('Node="%s" addController initializing new controllers array with controller="%s', this.name, controller);
+      debug(
+        'Node="%s" addController initializing new controllers array with controller="%s',
+        this.name,
+        controller,
+      );
       this.controllers = [controller];
 
       return this;

@@ -35,12 +35,14 @@ describe('#Integrated Router test', () => {
   router.addRoute(uri2, ctrl6);
 
   describe('#getRouteMatch tests', () => {
-    it('#getRouteMatch should return routeMatche', () => {
-      const res = <RouteMatch<BasicController<string>>>router.getRouteMatch('/catalog/toys/cars/honda/crv');
+    it('#getRouteMatch should return RouteMatch', () => {
+      const res = <RouteMatch<BasicController<string>>>(
+        router.getRouteMatch('/catalog/toys/cars/honda/crv')
+      );
 
       expect(res.node.controllers.length).to.equal(2);
-      expect(res.node.controllers[0].controller.id).to.equal('ctrl2');
-      expect(res.node.controllers[1].controller.id).to.equal('ctrl6');
+      expect(res.node.controllers[0].id).to.equal('ctrl2');
+      expect(res.node.controllers[1].id).to.equal('ctrl6');
     });
 
     it('#getRouteMatch Should find matching route', () => {
@@ -51,7 +53,9 @@ describe('#Integrated Router test', () => {
     });
 
     it('#.getRouteMatch Should find route with extracted path parameters', () => {
-      const res = <RouteMatch<BasicController<string>>>router.getRouteMatch('/catalog/toys/cars/toyota/rav4');
+      const res = <RouteMatch<BasicController<string>>>(
+        router.getRouteMatch('/catalog/toys/cars/toyota/rav4')
+      );
 
       expect(res.node.controllers[0].id).to.equal('ctrl2');
 
@@ -70,7 +74,9 @@ describe('#Integrated Router test', () => {
     });
 
     it('#findRoute should find route with path params in 2 uri segments', () => {
-      const res = <IRouteMatch<BasicController<string>>>router.getRouteMatch('/catalog/toys/cars/gm/mymodel-gtx-item/id-35.html');
+      const res = <IRouteMatch<BasicController<string>>>(
+        router.getRouteMatch('/catalog/toys/cars/gm/mymodel-gtx-item/id-35.html')
+      );
 
       expect(res.node.controllers[0].id).to.equal('ctrl3');
 
@@ -93,7 +99,9 @@ describe('#Integrated Router test', () => {
     });
 
     it('#getRouteMatch should find route with regex params', () => {
-      const res = <IRouteMatch<BasicController<string>>>router.getRouteMatch('/catalog/toys/cars/widget-678green/2015');
+      const res = <IRouteMatch<BasicController<string>>>(
+        router.getRouteMatch('/catalog/toys/cars/widget-678green/2015')
+      );
 
       expect(res.node.controllers[0].id).to.equal('ctrl4');
 
@@ -134,7 +142,9 @@ describe('#Integrated Router test', () => {
     });
 
     it('#getRouteMatch should not find matching regex route if regex param did not match but find next matching route', () => {
-      const res = <IRouteMatch<BasicController<string>>>router.getRouteMatch('/catalog/toys/cars/widget-678yellow/2015');
+      const res = <IRouteMatch<BasicController<string>>>(
+        router.getRouteMatch('/catalog/toys/cars/widget-678yellow/2015')
+      );
 
       expect(res.node.controllers[0].id).to.equal('ctrl2');
 
@@ -161,7 +171,7 @@ describe('#Integrated Router test', () => {
       const res = router.getAllRoutes();
       expect(
         res.sort((item1, item2) => {
-          return item1.controller.id > item2.controller.id ? 1:-1;
+          return item1.controller.id > item2.controller.id ? 1 : -1;
         }),
       ).to.deep.equal([
         { uri: uri1, controller: ctrl1 },

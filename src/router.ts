@@ -2,7 +2,8 @@ import Debug from 'debug';
 import {
   IController,
   IRouteMatchResult,
-  IStringMap, IUriParams,
+  IStringMap,
+  IUriParams,
   Node,
   PARENT_NODE,
   ROUTE_PATH_SEPARATOR,
@@ -64,7 +65,7 @@ export default class Router<T extends IController> {
     /**
      * Special case if uri is empty then add controller to rootNode
      */
-    if (uri.trim()==='') {
+    if (uri.trim() === '') {
       debug(
         'Router.addRoute empty uri passed. Adding controller "%s" to rootNode',
         controller.toString(),
@@ -109,9 +110,17 @@ export default class Router<T extends IController> {
    */
   public getAllRoutes(): Array<IRouteInfo> {
     const routes = Array.from(this.rootNode.getAllRoutes());
-    return routes.map(routeMatch => {
-      return routeMatch.node.controllers
-        .map(controller => new RouteInfo(makeUriTemplate(routeMatch.node), controller));
-    }).flat(1);
+    const res = routes.map(routeMatch => {
+      return routeMatch.node.controllers.map(
+        controller => new RouteInfo(makeUriTemplate(routeMatch.node), controller),
+      );
+    });
+
+    /**
+     * Flatten array
+     */
+    return res.reduce((prev, curr) => {
+      return prev.concat(curr);
+    });
   }
 }

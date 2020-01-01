@@ -20,6 +20,8 @@ export default class RouteMatch<T extends IController> implements IRouteMatch<T>
    * This method is used for logging and debugging
    */
   public toString() {
-    return `RouteMatch node=${this.node.name} controllers=${JSON.stringify(this.node.controllers)} params=${JSON.stringify(this.params)}`;
+    return `RouteMatch node=${this.node.name} controllers=${JSON.stringify(
+      this.node.controllers,
+    )} params=${JSON.stringify(this.params)}`;
   }
 }

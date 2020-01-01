@@ -1,7 +1,7 @@
 import Debug from 'debug';
 import * as methods from 'methods';
 import Router from './router';
-import { IController, IRouteMatch, IRouteMatchResult, IStringMap, IUriParams, Node } from './interfaces';
+import { IController, IRouteMatchResult, IStringMap, Node } from './interfaces';
 import { RouterError } from './errors';
 import RouterErrorCode from './errors/errorcodes';
 import { IHttpRouteInfo } from './interfaces/routeinfo';

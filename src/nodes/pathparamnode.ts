@@ -93,14 +93,14 @@ export default class PathParamNode<T extends IController> extends RootNode<T> im
      */
     const ret =
       other instanceof PathParamNode &&
-      other.type ===  this.type &&
+      other.type === this.type &&
       this.prefix === other.prefix &&
       this.postfix === other.postfix;
 
     return ret;
   }
 
-  public getRouteMatch(uri: string, params?: IUriParams): IRouteMatchResult<T> {
+  public getRouteMatch(uri: string, params: IUriParams = { pathParams: [] }): IRouteMatchResult<T> {
     const extractedParam = Strlib.extractUriParam(uri, this.prefix, this.postfix);
 
     /**
@@ -123,47 +123,16 @@ export default class PathParamNode<T extends IController> extends RootNode<T> im
           return undefined;
         }
         return new RouteMatch(this, copiedParams);
-      } else {
-        /**
-         * Have rest of uri
-         * Loop over children to get result
-         */
-        return this.findChildMatches(extractedParam.rest, copiedParams);
       }
+      /**
+       * Have rest of uri
+       * Loop over children to get result
+       */
+      return this.findChildMatches(extractedParam.rest, copiedParams);
     }
+
+    return undefined;
   }
-
-  /*public *findRoutes(
-    uri: string,
-    params: IUriParams = {
-      pathParams: [],
-      regexParams: [],
-    },
-  ): IterableIterator<IRouteMatch<T>> {
-    const extractedParam = Strlib.extractUriParam(uri, this.prefix, this.postfix);
-
-    /!**
-     * If there are no extractedParam then this generator
-     * will not yield anything
-     *!/
-    if (extractedParam) {
-      const copiedParams = Utils.copyPathParams(
-        params,
-        new ExtractedPathParam(this.paramName, extractedParam.param),
-      );
-
-      if (!extractedParam.rest) {
-        /!**
-         * If no tail left in search string
-         * it means there are no more segments left in string to match
-         * In this case this node is a complete match
-         *!/
-        yield* this.getRouteMatchIterator(copiedParams);
-      } else {
-        yield* this.findChildMatches(extractedParam.rest, copiedParams);
-      }
-    }
-  }*/
 
   makeUri(params: IStringMap): string {
     if (!params[this.paramName]) {

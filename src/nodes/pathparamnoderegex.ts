@@ -1,5 +1,5 @@
 import Debug from 'debug';
-import { IController, IRouteMatch, IStringMap, Node, IUriParams, IRouteMatchResult } from '../interfaces';
+import { IController, IStringMap, Node, IUriParams, IRouteMatchResult } from '../interfaces';
 import PathParamNode from './pathparamnode';
 import { Utils, Strlib } from '../utils';
 import { ExtractedPathParam, ExtractedRegexParams, RouteMatch } from '../lib';
@@ -75,7 +75,7 @@ export default class PathParamNodeRegex<T extends IController> extends PathParam
     return res || false;
   }
 
-  public getRouteMatch(uri: string, params?: IUriParams): IRouteMatchResult<T> {
+  public getRouteMatch(uri: string, params: IUriParams = { pathParams: [] }): IRouteMatchResult<T> {
     const extractedParam = Strlib.extractUriParam(uri, this.prefix, this.postfix);
 
     if (extractedParam) {
@@ -89,12 +89,10 @@ export default class PathParamNodeRegex<T extends IController> extends PathParam
         );
 
         /**
-         *
          * if only 1 match was extracted then
          * the order of matched elements is off?
          * the array will have only one element (at 0)
          * instead of normal 0 for whole string match and 1 for first extracted match
-         *
          */
         if (!extractedParam.rest) {
           /**
@@ -107,9 +105,8 @@ export default class PathParamNodeRegex<T extends IController> extends PathParam
           }
 
           return new RouteMatch(this, copiedParams);
-        } else {
-          return this.findChildMatches(extractedParam.rest, copiedParams);
         }
+        return this.findChildMatches(extractedParam.rest, copiedParams);
       }
     }
 

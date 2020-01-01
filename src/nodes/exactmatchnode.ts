@@ -66,9 +66,9 @@ export default class ExactMatchNode<T extends IController> extends RootNode<T> i
 
   equals(other: Node<T>) {
     return (
-      other.type===this.type &&
+      other.type === this.type &&
       other instanceof ExactMatchNode &&
-      other.origUriPattern===this.origUriPattern
+      other.origUriPattern === this.origUriPattern
     );
   }
 
@@ -97,7 +97,6 @@ export default class ExactMatchNode<T extends IController> extends RootNode<T> i
        * Just yield* to controllers array iterator
        */
       if (!rest) {
-
         if (!this.controllers) {
           return undefined;
         }
@@ -107,56 +106,16 @@ export default class ExactMatchNode<T extends IController> extends RootNode<T> i
          * passing a node. If we have node then we don't even need to have controllers separately in it.
          */
         return new RouteMatch(this, params);
-      } else {
-        /**
-         * Have rest of uri
-         * Loop over children to get result
-         */
-        return this.findChildMatches(rest, params);
       }
+      /**
+       * Have rest of uri
+       * Loop over children to get result
+       */
+      return this.findChildMatches(rest, params);
     }
 
     return undefined;
   }
-
-  /*public *findRoutes(
-   uri: string,
-   params: IUriParams = { pathParams: [] },
-   ): IterableIterator<IRouteMatch<T>> {
-   /!**
-   * If not starts with origUriPattern then will not yield anything
-   *!/
-   if (uri.startsWith(this.origUriPattern)) {
-   /!**
-   * The start of the uri matched this node
-   * If this is an exact match (rest will be empty string)
-   * then must have controllers
-   *
-   * if NOT exact match then one of the child nodes must
-   * have controllers
-   *
-   * get the rest of the uri
-   * if its empty string then we have exact math
-   * in which case must have controller
-   *!/
-   const rest = uri.substring(this.segmentLength);
-
-   /!**
-   * uri matched the uri of this node and
-   * there are no additional string
-   * Just yield* to controllers array iterator
-   *!/
-   if (!rest) {
-   yield* this.getRouteMatchIterator(params);
-   } else {
-   /!**
-   * Have rest of uri
-   * Loop over children to get result
-   *!/
-   yield* this.findChildMatches(rest, params);
-   }
-   }
-   }*/
 
   makeUri(params: IStringMap): string {
     debug('Entered %s makeUri with params="%o"', this.name, params);

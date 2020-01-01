@@ -175,7 +175,7 @@ describe('#CatchAllNode.ts', () => {
       node.addController(ctrl2);
 
       const res = node.getAllRoutes();
-      const controllers = res.next().value.node.controllers;
+      const { controllers } = res.next().value.node;
 
       expect(controllers[0]).to.equal(ctrl);
       expect(controllers[1]).to.equal(ctrl2);

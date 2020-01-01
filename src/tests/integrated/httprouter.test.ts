@@ -55,11 +55,13 @@ describe('#HttpRouter tests', () => {
     httpRouter.addRoute('post', uri2, ctrl6);
 
     it('getRouteMatch should return iterator matching httpMethod and uri', () => {
-      const res = <RouteMatch<BasicController<string>>>httpRouter.getRouteMatch('get', '/catalog/toys/cars/honda/crv');
+      const res = <RouteMatch<BasicController<string>>>(
+        httpRouter.getRouteMatch('get', '/catalog/toys/cars/honda/crv')
+      );
 
       expect(res).to.be.instanceOf(RouteMatch);
       expect(res.node.controllers.length).to.equal(1);
-      expect(res.node.controllers[0].controller.id).to.equal('ctrl2');
+      expect(res.node.controllers[0].id).to.equal('ctrl2');
     });
 
     it('getRouteMatch should return undefined if route for httpMethod does not exist for uri', () => {

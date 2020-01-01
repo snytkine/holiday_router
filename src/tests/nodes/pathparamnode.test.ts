@@ -69,32 +69,14 @@ describe('#pathparamnode.ts', () => {
       node.addController(ctrl2);
 
       const res = node.getAllRoutes();
+      const { controllers } = res.next().value.node;
 
-      expect(res.next().value.controller).to.equal(ctrl);
-
-      expect(res.next().value.controller).to.equal(ctrl2);
-
+      expect(controllers[0]).to.equal(ctrl);
+      expect(controllers[1]).to.equal(ctrl2);
       expect(res.next().value).to.equal(undefined);
     });
 
-    it('.getAllRoutes should return iterator with all controllers', () => {
-      const node = new PathParamNode('var1');
-      const ctrl = new BasicController('controller1', 'id1', 2);
-      const ctrl2 = new BasicController('controller2', 'id2', 1);
-
-      node.addController(ctrl);
-      node.addController(ctrl2);
-
-      const res = node.getAllRoutes();
-
-      expect(res.next().value.controller).to.equal(ctrl);
-
-      expect(res.next().value.controller).to.equal(ctrl2);
-
-      expect(res.next().value).to.equal(undefined);
-    });
-
-    it('.getRouteMatchByControllerId should return matching controller', () => {
+    it('.getRouteMatchByControllerId should return matching RouteMatch', () => {
       const node = new PathParamNode('var1');
       const ctrl = new BasicController('controller1', 'id1');
       const ctrl2 = new BasicController('controller2', 'id2');
@@ -107,8 +89,7 @@ describe('#pathparamnode.ts', () => {
       const res = <IRouteMatch<BasicController<string>>>node.getRouteMatchByControllerId('id2');
 
       expect(res.node).to.equal(node);
-
-      expect(res.node.controllers[0]).to.equal(ctrl2);
+      expect(res.node.controllers).to.include(ctrl2);
     });
 
     it('Calling addController method twice with same controller should throw', () => {
@@ -183,16 +164,18 @@ describe('#pathparamnode.ts', () => {
       expect(foundRoutes).to.equal(undefined);
     });
 
-    it('.getRouteMatch should return single RouteMatch with highest priority', () => {
+    it('.getRouteMatch should return single RouteMatch with highest priority controller first', () => {
       const myNode = new PathParamNode('id', '.html', 'order-');
       const ctrl = new BasicController('controller1', 'id1', 2);
       const ctrl2 = new BasicController('controller2', 'id2', 1);
       myNode.addController(ctrl2);
       myNode.addController(ctrl);
 
-      const routeMatch = <IRouteMatch<BasicController<string>>>myNode.getRouteMatch('order-1234.html');
+      const routeMatch = <IRouteMatch<BasicController<string>>>(
+        myNode.getRouteMatch('order-1234.html')
+      );
 
-      expect(routeMatch).to.equal(myNode);
+      expect(routeMatch.node).to.equal(myNode);
 
       expect(routeMatch.node.controllers[0]).to.equal(ctrl);
     });
@@ -218,7 +201,9 @@ describe('#pathparamnode.ts', () => {
     node1.addChildNode(nodeWithPrefixAndPostfix);
 
     it('findRoute should extract pathParams from url and find from child node', () => {
-      const routeMatch = <IRouteMatch<BasicController<string>>>node1.getRouteMatch('books/order-1234.html');
+      const routeMatch = <IRouteMatch<BasicController<string>>>(
+        node1.getRouteMatch('books/order-1234.html')
+      );
 
       expect(routeMatch.node).to.equal(nodeWithPrefixAndPostfix);
 

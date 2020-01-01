@@ -5,8 +5,9 @@
   "scripts": {
     "start": "node ./bin/www",
     "prebuild": "rm -rf build",
-    "build": "tsc --pretty",
-    "test": "nyc mocha build/tests/ --recursive"
+    "build": "tsc --pretty --lib es2019.array",
+    "test": "nyc mocha build/tests/ --recursive",
+    "lint": "eslint src --ext .ts"
   },
   "nyc": {
     "extension": [
@@ -28,8 +29,10 @@
     "all": true
   },
   "dependencies": {
+    "@flatten/array": "^1.1.8",
     "@types/expect": "^24.3.0",
     "@typescript-eslint/eslint-plugin": "^2.13.0",
+    "array-flatten": "^3.0.0",
     "constantinople": "^3.1.1",
     "debug": "^4.1.1",
     "eslint-config-airbnb-typescript": "^6.3.1",
@@ -53,6 +56,6 @@
     "mocha": "^6.2.2",
     "nyc": "^14.1.1",
     "prettier": "^1.19.1",
-    "typescript": "^3.7.2"
+    "typescript": "^3.7.4"
   }
 }

@@ -96,7 +96,9 @@ export const makePathParamNode = <T extends IController>(
  * @param {string} uriSegment
  * @returns {any}
  */
-export const makePathParamNodeRegex = <T extends IController>(uriSegment: string): PathParamNodeRegex<T> | null => {
+export const makePathParamNodeRegex = <T extends IController>(
+  uriSegment: string,
+): PathParamNodeRegex<T> | null => {
   debug('makePathParamNodeRegex entered with uriSegment=%s"', uriSegment);
 
   const res = PathParamRegexRe.exec(uriSegment);

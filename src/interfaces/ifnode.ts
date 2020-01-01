@@ -16,7 +16,7 @@ export interface IUriParams {
 }
 
 export interface IRouteMatch<T extends IController> {
-  //controllers: Array<T>;
+  // controllers: Array<T>;
   params: IUriParams;
   node: Node<T>;
 }
@@ -100,9 +100,9 @@ export interface Node<T extends IController> {
 
   getRouteMatch(uri: string, params?: IUriParams): IRouteMatchResult<T>;
 
-  //findRoutes(uri: string, params?: IUriParams): IterableIterator<IRouteMatch<T>>;
+  // findRoutes(uri: string, params?: IUriParams): IterableIterator<IRouteMatch<T>>;
 
-  //findRoute(uri: string, params?: IUriParams): IRouteMatchResult<T>;
+  // findRoute(uri: string, params?: IUriParams): IRouteMatchResult<T>;
 
   /**
    * May throw error if addChild fails
