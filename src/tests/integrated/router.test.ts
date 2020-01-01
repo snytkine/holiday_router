@@ -1,7 +1,8 @@
 import { expect } from 'chai';
-import { BasicController, RouterError, RouterErrorCode, UniqueController } from '../..';
 import { IRouteMatch } from '../../interfaces';
 import Router from '../../router';
+import { BasicController, UniqueController } from '../../lib';
+import { RouterError, RouterErrorCode } from '../../errors';
 
 /**
  * @todo make separate suite for addRoute methods, including covering exception cases

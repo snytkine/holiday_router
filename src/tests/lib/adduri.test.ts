@@ -7,7 +7,7 @@ import {
   makeNode,
   makePathParamNode,
   makePathParamNodeRegex,
-} from '../../adduri';
+} from '../../utils/adduri';
 import TAG from '../../enums/nodetags';
 
 describe('#adduri.ts', () => {

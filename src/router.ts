@@ -10,7 +10,7 @@ import {
 } from './interfaces';
 import { RootNode } from './nodes';
 import { makeUriTemplate, makeUrl, Strlib } from './utils';
-import { makeNode } from './adduri';
+import { makeNode } from './utils/adduri';
 import { RouterError, RouterErrorCode } from './errors';
 import { IRouteInfo } from './interfaces/routeinfo';
 

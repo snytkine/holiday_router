@@ -1,6 +1,8 @@
 import { expect } from 'chai';
 import { ExactMatchNode, PathParamNode } from '../../nodes';
-import { BasicController, makeUriTemplate, makeUrl, PARENT_NODE } from '../../index';
+import { BasicController } from '../../lib';
+import { PARENT_NODE } from '../../interfaces';
+import { makeUriTemplate, makeUrl } from '../../utils';
 
 describe('#makeurl test', () => {
   const node0 = new ExactMatchNode('/');
