@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { PathParamNodeRegex, PRIORITY } from '../../nodes';
+import { PathParamNode, PathParamNodeRegex, PRIORITY } from '../../nodes';
 import { RouterError, RouterErrorCode } from '../../errors';
 import { BasicController } from '../../lib';
 
@@ -12,6 +12,15 @@ describe('#pathparamnoderegex node', () => {
         new RegExp('([0-9]+)'),
         '/',
         'item-',
+      );
+      expect(node).to.be.instanceOf(PathParamNodeRegex);
+    });
+
+    it('Created object should be instance of PathParamNodeRegex using empty prefix and postfix', () => {
+      const node = new PathParamNodeRegex(
+        'item-{id:([0-9]+)}/',
+        'id',
+        new RegExp('([0-9]+)')
       );
       expect(node).to.be.instanceOf(PathParamNodeRegex);
     });
@@ -119,11 +128,11 @@ describe('#pathparamnoderegex node', () => {
       expect(res.code).to.be.equal(RouterErrorCode.MAKE_URI_REGEX_FAIL);
     });
 
-    it('.findRoutes should return iterator with all matches', () => {
+    it('.getRouteMatch should return RouteMatch', () => {
       const nodeWithPrefixAndPostfix = new PathParamNodeRegex(
         'order-{id:([0-9]+)}.html',
         'id',
-        new RegExp('([0-9]+)'),
+        new RegExp('^([0-9]+)$'),
         '.html',
         'order-',
       );
@@ -141,11 +150,49 @@ describe('#pathparamnoderegex node', () => {
       expect(foundRoutes.node.controllers[1]).to.equal(ctrl2);
     });
 
+
+    it('.getRouteMatch should return undefined if regex does not match', () => {
+      const nodeWithPrefixAndPostfix = new PathParamNodeRegex(
+        'order-{id:([0-9]+)}.html',
+        'id',
+        new RegExp('^([0-9]+)$'),
+        '.html',
+        'order-',
+      );
+      const ctrl = new BasicController('controller1', 'id1', 2);
+      const ctrl2 = new BasicController('controller2', 'id2', 1);
+      nodeWithPrefixAndPostfix.addController(ctrl);
+      nodeWithPrefixAndPostfix.addController(ctrl2);
+
+      const foundRoutes = nodeWithPrefixAndPostfix.getRouteMatch('order-a1.html');
+
+      expect(foundRoutes).to.equal(undefined);
+    });
+
+    it('.getRouteMatch should return undefined if prefix does not match', () => {
+      const nodeWithPrefixAndPostfix = new PathParamNodeRegex(
+        'order-{id:([0-9]+)}.html',
+        'id',
+        new RegExp('^([0-9]+)$'),
+        '.html',
+        'order-',
+      );
+      const ctrl = new BasicController('controller1', 'id1', 2);
+      const ctrl2 = new BasicController('controller2', 'id2', 1);
+      nodeWithPrefixAndPostfix.addController(ctrl);
+      nodeWithPrefixAndPostfix.addController(ctrl2);
+
+      const foundRoutes = nodeWithPrefixAndPostfix.getRouteMatch('orders-123.html');
+
+      expect(foundRoutes).to.equal(undefined);
+    });
+
+
     it('PathParamNodeRegex with child nodes .getRouteMatch should return RouteMatch from child nodes with all matches', () => {
       const nodeWithPrefixAndPostfix = new PathParamNodeRegex(
         'order-{id:([0-9]+)}/',
         'id',
-        new RegExp('([0-9]+)'),
+        new RegExp('^([0-9]+)$'),
         '/',
         'order-',
       );
@@ -174,5 +221,20 @@ describe('#pathparamnoderegex node', () => {
 
       expect(foundRoutes.params.pathParams[1].paramValue).to.equal('NICK');
     });
+
+    it('.getRouteMatch on node without controllers should return undefined', () => {
+      const nodeWithPrefixAndPostfix = new PathParamNodeRegex(
+        'order-{id:([0-9]+)}.html',
+        'id',
+        new RegExp('^([0-9]+)$'),
+        '.html',
+        'order-',
+      );
+
+      const routeMatch = nodeWithPrefixAndPostfix.getRouteMatch('order-1234.html');
+
+      expect(routeMatch).to.equal(undefined);
+    });
+
   });
 });

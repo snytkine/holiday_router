@@ -164,16 +164,14 @@ describe('#pathparamnode.ts', () => {
       expect(foundRoutes).to.equal(undefined);
     });
 
-    it('.getRouteMatch should return single RouteMatch with highest priority controller first', () => {
+    it('.getRouteMatch should return RouteMatch with highest priority controller first', () => {
       const myNode = new PathParamNode('id', '.html', 'order-');
       const ctrl = new BasicController('controller1', 'id1', 2);
       const ctrl2 = new BasicController('controller2', 'id2', 1);
       myNode.addController(ctrl2);
       myNode.addController(ctrl);
 
-      const routeMatch = <IRouteMatch<BasicController<string>>>(
-        myNode.getRouteMatch('order-1234.html')
-      );
+      const routeMatch = <IRouteMatch<BasicController<string>>>myNode.getRouteMatch('order-1234.html')
 
       expect(routeMatch.node).to.equal(myNode);
 
@@ -191,6 +189,15 @@ describe('#pathparamnode.ts', () => {
 
       expect(routeMatch).to.equal(undefined);
     });
+
+    it('.getRouteMatch on node without controllers should return undefined', () => {
+      const myNode = new PathParamNode('id', '.html', 'order-');
+
+      const routeMatch = myNode.getRouteMatch('order-1234.html');
+
+      expect(routeMatch).to.equal(undefined);
+    });
+
   });
 
   describe('#PathParamNode with child nodes test', () => {

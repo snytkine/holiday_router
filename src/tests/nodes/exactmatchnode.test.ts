@@ -3,7 +3,7 @@ import { ExactMatchNode, getNodePriority, PathParamNode, PRIORITY } from '../../
 import TAG from '../../enums/nodetags';
 import { IRouteMatch } from '../../interfaces';
 import { BasicController } from '../../lib';
-import { RouterErrorCode } from '../../errors';
+import { RouterError, RouterErrorCode } from '../../errors';
 
 describe('#ExactMatchNode.ts', () => {
   describe('#ExactMatchNode object test', () => {
@@ -79,13 +79,13 @@ describe('#ExactMatchNode.ts', () => {
       const node = new ExactMatchNode('path1/');
       const ctrl = new BasicController('controller1');
       node.addController(ctrl);
-
+      let res: RouterError;
       try {
         node.addController(ctrl);
-        throw new Error('RootNode.addController should throw DUPLICATE_CONTROLLER error');
       } catch (e) {
-        expect(e.code).to.equal(RouterErrorCode.DUPLICATE_CONTROLLER);
+        res = e;
       }
+      expect(res.code).to.equal(RouterErrorCode.DUPLICATE_CONTROLLER);
     });
 
     it('.getRouteMatch should return iterator with all matches', () => {
@@ -124,6 +124,14 @@ describe('#ExactMatchNode.ts', () => {
       node.addController(ctrl2);
 
       const routeMatch = node.getRouteMatch('path1');
+
+      expect(routeMatch).to.equal(undefined);
+    });
+
+    it('.getRouteMatch on node without controllers should return undefined', () => {
+      const node = new ExactMatchNode('path1/');
+
+      const routeMatch = node.getRouteMatch('path1/');
 
       expect(routeMatch).to.equal(undefined);
     });

@@ -76,6 +76,11 @@ export default class HttpRouter<T extends IController> {
       );
     }
 
-    return ret;
+    /**
+     * Flatten array
+     */
+    return ret.reduce((prev, curr) => {
+      return prev.concat(curr);
+    });
   }
 }

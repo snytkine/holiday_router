@@ -69,4 +69,75 @@ describe('#HttpRouter tests', () => {
       expect(res).to.equal(undefined);
     });
   });
+
+  describe('#makeUri tests', () => {
+    const httpRouter = new HttpRouter();
+    httpRouter.addRoute('get', uri1, ctrl1);
+    httpRouter.addRoute('get', uri2, ctrl2);
+    httpRouter.addRoute('post', uri1, ctrl3);
+    httpRouter.addRoute('post', uri2, ctrl4);
+    httpRouter.addRoute('post', uri1, ctrl5);
+    httpRouter.addRoute('post', uri2, ctrl6);
+
+    it('.makeUri should return uri string if matching controller found', () => {
+      const url = httpRouter.makeUri('get', 'ctrl2', {
+        make: 'honda',
+        model: 'crv',
+      });
+
+      expect(url).to.equal('/catalog/toys/cars/honda/crv');
+    });
+
+    it('.makeUri should throw RouterError if http method is not supported', () => {
+      let res: RouterError;
+      try {
+        httpRouter.makeUri('something', 'ctrl2', {
+          make: 'honda',
+          model: 'crv',
+        });
+      } catch (e) {
+        res = e;
+      }
+
+      expect(res.code).to.equal(RouterErrorCode.UNSUPPORTED_HTTP_METHOD);
+    });
+  });
+
+  describe('#getAllRoutes test', () => {
+    const httpRouter = new HttpRouter();
+    httpRouter.addRoute('get', uri1, ctrl1);
+    httpRouter.addRoute('get', uri2, ctrl2);
+    httpRouter.addRoute('post', uri1, ctrl3);
+    httpRouter.addRoute('post', uri2, ctrl4);
+    httpRouter.addRoute('post', uri1, ctrl5);
+    httpRouter.addRoute('post', uri2, ctrl6);
+    it('#Should return array of route objects', () => {
+      const res = httpRouter.getAllRoutes();
+      expect(res).to.deep.equal([{
+        'uri': '/catalog/toys/',
+        'controller': { 'priority': 1, 'controller': 'CTRL-1', 'id': 'ctrl1' },
+        'method': 'get',
+      }, {
+        'uri': '/catalog/toys/cars/{make}/{model}',
+        'controller': { 'priority': 1, 'controller': 'CTRL-2', 'id': 'ctrl2' },
+        'method': 'get',
+      }, {
+        'uri': '/catalog/toys/',
+        'controller': { 'priority': 1, 'controller': 'CTRL-3', 'id': 'ctrl3' },
+        'method': 'post',
+      }, {
+        'uri': '/catalog/toys/',
+        'controller': { 'priority': 1, 'controller': 'CTRL-5', 'id': 'ctrl5' },
+        'method': 'post',
+      }, {
+        'uri': '/catalog/toys/cars/{make}/{model}',
+        'controller': { 'priority': 1, 'controller': 'CTRL-4', 'id': 'ctrl4' },
+        'method': 'post',
+      }, {
+        'uri': '/catalog/toys/cars/{make}/{model}',
+        'controller': { 'priority': 1, 'controller': 'CTRL-6', 'id': 'ctrl6' },
+        'method': 'post',
+      }]);
+    });
+  });
 });
