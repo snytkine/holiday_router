@@ -94,7 +94,7 @@ export default class Router<T extends IController> {
     return this.addRoute(tail, controller, addedNode);
   }
 
-  makeUri(controllerId: string, params?: IStringMap): string {
+  public makeUri(controllerId: string, params?: IStringMap): string {
     debug('Entered router.makeUri with controllerId="%s", params="%o"', controllerId, params);
     const routeMatch = this.rootNode.getRouteMatchByControllerId(controllerId);
 
@@ -113,7 +113,7 @@ export default class Router<T extends IController> {
    * and pass original uri template, otherwise we cannot recreate
    * full uri template from node since original template is lost in regex node
    */
-  getAllRoutes(): Array<IRouteInfo> {
+  public getAllRoutes(): Array<IRouteInfo> {
     const routes = Array.from(this.rootNode.getAllRoutes());
     return routes.map(routeMatch => {
       return { uri: makeUriTemplate(routeMatch.node), controller: routeMatch.controller };

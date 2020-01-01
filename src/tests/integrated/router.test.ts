@@ -3,6 +3,10 @@ import { BasicController, RouterError, RouterErrorCode, UniqueController } from 
 import { IRouteMatch } from '../../interfaces';
 import Router from '../../router';
 
+/**
+ * @todo make separate suite for addRoute methods, including covering exception cases
+ * and check for return values to be instance of Node
+ */
 describe('#Integrated Router test', () => {
   const uri1 = '/catalog/toys/';
   const uri2 = '/catalog/toys/cars/{make}/{model}';
@@ -144,7 +148,7 @@ describe('#Integrated Router test', () => {
 
     it('should not find matching route if uri does not match any added routes', () => {
       const res = <IRouteMatch<BasicController<string>>>(
-        router.findRoute('/catalog/books/cars/widget-678yellow/2015')
+        router.findRoute('/catalog/toys/cars/widget-678-yellow/2015')
       );
 
       expect(res).to.be.undefined;

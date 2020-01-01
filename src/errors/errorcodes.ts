@@ -8,6 +8,7 @@ enum RouterErrorCode {
   CREATE_NODE_FAILED,
   NON_UNIQUE_PARAM,
   CONTROLLER_NOT_FOUND,
+  UNSUPPORTED_HTTP_METHOD,
 }
 
 export default RouterErrorCode;
