@@ -1,1 +1,14 @@
 language: node_js
+node_js:
+  - 'node'
+  - '10'
+  - '8'
+
+branches:
+  only:
+    - master
+    - /^release-.*/
+    -
+script:
+  - npm ci
+  - npm run test
