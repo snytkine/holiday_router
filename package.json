@@ -25,7 +25,7 @@
   "files": [
     "build/"
   ],
-  "main": "build/index.js",
+  "main": "./build/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/snytkine/holiday_router.git"
