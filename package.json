@@ -6,11 +6,11 @@
   "author": "Dmitri Snytkine",
   "license": "MIT",
   "scripts": {
-    "prepare" : "npm run build",
-    "prepublishOnly" : "npm test && npm run lint",
-    "preversion" : "npm run lint",
-    "version" : "npm run format && git add -A src",
-    "postversion" : "git push && git push --tags",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm test && npm run lint",
+    "preversion": "npm run lint",
+    "version": "npm run format && git add -A src",
+    "postversion": "git push && git push --tags",
     "prebuild": "rm -rf build",
     "build": "tsc --pretty",
     "test": "nyc mocha build/tests/ --recursive",
@@ -29,7 +29,11 @@
     "type": "git",
     "url": "git+https://github.com/snytkine/holiday_router.git"
   },
-  "keywords": ["URI", "Router", "Typescript"],
+  "keywords": [
+    "URI",
+    "Router",
+    "Typescript"
+  ],
   "nyc": {
     "extension": [
       ".ts"
@@ -50,10 +54,8 @@
     "all": true
   },
   "dependencies": {
-    "@flatten/array": "^1.1.8",
     "@types/expect": "^24.3.0",
     "@typescript-eslint/eslint-plugin": "^2.13.0",
-    "array-flatten": "^3.0.0",
     "constantinople": "^3.1.1",
     "debug": "^4.1.1",
     "eslint-config-airbnb-typescript": "^6.3.1",
