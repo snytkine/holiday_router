@@ -13,11 +13,16 @@
     "postversion": "git push && git push --tags",
     "prebuild": "node ./node-build-os.js clean",
     "build": "tsc --pretty",
+    "pretest": "npm run build",
     "test": "nyc mocha build/tests/ --recursive",
     "format": "eslint src --ext .ts --fix",
     "lint": "eslint src --ext .ts",
     "coverage": "mv coverage/coverage-final.json coverage/coverage.json"
   },
+  "pre-commit": [
+    "lint",
+    "test"
+  ],
   "engines": {
     "node": ">=8.11.0"
   },
@@ -80,6 +85,7 @@
     "eslint-plugin-prettier": "^3.1.2",
     "mocha": "^6.2.2",
     "nyc": "^14.1.1",
+    "pre-commit": "^1.2.2",
     "prettier": "^1.19.1",
     "typescript": "^3.7.4"
   }
