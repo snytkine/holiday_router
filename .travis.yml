@@ -3,7 +3,8 @@ node_js:
   - 'node'
   - '10'
   - '8'
-
+env:
+  - CODECOV_TOKEN="f9e6550c-0f4f-4618-b107-b6f5bea39879"
 branches:
   only:
     - master
@@ -12,3 +13,6 @@ branches:
 script:
   - npm ci
   - npm run test
+  - npm install codecov -g
+after_success:
+  - codecov
