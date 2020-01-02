@@ -11,7 +11,7 @@
     "preversion": "npm run lint",
     "version": "npm run format && git add -A src",
     "postversion": "git push && git push --tags",
-    "prebuild": "rm -rf build",
+    "prebuild": "node ./node-build-os.js clean",
     "build": "tsc --pretty",
     "test": "nyc mocha build/tests/ --recursive",
     "format": "eslint src --ext .ts --fix",

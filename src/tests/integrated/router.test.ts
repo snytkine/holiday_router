@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { IRouteInfo, IRouteMatch } from '../../interfaces';
-import { Router } from '../../';
+import { Router } from '../..';
 import { BasicController, RouteMatch, UniqueController } from '../../lib';
 import { RouterError, RouterErrorCode } from '../../errors';
 
@@ -179,7 +179,7 @@ describe('#Integrated Router test', () => {
       const res: Array<IRouteInfo> = router.getAllRoutes();
       expect(
         res.sort((item1, item2) => {
-          return item1.controller.id > item2.controller.id ? 1:-1;
+          return item1.controller.id > item2.controller.id ? 1 : -1;
         }),
       ).to.deep.equal([
         { uri: uri1, controller: ctrl1 },

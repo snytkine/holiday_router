@@ -20,7 +20,7 @@ export default class BasicController<T> implements IController {
   }
 
   public equals(other: IController): boolean {
-    return other instanceof BasicController && other.controller===this.controller;
+    return other instanceof BasicController && other.controller === this.controller;
   }
 
   public toString(): string {

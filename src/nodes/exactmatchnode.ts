@@ -72,7 +72,7 @@ export default class ExactMatchNode<T extends IController> extends RootNode<T> i
     );
   }
 
-  public getRouteMatch(uri: string, params: IUriParams = {pathParams: []}): IRouteMatchResult<T> {
+  public getRouteMatch(uri: string, params: IUriParams = { pathParams: [] }): IRouteMatchResult<T> {
     /**
      * If not starts with origUriPattern then will not yield anything
      */

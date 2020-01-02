@@ -99,7 +99,7 @@ export default class RootNode<T extends IController> implements Node<T> {
    * @param {IUriParams} params
    * @returns {IRouteMatchResult<T>}
    */
-  getRouteMatch(uri: string, params: IUriParams = {pathParams: []}): IRouteMatchResult<T> {
+  getRouteMatch(uri: string, params: IUriParams = { pathParams: [] }): IRouteMatchResult<T> {
     return this.findChildMatches(uri, params);
   }
 

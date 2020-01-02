@@ -202,7 +202,9 @@ describe('#pathparamnoderegex node', () => {
       node2.addController(ctrl);
       nodeWithPrefixAndPostfix.addChildNode(node2);
 
-      const foundRoutes = <IRouteMatch<BasicController<string>>>nodeWithPrefixAndPostfix.getRouteMatch('order-1234/customer-NICK.html');
+      const foundRoutes = <IRouteMatch<BasicController<string>>>(
+        nodeWithPrefixAndPostfix.getRouteMatch('order-1234/customer-NICK.html')
+      );
 
       expect(foundRoutes.node).to.equal(node2);
 

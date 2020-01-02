@@ -71,7 +71,9 @@ describe('#adduri.ts', () => {
 
   describe('#mathPathParamNodeRegex', () => {
     it('should create PathParamNodeRegex without prefix and postfix when passed uriSeegment is matching a valid regex', () => {
-      const res = <PathParamNodeRegex<BasicController<string>>>makePathParamNodeRegex('{year:([0-9]{4})}');
+      const res = <PathParamNodeRegex<BasicController<string>>>(
+        makePathParamNodeRegex('{year:([0-9]{4})}')
+      );
 
       expect(res.type).to.be.equal(TAG.PATHPARAM_REGEX_NODE);
       expect(res.paramName).to.be.equal('year');
@@ -92,14 +94,18 @@ describe('#adduri.ts', () => {
     });
 
     it('should create PathParamNodeRegex with prefix and postfix when passed uriSegment is matching a valid regex', () => {
-      const res = <PathParamNodeRegex<BasicController<string>>>makePathParamNodeRegex('model-{year:([0-9]{4})}-current.html');
+      const res = <PathParamNodeRegex<BasicController<string>>>(
+        makePathParamNodeRegex('model-{year:([0-9]{4})}-current.html')
+      );
       expect(res.name).to.equal(
         `PathParamNodeRegex::'year'::'^([0-9]{4})$'::'model-'::'-current.html'`,
       );
     });
 
     it('should create PathParamNodeRegex and add $ to end of pattern and ^ to beginning', () => {
-      const res = <PathParamNodeRegex<BasicController<string>>>makePathParamNodeRegex('total-{price:([0-9]{2,4})}-us\\$');
+      const res = <PathParamNodeRegex<BasicController<string>>>(
+        makePathParamNodeRegex('total-{price:([0-9]{2,4})}-us\\$')
+      );
       const reSource = res.regex.source;
       expect(reSource.startsWith('^')).to.be.true;
       expect(reSource.endsWith('$')).to.be.true;
@@ -131,7 +137,9 @@ describe('#adduri.ts', () => {
     });
 
     it('should create PathParamNodeRegex', () => {
-      const res = <PathParamNodeRegex<BasicController<string>>>makeNode('invoice-{id:[0-9]{2,3}}.html');
+      const res = <PathParamNodeRegex<BasicController<string>>>(
+        makeNode('invoice-{id:[0-9]{2,3}}.html')
+      );
       expect(res).to.be.instanceOf(PathParamNodeRegex);
     });
 
