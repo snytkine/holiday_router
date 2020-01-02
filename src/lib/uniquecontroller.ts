@@ -2,7 +2,7 @@ import Debug from 'debug';
 import { IController } from '../interfaces';
 import BasicController from './basiccontroller';
 
-const debug = Debug('GP-URI-ROUTER:NODE:lib');
+const debug = Debug('HOLIDAY-ROUTER:NODE:lib');
 
 /**
  * UniqueController always returns true from equals() method

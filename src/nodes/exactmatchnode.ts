@@ -5,7 +5,7 @@ import { PRIORITY } from './nodepriorities';
 import TAG from '../enums/nodetags';
 import { RouteMatch } from '../lib';
 
-const debug = Debug('GP-URI-ROUTER:node:exactmatch');
+const debug = Debug('HOLIDAY-ROUTER:node:exactmatch');
 
 /**
  * Node represents uri segment that ends with path separator

@@ -1,7 +1,7 @@
 import Debug from 'debug';
 import { IController, IStringMap, Node, PARENT_NODE } from '../interfaces';
 
-const debug = Debug('GP-URI-ROUTER:lib');
+const debug = Debug('HOLIDAY-ROUTER:lib');
 
 /**
  *

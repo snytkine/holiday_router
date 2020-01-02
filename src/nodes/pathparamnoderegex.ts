@@ -7,7 +7,7 @@ import { PRIORITY } from './nodepriorities';
 import TAG from '../enums/nodetags';
 import { RouterError, RouterErrorCode } from '../errors';
 
-const debug = Debug('GP-URI-ROUTER:node:pathparamnoderegex');
+const debug = Debug('HOLIDAY-ROUTER:node:pathparamnoderegex');
 
 export default class PathParamNodeRegex<T extends IController> extends PathParamNode<T>
   implements Node<T> {

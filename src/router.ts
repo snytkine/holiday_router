@@ -1,6 +1,7 @@
 import Debug from 'debug';
 import {
   IController,
+  IRouteInfo,
   IRouteMatchResult,
   IStringMap,
   IUriParams,
@@ -12,10 +13,9 @@ import { RootNode } from './nodes';
 import { makeUriTemplate, makeUrl, Strlib } from './utils';
 import { makeNode } from './utils/adduri';
 import { RouterError, RouterErrorCode } from './errors';
-import { IRouteInfo } from './interfaces/routeinfo';
 import { RouteInfo } from './lib';
 
-const debug = Debug('GP-URI-ROUTER:router');
+const debug = Debug('HOLIDAY-ROUTER:router');
 /**
  * @TODO add makeUri(controllerID, params) it will call getRouteMatchByControllerId and then makeUri(node,params) or throw
  */

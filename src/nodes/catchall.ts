@@ -14,7 +14,7 @@ import TAG from '../enums/nodetags';
 import { RouterError, RouterErrorCode } from '../errors';
 import { ExtractedPathParam, RouteMatch } from '../lib';
 
-const debug = Debug('GP-URI-ROUTER:node:catchallnode');
+const debug = Debug('HOLIDAY-ROUTER:node:catchallnode');
 
 /**
  * Node represents uri segment that ends with path separator

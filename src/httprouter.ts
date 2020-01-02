@@ -1,12 +1,10 @@
 import Debug from 'debug';
 import * as methods from 'methods';
 import Router from './router';
-import { IController, IRouteMatchResult, IStringMap, Node } from './interfaces';
-import { RouterError } from './errors';
-import RouterErrorCode from './errors/errorcodes';
-import { IHttpRouteInfo } from './interfaces/routeinfo';
+import { IController, IHttpRouteInfo, IRouteMatchResult, IStringMap, Node } from './interfaces';
+import { RouterError, RouterErrorCode } from './errors';
 
-const debug = Debug('GP-URI-ROUTER:router');
+const debug = Debug('HOLIDAY-ROUTER:router');
 
 export default class HttpRouter<T extends IController> {
   private routers: Map<string, Router<T>> = new Map();

@@ -8,7 +8,7 @@ import { ExtractedPathParam, RouteMatch } from '../lib';
 
 import { RouterError, RouterErrorCode } from '../errors';
 
-const debug = Debug('GP-URI-ROUTER:node:pathparamnode');
+const debug = Debug('HOLIDAY-ROUTER:node:pathparamnode');
 
 /**
  * Node represents uri segment that

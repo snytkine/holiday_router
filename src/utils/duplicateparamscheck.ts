@@ -2,7 +2,7 @@ import Debug from 'debug';
 import { IController, Node, PARENT_NODE } from '../interfaces';
 import { RouterError, RouterErrorCode } from '../errors';
 
-const debug = Debug('GP-URI-ROUTER:lib');
+const debug = Debug('HOLIDAY-ROUTER:lib');
 
 export default function ensureNoDuplicatePathParams<T extends IController>(
   node: Node<T>,

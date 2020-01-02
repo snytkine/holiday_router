@@ -14,7 +14,7 @@ import { PRIORITY } from './nodepriorities';
 import TAG from '../enums/nodetags';
 import { RouterError, RouterErrorCode } from '../errors';
 
-const debug = Debug('GP-URI-ROUTER:NODE:RootNode');
+const debug = Debug('HOLIDAY-ROUTER:NODE:RootNode');
 
 /**
  * @todo add getter and setter to parent node

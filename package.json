@@ -1,18 +1,38 @@
 {
-  "name": "thanksgiving-router",
-  "version": "0.0.1",
-  "private": true,
+  "name": "holiday-router",
+  "description": "General purpose flexible URI router written in TypeScript",
+  "version": "1.0.0",
+  "private": false,
+  "author": "Dmitri Snytkine",
+  "license": "MIT",
   "scripts": {
-    "start": "node ./bin/www",
+    "prepare" : "npm run build",
+    "prepublishOnly" : "npm test && npm run lint",
+    "preversion" : "npm run lint",
+    "version" : "npm run format && git add -A src",
+    "postversion" : "git push && git push --tags",
     "prebuild": "rm -rf build",
-    "build": "tsc --pretty --lib es2019.array",
+    "build": "tsc --pretty",
     "test": "nyc mocha build/tests/ --recursive",
+    "format": "eslint src --ext .ts --fix",
     "lint": "eslint src --ext .ts"
   },
+  "engines": {
+    "node": ">=8.11.0"
+  },
+  "typings": "build/types/index.d.ts",
+  "files": [
+    "build/"
+  ],
+  "main": "build/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/snytkine/holiday_router.git"
+  },
+  "keywords": ["URI", "Router", "Typescript"],
   "nyc": {
     "extension": [
-      ".ts",
-      ".tsx"
+      ".ts"
     ],
     "exclude": [
       "**/*.d.ts",
@@ -24,7 +44,8 @@
       "*.js"
     ],
     "reporter": [
-      "html"
+      "html",
+      "text"
     ],
     "all": true
   },

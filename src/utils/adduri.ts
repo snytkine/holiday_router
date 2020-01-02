@@ -3,7 +3,7 @@ import { CATCH_ALL_PARAM_NAME, IController, Node } from '../interfaces';
 
 import { CatchAllNode, ExactMatchNode, PathParamNode, PathParamNodeRegex } from '../nodes';
 
-const debug = Debug('GP-URI-ROUTER:lib');
+const debug = Debug('HOLIDAY-ROUTER:lib');
 
 export type NodeFactory = <T extends IController>(uriSegment: string) => Node<T> | null;
 
