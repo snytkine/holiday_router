@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import { PathParamNodeRegex, PRIORITY } from '../../nodes';
 import { RouterError, RouterErrorCode } from '../../errors';
 import { BasicController } from '../../lib';
+import { IRouteMatch } from '../../interfaces';
 
 describe('#pathparamnoderegex node', () => {
   describe('#PathParamNode object test', () => {
@@ -201,10 +202,11 @@ describe('#pathparamnoderegex node', () => {
       node2.addController(ctrl);
       nodeWithPrefixAndPostfix.addChildNode(node2);
 
-      const foundRoutes = nodeWithPrefixAndPostfix.getRouteMatch('order-1234/customer-NICK.html');
+      const foundRoutes = <IRouteMatch<BasicController<string>>>nodeWithPrefixAndPostfix.getRouteMatch('order-1234/customer-NICK.html');
 
       expect(foundRoutes.node).to.equal(node2);
 
+      // @ts-ignore
       expect(foundRoutes.node.controllers[0]).to.equal(ctrl);
 
       expect(foundRoutes.params.pathParams[0].paramName).to.equal('id');

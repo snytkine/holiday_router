@@ -7,11 +7,11 @@ import { IController } from '../interfaces';
  *
  */
 export default class BasicController<T> implements IController {
-  public controller;
+  public controller: T;
 
-  public readonly priority;
+  public readonly priority: number;
 
-  public readonly id;
+  public readonly id: string;
 
   constructor(controller: T, id: string = 'BasicController', priority = 1) {
     this.priority = priority;
@@ -19,11 +19,11 @@ export default class BasicController<T> implements IController {
     this.id = id;
   }
 
-  public equals(other: IController) {
-    return other instanceof BasicController && other.controller === this.controller;
+  public equals(other: IController): boolean {
+    return other instanceof BasicController && other.controller===this.controller;
   }
 
-  public toString() {
+  public toString(): string {
     return `${this.constructor.name} id=${this.id} priority=${this.priority}`;
   }
 }

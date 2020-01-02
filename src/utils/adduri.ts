@@ -149,8 +149,8 @@ const factories: Array<NodeFactory> = [
  *
  * @param {string} uriSegment
  */
-export const makeNode = <T extends IController>(uriSegment: string): Node<T> => {
-  let ret: Node<T>;
+export const makeNode = <T extends IController>(uriSegment: string): Node<T> | null => {
+  let ret: Node<T> | null;
   let i = 0;
 
   do {

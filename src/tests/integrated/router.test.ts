@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import { IRouteMatch } from '../../interfaces';
-import Router from '../../router';
+import { IRouteInfo, IRouteMatch } from '../../interfaces';
+import { Router } from '../../';
 import { BasicController, RouteMatch, UniqueController } from '../../lib';
 import { RouterError, RouterErrorCode } from '../../errors';
 
@@ -40,14 +40,18 @@ describe('#Integrated Router test', () => {
         router.getRouteMatch('/catalog/toys/cars/honda/crv')
       );
 
+      // @ts-ignore
       expect(res.node.controllers.length).to.equal(2);
+      // @ts-ignore
       expect(res.node.controllers[0].id).to.equal('ctrl2');
+      // @ts-ignore
       expect(res.node.controllers[1].id).to.equal('ctrl6');
     });
 
     it('#getRouteMatch Should find matching route', () => {
       const res = <RouteMatch<BasicController<string>>>router.getRouteMatch('/catalog/toys/');
 
+      // @ts-ignore
       expect(res.node.controllers[0].id).to.equal('ctrl1');
       expect(res.node.name).to.equal('ExactMathNode::toys/');
     });
@@ -57,6 +61,7 @@ describe('#Integrated Router test', () => {
         router.getRouteMatch('/catalog/toys/cars/toyota/rav4')
       );
 
+      // @ts-ignore
       expect(res.node.controllers[0].id).to.equal('ctrl2');
 
       expect(res.node.name).to.equal(`PathParamNode::model::''::''`);
@@ -78,6 +83,7 @@ describe('#Integrated Router test', () => {
         router.getRouteMatch('/catalog/toys/cars/gm/mymodel-gtx-item/id-35.html')
       );
 
+      // @ts-ignore
       expect(res.node.controllers[0].id).to.equal('ctrl3');
 
       expect(res.node.name).to.equal(`PathParamNode::id::'id-'::'.html'`);
@@ -103,6 +109,7 @@ describe('#Integrated Router test', () => {
         router.getRouteMatch('/catalog/toys/cars/widget-678green/2015')
       );
 
+      // @ts-ignore
       expect(res.node.controllers[0].id).to.equal('ctrl4');
 
       expect(res.node.name).to.equal(`PathParamNodeRegex::'year'::'^([0-9]{4})$'::''::''`);
@@ -146,6 +153,7 @@ describe('#Integrated Router test', () => {
         router.getRouteMatch('/catalog/toys/cars/widget-678yellow/2015')
       );
 
+      // @ts-ignore
       expect(res.node.controllers[0].id).to.equal('ctrl2');
 
       expect(res.node.name).to.equal(`PathParamNode::model::''::''`);
@@ -161,17 +169,17 @@ describe('#Integrated Router test', () => {
       const rtr = new Router();
       const controller = new UniqueController('rootController');
       rtr.addRoute('', controller);
-
+      // @ts-ignore
       expect(rtr.rootNode.controllers[0]).to.equal(controller);
     });
   });
 
   describe('#getAllRoutes test', () => {
     it('#Should return array of route objects', () => {
-      const res = router.getAllRoutes();
+      const res: Array<IRouteInfo> = router.getAllRoutes();
       expect(
         res.sort((item1, item2) => {
-          return item1.controller.id > item2.controller.id ? 1 : -1;
+          return item1.controller.id > item2.controller.id ? 1:-1;
         }),
       ).to.deep.equal([
         { uri: uri1, controller: ctrl1 },
@@ -224,7 +232,9 @@ describe('#Integrated Router test', () => {
         res = e;
       }
 
+      // @ts-ignore
       expect(res).to.be.instanceOf(RouterError);
+      // @ts-ignore
       expect(res.code).to.be.equal(RouterErrorCode.CONTROLLER_NOT_FOUND);
     });
   });

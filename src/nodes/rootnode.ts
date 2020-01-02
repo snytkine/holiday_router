@@ -28,7 +28,7 @@ const debug = Debug('HOLIDAY-ROUTER:NODE:RootNode');
 export default class RootNode<T extends IController> implements Node<T> {
   public [PARENT_NODE]: Node<T>;
 
-  public controllers: Array<T>;
+  public controllers?: Array<T>;
 
   public paramName = '';
 
@@ -99,7 +99,7 @@ export default class RootNode<T extends IController> implements Node<T> {
    * @param {IUriParams} params
    * @returns {IRouteMatchResult<T>}
    */
-  getRouteMatch(uri: string, params?: IUriParams): IRouteMatchResult<T> {
+  getRouteMatch(uri: string, params: IUriParams = {pathParams: []}): IRouteMatchResult<T> {
     return this.findChildMatches(uri, params);
   }
 
@@ -125,7 +125,7 @@ export default class RootNode<T extends IController> implements Node<T> {
 
   public addChildNode(node: Node<T>): Node<T> {
     debug('Entered addChildNode on node "%s" with node "%s"', this.name, node.name);
-    const existingChildNode: Node<T> = this.children.find(_ => _.equals(node));
+    const existingChildNode: Node<T> | undefined = this.children.find(_ => _.equals(node));
     if (existingChildNode) {
       debug(
         'Node "%s" has childNode "%s" equals to new node "%s"',

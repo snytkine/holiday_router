@@ -63,7 +63,7 @@ export default class Router<T extends IController> {
 
     const { head, tail } = Strlib.splitUriByPathSeparator(uri, [ROUTE_PATH_SEPARATOR]);
 
-    const childNode = makeNode<T>(head);
+    const childNode = <Node<T>>makeNode<T>(head);
     childNode[PARENT_NODE] = parentNode;
 
     const addedNode = parentNode.addChildNode(childNode);
@@ -76,7 +76,7 @@ export default class Router<T extends IController> {
     return this.addRoute(tail, controller, addedNode);
   }
 
-  public makeUri(controllerId: string, params?: IStringMap): string {
+  public makeUri(controllerId: string, params: IStringMap = {}): string {
     debug('Entered router.makeUri with controllerId="%s", params="%o"', controllerId, params);
     const routeMatch = this.rootNode.getRouteMatchByControllerId(controllerId);
 
@@ -94,6 +94,7 @@ export default class Router<T extends IController> {
     const routes = this.rootNode.getAllRoutes();
     return routes
       .map(routeMatch => {
+        // @ts-ignore
         return routeMatch.node.controllers.map(
           controller => new RouteInfo(makeUriTemplate(routeMatch.node), controller),
         );

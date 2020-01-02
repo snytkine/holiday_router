@@ -15,10 +15,13 @@ export default function ensureNoDuplicatePathParams<T extends IController>(
     return true;
   }
 
+  // @ts-ignore
   if (node[PARENT_NODE].paramName === paramName) {
+    // @ts-ignore
     const errorMessage = `URI params must be unique. Non-unique param "${paramName}" found in node=${node[PARENT_NODE].name}`;
     throw new RouterError(errorMessage, RouterErrorCode.NON_UNIQUE_PARAM);
   }
 
+  // @ts-ignore
   return ensureNoDuplicatePathParams(node[PARENT_NODE], paramName);
 }

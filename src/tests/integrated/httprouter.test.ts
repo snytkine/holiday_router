@@ -32,7 +32,8 @@ describe('#HttpRouter tests', () => {
     });
 
     it('should throw RouterException if trying to add unsupported http method', () => {
-      let ret: RouterError;
+      let ret: RouterError | undefined;
+
       try {
         const httpRouter = new HttpRouter();
         httpRouter.addRoute('question', uri1, ctrl1);
@@ -41,6 +42,7 @@ describe('#HttpRouter tests', () => {
       }
 
       expect(ret).to.be.instanceOf(RouterError);
+      // @ts-ignore
       expect(ret.code).to.equal(RouterErrorCode.UNSUPPORTED_HTTP_METHOD);
     });
   });
@@ -60,7 +62,9 @@ describe('#HttpRouter tests', () => {
       );
 
       expect(res).to.be.instanceOf(RouteMatch);
+      // @ts-ignore
       expect(res.node.controllers.length).to.equal(1);
+      // @ts-ignore
       expect(res.node.controllers[0].id).to.equal('ctrl2');
     });
 
@@ -99,6 +103,7 @@ describe('#HttpRouter tests', () => {
         res = e;
       }
 
+      // @ts-ignore
       expect(res.code).to.equal(RouterErrorCode.UNSUPPORTED_HTTP_METHOD);
     });
   });

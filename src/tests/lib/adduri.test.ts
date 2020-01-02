@@ -9,6 +9,7 @@ import {
   makePathParamNodeRegex,
 } from '../../utils/adduri';
 import TAG from '../../enums/nodetags';
+import { BasicController } from '../../lib';
 
 describe('#adduri.ts', () => {
   describe('#makeExactMatchNode', () => {
@@ -42,21 +43,21 @@ describe('#adduri.ts', () => {
 
   describe('#makePathParamNode', () => {
     it('should create PathParamNode without prefix and postfix', () => {
-      const res = makePathParamNode('{catalog}');
+      const res = <PathParamNode<BasicController<string>>>makePathParamNode('{catalog}');
       expect(res.type).to.be.equal(TAG.PATHPARAM_NODE);
       expect(res.paramName).to.equal('catalog');
       expect(res.name).to.be.equal(`PathParamNode::catalog::''::''`);
     });
 
     it('should create PathParamNode with prefix and postfix', () => {
-      const res = makePathParamNode('widget-{id}.html');
+      const res = <PathParamNode<BasicController<string>>>makePathParamNode('widget-{id}.html');
       expect(res.type).to.be.equal(TAG.PATHPARAM_NODE);
       expect(res.paramName).to.equal('id');
       expect(res.name).to.be.equal(`PathParamNode::id::'widget-'::'.html'`);
     });
 
     it('should create PathParamNode with prefix and postfix with spaces before after param name', () => {
-      const res = makePathParamNode('widget-{ id }.html');
+      const res = <PathParamNode<BasicController<string>>>makePathParamNode('widget-{ id }.html');
       expect(res.type).to.be.equal(TAG.PATHPARAM_NODE);
       expect(res.paramName).to.equal('id');
       expect(res.name).to.be.equal(`PathParamNode::id::'widget-'::'.html'`);
@@ -70,7 +71,7 @@ describe('#adduri.ts', () => {
 
   describe('#mathPathParamNodeRegex', () => {
     it('should create PathParamNodeRegex without prefix and postfix when passed uriSeegment is matching a valid regex', () => {
-      const res = makePathParamNodeRegex('{year:([0-9]{4})}');
+      const res = <PathParamNodeRegex<BasicController<string>>>makePathParamNodeRegex('{year:([0-9]{4})}');
 
       expect(res.type).to.be.equal(TAG.PATHPARAM_REGEX_NODE);
       expect(res.paramName).to.be.equal('year');
@@ -91,14 +92,14 @@ describe('#adduri.ts', () => {
     });
 
     it('should create PathParamNodeRegex with prefix and postfix when passed uriSegment is matching a valid regex', () => {
-      const res = makePathParamNodeRegex('model-{year:([0-9]{4})}-current.html');
+      const res = <PathParamNodeRegex<BasicController<string>>>makePathParamNodeRegex('model-{year:([0-9]{4})}-current.html');
       expect(res.name).to.equal(
         `PathParamNodeRegex::'year'::'^([0-9]{4})$'::'model-'::'-current.html'`,
       );
     });
 
     it('should create PathParamNodeRegex and add $ to end of pattern and ^ to beginning', () => {
-      const res = makePathParamNodeRegex('total-{price:([0-9]{2,4})}-us\\$');
+      const res = <PathParamNodeRegex<BasicController<string>>>makePathParamNodeRegex('total-{price:([0-9]{2,4})}-us\\$');
       const reSource = res.regex.source;
       expect(reSource.startsWith('^')).to.be.true;
       expect(reSource.endsWith('$')).to.be.true;
@@ -123,24 +124,24 @@ describe('#adduri.ts', () => {
 
   describe('#makeNode test', () => {
     it('should create PathParamNode', () => {
-      const res = makeNode('invoice-{id}.html');
+      const res = <PathParamNode<BasicController<string>>>makeNode('invoice-{id}.html');
       expect(res).to.be.instanceOf(PathParamNode);
 
       expect(res.name).to.equal(`PathParamNode::id::'invoice-'::'.html'`);
     });
 
     it('should create PathParamNodeRegex', () => {
-      const res = makeNode('invoice-{id:[0-9]{2,3}}.html');
+      const res = <PathParamNodeRegex<BasicController<string>>>makeNode('invoice-{id:[0-9]{2,3}}.html');
       expect(res).to.be.instanceOf(PathParamNodeRegex);
     });
 
     it('should create CatchAllNode', () => {
-      const res = makeNode('**');
+      const res = <CatchAllNode<BasicController<string>>>makeNode('**');
       expect(res).to.be.instanceOf(CatchAllNode);
     });
 
     it('should create ExactMatchNode', () => {
-      const res = makeNode('invoices/');
+      const res = <ExactMatchNode<BasicController<string>>>makeNode('invoices/');
       expect(res).to.be.instanceOf(ExactMatchNode);
     });
   });

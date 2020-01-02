@@ -64,7 +64,7 @@ export default class ExactMatchNode<T extends IController> extends RootNode<T> i
     return `${TAG.EXACTMATCH_NODE}::${this.origUriPattern}`;
   }
 
-  equals(other: Node<T>) {
+  equals(other: Node<T>): boolean {
     return (
       other.type === this.type &&
       other instanceof ExactMatchNode &&
@@ -72,7 +72,7 @@ export default class ExactMatchNode<T extends IController> extends RootNode<T> i
     );
   }
 
-  public getRouteMatch(uri: string, params?: IUriParams): IRouteMatchResult<T> {
+  public getRouteMatch(uri: string, params: IUriParams = {pathParams: []}): IRouteMatchResult<T> {
     /**
      * If not starts with origUriPattern then will not yield anything
      */

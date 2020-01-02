@@ -20,23 +20,25 @@ export const makeUrl = <T extends IController>(
 ): string => {
   debug('Entered makeUri with node "%s" params="%o"', node.name, params);
 
-  const ret = node.makeUri(params) + res;
+  const ret: string = node.makeUri(params) + res;
 
   if (!node[PARENT_NODE]) {
     return ret;
   }
 
+  // @ts-ignore
   return makeUrl(node[PARENT_NODE], params, ret);
 };
 
 export const makeUriTemplate = <T extends IController>(node: Node<T>, res: string = ''): string => {
   debug('Entered makeUriPattern with node "%s"', node.name);
 
-  const ret = node.uriTemplate + res;
+  const ret: string = node.uriTemplate + res;
 
   if (!node[PARENT_NODE]) {
     return ret;
   }
 
+  // @ts-ignore
   return makeUriTemplate(node[PARENT_NODE], ret);
 };

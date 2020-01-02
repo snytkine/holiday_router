@@ -28,8 +28,9 @@ export default class HttpRouter<T extends IController> {
       controller,
     );
     const method = httpMethod.toLocaleLowerCase();
-    if (this.routers.has(method)) {
-      return this.routers.get(method).addRoute(uri, controller);
+    const methodRouter = this.routers.get(method);
+    if (methodRouter) {
+      return methodRouter.addRoute(uri, controller);
     }
 
     if (!methods.includes(method)) {
@@ -60,7 +61,7 @@ export default class HttpRouter<T extends IController> {
   }
 
   public getAllRoutes(): Array<IHttpRouteInfo> {
-    const ret = [];
+    const ret: Array<IHttpRouteInfo>[] = [];
 
     this.routers.forEach((router, httpMethod) => {
       ret.push(

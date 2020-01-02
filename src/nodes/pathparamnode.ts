@@ -70,7 +70,7 @@ export default class PathParamNode<T extends IController> extends RootNode<T> im
    * @param {Node<T>} other
    * @returns {boolean}
    */
-  public equals(other: Node<T>) {
+  public equals(other: Node<T>): boolean {
     debug(
       'entered equals on node  id="%s" name="%s" with other.id="%s" other.name="%s"',
       this.type,
@@ -91,7 +91,7 @@ export default class PathParamNode<T extends IController> extends RootNode<T> im
      * complain about other.prefix and other.potfix
      * if typescript not sure that other node has these props
      */
-    const ret =
+    const ret: boolean =
       other instanceof PathParamNode &&
       other.type === this.type &&
       this.prefix === other.prefix &&
