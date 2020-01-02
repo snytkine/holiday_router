@@ -15,7 +15,8 @@
     "build": "tsc --pretty",
     "test": "nyc mocha build/tests/ --recursive",
     "format": "eslint src --ext .ts --fix",
-    "lint": "eslint src --ext .ts"
+    "lint": "eslint src --ext .ts",
+    "coverage": "mv coverage/coverage-final.json coverage/coverage.json"
   },
   "engines": {
     "node": ">=8.11.0"
