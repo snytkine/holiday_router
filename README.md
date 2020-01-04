@@ -4,12 +4,12 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/75c7ae20ca921d0db458/maintainability)](https://codeclimate.com/github/snytkine/holiday_router/maintainability)
 
 # Holiday Router
-##Advanced URI Routing library for matching URI to controller
-##Open Source under the *MIT License*
-####Written in Typescript. Strong typing and interface based design makes it very flexible for developers to implement own controller classes.
-####Over 150 unit tests covering 100% of codebased and lots of extra real-life cases.
-####Using industry standard eslint rules for typescript makes use of best practices for writing clean tyescript code
-###Features
+## Advanced URI Routing library for matching URI to controller
+## Open Source under the *MIT License*
+#### Written in Typescript. Strong typing and interface based design makes it very flexible for developers to implement own controller classes.
+#### Over 150 unit tests covering 100% of codebased and lots of extra real-life cases.
+#### Using industry standard eslint rules for typescript makes use of best practices for writing clean tyescript code
+### Features
 * Named uri parameters /catalog/{category}/{subcategory/
 * Catchall routes with support for named catchall parameter /images/\*\*imagepath
 or just /images/\*\* for anonymous catchall param
