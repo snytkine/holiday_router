@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.com/snytkine/holiday_router.svg?branch=master)](https://travis-ci.com/snytkine/holiday_router)
+[![codecov](https://codecov.io/gh/snytkine/holiday_router/branch/master/graph/badge.svg)](https://codecov.io/gh/snytkine/holiday_router)
+[![Known Vulnerabilities](https://snyk.io/test/github/snytkine/holiday_router/badge.svg?targetFile=package.json)](https://snyk.io/test/github/snytkine/holiday_router?targetFile=package.json)
+
 # Holiday Router
 ##Advanced URI Routing library for matching URI to controller
 ####Written in Typescript. Strong typing and interface based design makes it very flexible for developers to implement own controller classes.
