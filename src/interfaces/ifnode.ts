@@ -16,7 +16,6 @@ export interface IUriParams {
 }
 
 export interface IRouteMatch<T extends IController> {
-  // controllers: Array<T>;
   params: IUriParams;
   node: Node<T>;
 }

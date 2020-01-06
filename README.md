@@ -37,22 +37,103 @@ npm install holiday-router
 ```
 
 ## API Reference
-* [Router](#Router--class)
-    * [new Router\<T extends IController>()](#Router_new)
-    * _instance methods_
-        * [.addRoute(uri: string, controller: T)](#Router--addRoute) : <code>Node\<T></code>
-        * [.getRouteMatch(uri: string)](#Router--getRouteMatch): <code>undefined | IRouteMatch\<T></code>
-        * [.makeUri(controllerId: string, params: IStringMap = {})](#Router--makeUri): <code>string</code>
-        * [.getAllRoutes()](#Router--getAllRoutes): <code>Array\<IRouteInfo></code>
-* [HttpRouter](#HttpRouter-class) 
-    * [new HttpRouter\<T extends IController>()](#HttpRouter_new)  
-    * _instance methods_
-        * [.addRoute(httpMethod: string, uri: string, controller: T)](#Router--addRoute) : <code>Node\<T></code>
-        * [.getRouteMatch(httpMethod: string, uri: string)](#Router--getRouteMatch): <code>undefined | IRouteMatch\<T></code>
-        * [.makeUri(httpMethod: string, controllerId: string, params?: IStringMap)](#Router--makeUri): <code>string</code>
-        * [.getAllRoutes()](#Router--getAllRoutes): <code>Array\<IHttpRouteInfo></code> 
+* ####[Interfaces](#Holiday-Router--Interfaces)
+    * [IController](#Interfaces--IController)
+    * [IRouteMatch](#Interfaces--IRouteMatch)
+    * [IRouteMatchResult](#Interfaces--IRouteMatchResult)
+    * [IUriParams](#Interfaces--IUriParams)
+    * [IRegexParams](#Interfaces--IRegexParams)
+    * [IStringMap](#Interfaces--IStringMap)
+    * [IRouteInfo](#Interfaces--IRouteInfo)
+    * [Note\<T>](#Interfaces--Node\<T>)
 
-<a name="Router--class"></a>
+* ####Errors
+    * [RouterError](#Errors--RouterError)
+
+*   ####Enums
+    * [RouterErrorCode](#Enums--RouterErrorCode)
+
+*   #### Classes
+    * [Router](#Router--class)
+        * [new Router\<T extends IController>()](#Router_new)
+        * _instance methods_
+            * [.addRoute(uri: string, controller: T)](#Router--addRoute) : <code>Node\<T></code>
+            * [.getRouteMatch(uri: string)](#Router--getRouteMatch): <code>IRouteMatchResult\<T extends IController></code>
+            * [.makeUri(controllerId: string, params: IStringMap = {})](#Router--makeUri): <code>string</code>
+            * [.getAllRoutes()](#Router--getAllRoutes): <code>Array\<IRouteInfo></code>
+    * [HttpRouter](#HttpRouter-class) 
+        * [new HttpRouter\<T extends IController>()](#HttpRouter_new)  
+        * _instance methods_
+            * [.addRoute(httpMethod: string, uri: string, controller: T)](#Router--addRoute) : <code>Node\<T></code>
+            * [.getRouteMatch(httpMethod: string, uri: string)](#Router--getRouteMatch): <code>undefined | IRouteMatch\<T></code>
+            * [.makeUri(httpMethod: string, controllerId: string, params?: IStringMap)](#Router--makeUri): <code>string</code>
+            * [.getAllRoutes()](#Router--getAllRoutes): <code>Array\<IHttpRouteInfo></code> 
+
+<a name="Holiday-Router--Interfaces"></a>
+
+##Interfaces
+<a name="Interfaces--IController"></a>
+#### IController
+Developer must implement own class that implements an IController interface
+or use one of 2 helper Classes: BasicController or UniqueController
+```typescript
+interface IController {
+  /**
+   * Controller must implement its own logic
+   * of how it determines if another controller is functionally equal
+   * to this controller.
+   *
+   * The purpose of calling equals(other) method is to prevent
+   * having 2 controller that can respond to same uri.
+   *
+   * @param other
+   */
+  equals(other: IController): boolean;
+
+  /**
+   * Multiple controller may exist in the same node, meaning
+   * that more than one controller can match same uri
+   * it's up to consuming program to iterate over results and
+   * find the best match.
+   * a controller with higher priority will be returned first from
+   * controller iterator.
+   * In general if multiple controllers can be used for same URI, a controller
+   * will also have some sort of filter function that will accept one or more params
+   * from consuming application to determine if controller is a match
+   * a controller with a more specific filter should have higher priority
+   *
+   * For example one controller may require that request have a specific header
+   * and another controller will serve every other request. The controller that requires
+   * a specific header should be tested first, otherwise the second more general controller
+   * will always match. For this reason the first controller must have higher priority
+   */
+  priority: number;
+
+  /**
+   * Identifier for a controller. It does not have to be unique
+   * it is used primarily for logging and debugging, a way to add a name to controller.
+   */
+  id: string;
+
+  /**
+   * Used for logging and debugging
+   */
+  toString(): string;
+}
+```
+
+<a name="Interfaces--IRouteMatch"></a>
+#### IRouteMatch
+```typescript
+interface IRouteMatch<T extends IController> {
+  params: IUriParams;
+  node: Node<T>;
+}
+```
+
+---
+<a name="Holiday-Router--classes"></a>
+##Classes
 ### Router
 <a name="Router_new"></a>
 
@@ -65,7 +146,7 @@ import { Router } from 'holiday-router';
 
 const router = new Router();
 ```
-
+---
 <a name="Router--addRoute"></a>
 #### .addRoute(uri: string, controller: T): <code>Node\<T></code>
 Adds route to router. 
