@@ -37,20 +37,22 @@ npm install holiday-router
 ```
 
 ## API Reference
-* ####[Interfaces](#Holiday-Router--Interfaces)
+* #### [Interfaces](#Holiday-Router--Interfaces)
     * [IController](#Interfaces--IController)
     * [IRouteMatch](#Interfaces--IRouteMatch)
     * [IRouteMatchResult](#Interfaces--IRouteMatchResult)
     * [IUriParams](#Interfaces--IUriParams)
+    * [IExtractedPathParam](#Interfaces--IExtractedPathParam)
     * [IRegexParams](#Interfaces--IRegexParams)
     * [IStringMap](#Interfaces--IStringMap)
     * [IRouteInfo](#Interfaces--IRouteInfo)
+    * [IHttpRouteInfo](#Interfaces--IHttpRouteInfo)
     * [Note\<T>](#Interfaces--Node\<T>)
 
-* ####Errors
+* #### Errors
     * [RouterError](#Errors--RouterError)
 
-*   ####Enums
+*   #### Enums
     * [RouterErrorCode](#Enums--RouterErrorCode)
 
 *   #### Classes
@@ -131,6 +133,110 @@ interface IRouteMatch<T extends IController> {
 }
 ```
 
+<a name="Interfaces--IRouteMatchResult"></a>
+#### IRouteMatchResult
+```typescript
+type IRouteMatchResult<T extends IController> = undefined | IRouteMatch<T>;
+```
+
+<a name="Interfaces--IUriParams"></a>
+#### IUriParams
+```typescript
+interface IUriParams {
+  pathParams: Array<IExtractedPathParam>;
+  regexParams?: Array<IRegexParams>;
+}
+```
+
+<a name="Interfaces--IExtractedPathParam"></a>
+#### IExtractedPathParam
+```typescript
+interface IExtractedPathParam {
+  paramName: string;
+  paramValue: string;
+}
+```
+
+<a name="Interfaces--IRegexParams"></a>
+#### IRegexParams
+```typescript
+interface IRegexParams {
+  paramName: string;
+  params: Array<string>;
+}
+```
+
+<a name="Interfaces--IStringMap"></a>
+#### IStringMap
+```typescript
+interface IStringMap {
+  [key: string]: string;
+}
+```
+
+<a name="Interfaces--IRouteInfo"></a>
+#### IRouteInfo
+```typescript
+interface IRouteInfo {
+  uri: string;
+  controller: IController;
+}
+```
+
+<a name="Interfaces--IHttpRouteInfo"></a>
+#### IHttpRouteInfo
+```typescript
+interface IHttpRouteInfo extends IRouteInfo {
+  method: string;
+}
+```
+
+
+<a name="Interfaces--Node"></a>
+#### Node\<T extends IController>
+```typescript
+interface Node<T extends IController> {
+  type: string;
+
+  priority: number;
+
+  name: string;
+
+  controllers?: Array<T>;
+
+  /**
+   * Original uri template that was used in addController method call
+   * This way a full uri template can be recreated by following parent nodes.
+   */
+  uriTemplate: string;
+
+  paramName: string;
+
+  equals(other: Node<T>): boolean;
+
+  getRouteMatch(uri: string, params?: IUriParams): IRouteMatchResult<T>;
+
+  addChildNode(node: Node<T>): Node<T>;
+
+  addController(controller: T): Node<T>;
+
+  getAllRoutes(): Array<IRouteMatch<T>>;
+
+  getRouteMatchByControllerId(id: string): IRouteMatchResult<T>;
+
+  makeUri(params: IStringMap): string;
+
+  children: Array<Node<T>>;
+
+  /**
+   * Having the property of type Symbol is an easy way
+   * to exclude it from JSON.stringify
+   * The parent node cannot be included in JSON because it
+   * will create recursion error
+   */
+  [Symbol.for('HOLIDAY-ROUTER:PARENT_NODE')]?: Node<T>;
+}
+```
 ---
 <a name="Holiday-Router--classes"></a>
 ##Classes
