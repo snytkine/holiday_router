@@ -35,3 +35,62 @@ Install using [npm](https://www.npmjs.org/):
 ```sh
 npm install holiday-router
 ```
+
+## API Reference
+* [Router](#Router--class)
+    * [new Router\<T extends IController>()](#Router_new)
+    * _instance methods_
+        * [.addRoute(uri: string, controller: T)](#Router--addRoute) : <code>Node\<T></code>
+        * [.getRouteMatch(uri: string)](#Router--getRouteMatch): <code>undefined | IRouteMatch\<T></code>
+        * [.makeUri(controllerId: string, params: IStringMap = {})](#Router--makeUri): <code>string</code>
+        * [.getAllRoutes()](#Router--getAllRoutes): <code>Array\<IRouteInfo></code>
+* [HttpRouter](#HttpRouter-class) 
+    * [new HttpRouter\<T extends IController>()](#HttpRouter_new)  
+    * _instance methods_
+        * [.addRoute(httpMethod: string, uri: string, controller: T)](#Router--addRoute) : <code>Node\<T></code>
+        * [.getRouteMatch(httpMethod: string, uri: string)](#Router--getRouteMatch): <code>undefined | IRouteMatch\<T></code>
+        * [.makeUri(httpMethod: string, controllerId: string, params?: IStringMap)](#Router--makeUri): <code>string</code>
+        * [.getAllRoutes()](#Router--getAllRoutes): <code>Array\<IHttpRouteInfo></code> 
+
+<a name="Router--class"></a>
+### Router
+<a name="Router_new"></a>
+
+#### new Router([opts])
+Creates a new instance of Router.
+
+**Example**
+```javascript
+import { Router } from 'holiday-router';
+
+const router = new Router();
+```
+
+<a name="Router--addRoute"></a>
+#### .addRoute(uri: string, controller: T): <code>Node\<T></code>
+Adds route to router. 
+
+| param | type | description | 
+| --- | --- | --- |
+| uri | <code>string</code> | uri with supported uri template syntax |
+| controller | <code>IController</code> | Controller is an object that must implement IController interface |
+
+**Example**
+In this example we adding uri template
+that will match any uri that looks like 
+/catalog/category/somecategory/widget-34/info
+
+Notice that 
+ - first 2 uri segments must be matched exactly but third and fourth
+uri segments are placeholder segments.
+ - Third segment can match any string and that string will then be
+available in the RouteMatch object when .getRouteMatch() is called with the uri
+ - The Fourth segment has a prefix widget- and the placeholder is a Regular Expression based param
+it must match the regex \[0-9]+ (must be numeric value)
+
+```javascript
+import { Router, BasicController } from 'holiday-router'; 
+
+const router = new Router();
+router.addRoute('/catalog/category/{categoryID}/widget-{widget:[0-9]+}/info', new BasicController('somecontroller', 'ctrl1'));
+```
