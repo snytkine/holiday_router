@@ -80,17 +80,19 @@ In this example we adding uri template
 that will match any uri that looks like 
 /catalog/category/somecategory/widget-34/info
 
-Notice that 
- - first 2 uri segments must be matched exactly but third and fourth
-uri segments are placeholder segments.
- - Third segment can match any string and that string will then be
-available in the RouteMatch object when .getRouteMatch() is called with the uri
- - The Fourth segment has a prefix widget- and the placeholder is a Regular Expression based param
-it must match the regex \[0-9]+ (must be numeric value)
-
 ```javascript
 import { Router, BasicController } from 'holiday-router'; 
 
 const router = new Router();
 router.addRoute('/catalog/category/{categoryID}/widget-{widget:[0-9]+}/info', new BasicController('somecontroller', 'ctrl1'));
 ```
+
+Notice that 
+ - First 2 uri segments must be matched exactly but third and fourth
+uri segments are placeholder segments.
+ - Third segment can match any string and that string will then be
+available in the RouteMatch object when .getRouteMatch() is called with the uri
+ - Fourth segment has a prefix widget- and the placeholder is a Regular Expression based param
+it must match the regex \[0-9]+ (must be numeric value)
+
+---
