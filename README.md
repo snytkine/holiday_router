@@ -253,18 +253,18 @@ const router = new Router();
 ```
 ---
 <a name="Router--addRoute"></a>
-#### .addRoute(uri: string, controller: T): <code>Node\<T></code>
+#### .addRoute(uri: string, controller: T): <code>[Node\<T>](#Interfaces--Node)</code>
 Adds route to router. 
 
 | param | type | description | 
 | --- | --- | --- |
 | uri | <code>string</code> | uri with supported uri template syntax |
-| controller | <code>IController</code> | Controller is an object that must implement IController interface |
+| controller | <code>[IController](#Interfaces--IController)</code> | Controller is an object that must implement IController interface |
 
 **Example**
 In this example we adding uri template
 that will match any uri that looks like 
-/catalog/category/somecategory/widget-34/info
+<code>/catalog/category/somecategory/widget-34/info</code>
 
 ```javascript
 import { Router, BasicController } from 'holiday-router'; 
@@ -294,7 +294,7 @@ Adds route to router.
 **Example**
 In this example we going to add a route
 and then will get the matching object for
-the url: /catalog/category/toys/widget-34/info
+the url: <code>/catalog/category/toys/widget-34/info</code>
 
 ```typescript
 import { Router, BasicController } from 'holiday-router'; 
