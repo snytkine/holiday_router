@@ -37,7 +37,7 @@ npm install holiday-router
 ```
 
 ## API Reference
-* #### [Interfaces](#Holiday-Router--Interfaces)
+* ## [Interfaces](#Holiday-Router--Interfaces) ##
     * [IController](#Interfaces--IController)
     * [IRouteMatch](#Interfaces--IRouteMatch)
     * [IRouteMatchResult](#Interfaces--IRouteMatchResult)
@@ -49,13 +49,13 @@ npm install holiday-router
     * [IHttpRouteInfo](#Interfaces--IHttpRouteInfo)
     * [Note\<T>](#Interfaces--Node)
 
-* #### Errors
+* ### Errors ###
     * [RouterError](#Errors--RouterError)
 
-*   #### Enums
+* ### Enums ###
     * [RouterErrorCode](#Enums--RouterErrorCode)
 
-*   #### Classes
+* ### Classes ###
     * [Router](#Router--class)
         * [new Router\<T extends IController>()](#Router_new)
         * _instance methods_
