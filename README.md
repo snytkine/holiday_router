@@ -47,7 +47,7 @@ npm install holiday-router
     * [IStringMap](#Interfaces--IStringMap)
     * [IRouteInfo](#Interfaces--IRouteInfo)
     * [IHttpRouteInfo](#Interfaces--IHttpRouteInfo)
-    * [Note\<T>](#Interfaces--Node\<T>)
+    * [Note\<T>](#Interfaces--Node)
 
 * #### Errors
     * [RouterError](#Errors--RouterError)
@@ -72,8 +72,7 @@ npm install holiday-router
             * [.getAllRoutes()](#Router--getAllRoutes): <code>Array\<IHttpRouteInfo></code> 
 
 <a name="Holiday-Router--Interfaces"></a>
-
-##Interfaces
+## Interfaces
 <a name="Interfaces--IController"></a>
 #### IController
 Developer must implement own class that implements an IController interface
@@ -239,7 +238,7 @@ interface Node<T extends IController> {
 ```
 ---
 <a name="Holiday-Router--classes"></a>
-##Classes
+## Classes
 ### Router
 <a name="Router_new"></a>
 
@@ -283,3 +282,93 @@ available in the RouteMatch object when .getRouteMatch() is called with the uri
 it must match the regex \[0-9]+ (must be numeric value)
 
 ---
+
+<a name="Router--getRouteMatch"></a>
+#### .getRouteMatch(uri: string): <code>[IRouteMatchResult\<T>](#Interfaces--IRouteMatchResult)</code>
+Adds route to router. 
+
+| param | type | description | 
+| --- | --- | --- |
+| uri | <code>string</code> | a full uri path |
+
+**Example**
+In this example we going to add a route
+and then will get the matching object for
+the url: /catalog/category/toys/widget-34/info
+
+```typescript
+import { Router, BasicController } from 'holiday-router'; 
+
+const router = new Router();
+router.addRoute('/catalog/category/{categoryID}/widget-{widget:([0-9]+)-(blue|red)}/info', new BasicController('somecontroller', 'ctrl1'));
+const routeMatch = router.getRouteMatch('/catalog/category/toys/widget-34-blue/info');
+```
+
+We will get back the result object RouteMatch (it implements IRouteMatchResult)
+The object will have the following structure:
+
+```json
+{
+  "params": {
+    "pathParams": [
+      {
+        "paramName": "categoryID",
+        "paramValue": "toys"
+      },
+      {
+        "paramName": "widget",
+        "paramValue": "34-blue"
+      }
+    ],
+    "regexParams": [
+      {
+        "paramName": "widget",
+        "params": [
+          "34-blue",
+          "34",
+          "blue"
+        ]
+      }
+    ]
+  },
+  "node": {
+    "paramName": "",
+    "uri": "",
+    "basePriority": 100,
+    "uriPattern": "",
+    "children": [],
+    "origUriPattern": "info",
+    "segmentLength": 4,
+    "controllers": [
+      {
+        "priority": 1,
+        "controller": "somecontroller",
+        "id": "ctrl1"
+      }
+    ]
+  }
+}
+
+```
+
+Notice the RouteMatch has 2 properties:
+- params which contains extracted pathParam and regexParams
+- node which contains .controllers array with our controller
+
+Notice that regexParams contains array of values extracted from regex route match.
+The first element in array of regex matches is always the entire match,
+in this case it's "34-blue", second element is specific match of capturing groups in 
+our regex: "34" from capturing group ([0-9]+) and "blue" from capturing group (blue|red)
+```
+    "regexParams": [
+      {
+        "paramName": "widget",
+        "params": [
+          "34-blue",
+          "34",
+          "blue"
+        ]
+      }
+    ]
+```
+------

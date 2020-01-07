@@ -4,7 +4,6 @@ import {
   IRouteInfo,
   IRouteMatchResult,
   IStringMap,
-  IUriParams,
   Node,
   PARENT_NODE,
   ROUTE_PATH_SEPARATOR,
@@ -26,8 +25,8 @@ export default class Router<T extends IController> {
     this.rootNode = new RootNode();
   }
 
-  public getRouteMatch(uri: string, params?: IUriParams): IRouteMatchResult<T> {
-    return this.rootNode.getRouteMatch(uri, params);
+  public getRouteMatch(uri: string): IRouteMatchResult<T> {
+    return this.rootNode.getRouteMatch(uri);
   }
 
   /**

@@ -34,8 +34,6 @@ export default class RootNode<T extends IController> implements Node<T> {
 
   private uri = '';
 
-  private id: string;
-
   private basePriority = 100;
 
   protected getNodePriority(nodeType: PRIORITY): number {
@@ -61,15 +59,14 @@ export default class RootNode<T extends IController> implements Node<T> {
 
   constructor() {
     this.children = [];
-    this.id = TAG.ROOT_NODE;
   }
 
   get type() {
-    return this.id;
+    return this.getTag(TAG.ROOT_NODE);
   }
 
   get name() {
-    return this.id;
+    return this.getTag(TAG.ROOT_NODE);
   }
 
   /**
