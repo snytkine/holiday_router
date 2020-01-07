@@ -28,7 +28,9 @@
   },
   "typings": "build/types/index.d.ts",
   "files": [
-    "build/"
+    "build/",
+    "README.md",
+    "LICENSE"
   ],
   "main": "./build/index.js",
   "repository": {
