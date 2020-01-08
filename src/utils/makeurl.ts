@@ -26,7 +26,6 @@ export const makeUrl = <T extends IController>(
     return ret;
   }
 
-  // @ts-ignore
   return makeUrl(node[PARENT_NODE], params, ret);
 };
 
@@ -39,6 +38,5 @@ export const makeUriTemplate = <T extends IController>(node: Node<T>, res: strin
     return ret;
   }
 
-  // @ts-ignore
   return makeUriTemplate(node[PARENT_NODE], ret);
 };

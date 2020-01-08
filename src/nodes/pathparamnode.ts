@@ -134,6 +134,12 @@ export default class PathParamNode<T extends IController> extends RootNode<T> im
     return undefined;
   }
 
+  /**
+   * @param params object with string keys and string values
+   * @throws RouteError with RouterErrorCode.MAKE_URI_MISSING_PARAM if
+   * params object does not have a key matching paramName of this node.
+   * @returns string
+   */
   makeUri(params: IStringMap): string {
     if (!params[this.paramName]) {
       throw new RouterError(

@@ -285,6 +285,7 @@ it must match the regex \[0-9]+ (must be numeric value)
 
 <a name="Router--getRouteMatch"></a>
 #### .getRouteMatch(uri: string): <code>[IRouteMatchResult\<T>](#Interfaces--IRouteMatchResult)</code>
+
 Adds route to router. 
 
 | param | type | description | 
@@ -372,3 +373,39 @@ our regex: "34" from capturing group ([0-9]+) and "blue" from capturing group (b
     ]
 ```
 ------
+<a name="Router--makeUri"></a>
+#### .makeUri(controllerId: string, params: [IStringMap](#Interfaces--IStringMap) = {}): <code>string</code>
+
+Generates URI for route. Replaces placeholders in URI template with values provided in params argument.
+
+
+| param | type | description | 
+| --- | --- | --- |
+| controllerId | <code>string</code> | value of .id of Controller (implements [IController](#Interfaces--IController) ) for the route |
+| params | <code>[IStringMap](#Interfaces--IStringMap)</code> | Object with keys matching placeholders in URI template for the route and value to be used in place of placeholders |
+
+
+**Throws** [RouterError](#Errors--RouterError) with [RouterErrorCode](#Enums--RouterErrorCode) = <code>RouterErrorCode.CONTROLLER_NOT_FOUND</code>
+if controller not found by controllerId.
+
+**Throws** [RouterError](#Errors--RouterError) with [RouterErrorCode](#Enums--RouterErrorCode) = <code>RouterErrorCode.MAKE_URI_MISSING_PARAM</code> if
+params object does not have a key matching any of paramNames in URI template for the route.
+
+**Throws** [RouterError](#Errors--RouterError) with [RouterErrorCode](#Enums--RouterErrorCode) = <code>RouterErrorCode.MAKE_URI_REGEX_FAIL</code> if
+value of param in params object does not match Regex in regex segment in uri template.
+
+
+**Example**
+In this example we going to add a route
+and then call makeUri method to generate URI for the route: 
+
+
+```typescript
+import { Router, BasicController } from 'holiday-router'; 
+
+const router = new Router();
+router.addRoute('/catalog/category/{categoryID}/widget-{widget:([0-9]+)-(blue|red)}/info', new BasicController('somecontroller', 'ctrl1'));
+const uri = router.makeUri('ctrl1', {"categoryId":"toys", "widget":"24-blue"});
+```
+
+The value of uri in this example will be <code>/catalog/category/toys/widget-24-blue/info</code>
