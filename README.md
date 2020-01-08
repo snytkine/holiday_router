@@ -237,6 +237,40 @@ interface Node<T extends IController> {
 }
 ```
 ---
+<a name="Holiday-Router--Errors"></a>
+## Errors
+
+<a name="Errors--RouterError"></a>
+#### RouterError
+```typescript
+class RouterError extends Error {
+  constructor(public message: string, public code: RouterErrorCode) {
+    super(message);
+  }
+}
+```
+
+new RouterError(message: string, code: [RouterErrorCode](#Enums--RouterErrorCode))
+
+---
+
+<a name="Enums--RouterErrorCode"></a>
+## RouterErrorCode
+```typescript
+enum RouterErrorCode {
+  ADD_CHILD = 1000000,
+  ADD_CHILD_CATCHALL,
+  DUPLICATE_CONTROLLER,
+  INVALID_REGEX,
+  MAKE_URI_MISSING_PARAM,
+  MAKE_URI_REGEX_FAIL,
+  CREATE_NODE_FAILED,
+  NON_UNIQUE_PARAM,
+  CONTROLLER_NOT_FOUND,
+  UNSUPPORTED_HTTP_METHOD,
+}
+```
+---
 <a name="Holiday-Router--classes"></a>
 ## Classes
 ### Router
@@ -409,3 +443,20 @@ const uri = router.makeUri('ctrl1', {"categoryId":"toys", "widget":"24-blue"});
 ```
 
 The value of uri in this example will be <code>/catalog/category/toys/widget-24-blue/info</code>
+
+---
+<a name="Router--getAllRoutes"></a>
+#### .getAllRoutes(): Array\<[IRouteInfo](#Interfaces--IRouteInfo)>
+
+---
+### HttpRouter
+<a name="HttpRouter_new"></a>
+Creates a new instance of Router.
+
+**Example**
+```javascript
+import { HttpRouter } from 'holiday-router';
+
+const router = new HttpRouter();
+```
+---
