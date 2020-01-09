@@ -276,7 +276,7 @@ enum RouterErrorCode {
 ### Router
 <a name="Router_new"></a>
 
-#### new Router([opts])
+#### new Router()
 Creates a new instance of Router.
 
 **Example**
@@ -334,7 +334,7 @@ the url: <code>/catalog/category/toys/widget-34/info</code>
 ```typescript
 import { Router, BasicController } from 'holiday-router'; 
 
-const router = new Router();
+const router: Router = new Router();
 router.addRoute('/catalog/category/{categoryID}/widget-{widget:([0-9]+)-(blue|red)}/info', new BasicController('somecontroller', 'ctrl1'));
 const routeMatch = router.getRouteMatch('/catalog/category/toys/widget-34-blue/info');
 ```
@@ -449,14 +449,47 @@ The value of uri in this example will be <code>/catalog/category/toys/widget-24-
 #### .getAllRoutes(): Array\<[IRouteInfo](#Interfaces--IRouteInfo)>
 
 ---
+<a name="HttpRouter-class"></a>
 ### HttpRouter
+HttpRouter is a convenience wrapper class that
+internally holds map of httpMethod -> Router
+each method has own instance of Router object.
+Only methods supported by Node.js (included in array or Node.js http.METHODS) or by 'methods' npm module are supported
+Only methods that were added to the instance of HttpRouter with addRoute are 
+added to the map of method -> router
+In other words if addRoute was used to only add GET and POST methods then
+the internal map method -> router will have only 2 elements.
+
+*IMPORTANT* - when adding route with addRoute method the first parameter httpMethod
+is converted to upper case and used as key in map of method -> router as upper case string
+but the .getRouteMatch method does not convert the first parameter 'httpMethod'
+to upper case so you must make sure when you call .getRouteMatch that you pass the first argument in upper case.
+This is done for performance reasons since Node.js already give value of method in upper case, so we
+don't need to call .toUpperCase every time the .getRouteMatch is called
+
 <a name="HttpRouter_new"></a>
+#### new Router()
 Creates a new instance of Router.
 
 **Example**
-```javascript
+```typescript
 import { HttpRouter } from 'holiday-router';
 
-const router = new HttpRouter();
+const router: HttpRouter = new HttpRouter();
 ```
 ---
+<a name="HttpRouter--addRoute"></a>
+#### .addRoute(httpMethod: string, uri: string, controller: T): <code>[Node\<T>](#Interfaces--Node)</code>
+Adds route to router. 
+
+| param | type | description | 
+| --- | --- | --- |
+| httpMethod | <code>string</code> | http method like get, post, etc. Not case sensitive |
+| uri | <code>string</code> | uri with supported uri template syntax |
+| controller | <code>[IController](#Interfaces--IController)</code> | Controller is an object that must implement IController interface |
+
+
+**Throws** [RouterError](#Errors--RouterError) with [RouterErrorCode](#Enums--RouterErrorCode) = <code>RouterErrorCode.UNSUPPORTED_HTTP_METHOD</code>
+if httpMethod not supported by version of Node.js (if used with Node.js) or not in list of method from 'methods' npm module
+---
+

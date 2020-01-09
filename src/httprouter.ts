@@ -27,13 +27,13 @@ export default class HttpRouter<T extends IController> {
       uri,
       controller,
     );
-    const method = httpMethod.toLocaleLowerCase();
+    const method = httpMethod.toLocaleUpperCase();
     const methodRouter = this.routers.get(method);
     if (methodRouter) {
       return methodRouter.addRoute(uri, controller);
     }
 
-    if (!methods.includes(method)) {
+    if (!methods.includes(method.toLocaleLowerCase())) {
       throw new RouterError(
         `Cannot add route for method ${method}`,
         RouterErrorCode.UNSUPPORTED_HTTP_METHOD,
@@ -48,7 +48,7 @@ export default class HttpRouter<T extends IController> {
   }
 
   public makeUri(httpMethod: string, controllerId: string, params?: IStringMap): string {
-    const method = httpMethod.toLocaleLowerCase();
+    const method = httpMethod.toLocaleUpperCase();
     const methodRouter = this.routers.get(method);
     if (!methodRouter) {
       throw new RouterError(

@@ -58,13 +58,11 @@ describe('#HttpRouter tests', () => {
 
     it('getRouteMatch should return iterator matching httpMethod and uri', () => {
       const res = <RouteMatch<BasicController<string>>>(
-        httpRouter.getRouteMatch('get', '/catalog/toys/cars/honda/crv')
+        httpRouter.getRouteMatch('GET', '/catalog/toys/cars/honda/crv')
       );
 
       expect(res).to.be.instanceOf(RouteMatch);
-      // @ts-ignore
       expect(res.node.controllers.length).to.equal(1);
-      // @ts-ignore
       expect(res.node.controllers[0].id).to.equal('ctrl2');
     });
 
@@ -122,32 +120,32 @@ describe('#HttpRouter tests', () => {
         {
           uri: '/catalog/toys/',
           controller: { priority: 1, controller: 'CTRL-1', id: 'ctrl1' },
-          method: 'get',
+          method: 'GET',
         },
         {
           uri: '/catalog/toys/cars/{make}/{model}',
           controller: { priority: 1, controller: 'CTRL-2', id: 'ctrl2' },
-          method: 'get',
+          method: 'GET',
         },
         {
           uri: '/catalog/toys/',
           controller: { priority: 1, controller: 'CTRL-3', id: 'ctrl3' },
-          method: 'post',
+          method: 'POST',
         },
         {
           uri: '/catalog/toys/',
           controller: { priority: 1, controller: 'CTRL-5', id: 'ctrl5' },
-          method: 'post',
+          method: 'POST',
         },
         {
           uri: '/catalog/toys/cars/{make}/{model}',
           controller: { priority: 1, controller: 'CTRL-4', id: 'ctrl4' },
-          method: 'post',
+          method: 'POST',
         },
         {
           uri: '/catalog/toys/cars/{make}/{model}',
           controller: { priority: 1, controller: 'CTRL-6', id: 'ctrl6' },
-          method: 'post',
+          method: 'POST',
         },
       ]);
     });
