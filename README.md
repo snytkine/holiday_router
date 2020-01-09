@@ -66,10 +66,10 @@ npm install holiday-router
     * [HttpRouter](#HttpRouter-class) 
         * [new HttpRouter\<T extends IController>()](#HttpRouter_new)  
         * _instance methods_
-            * [.addRoute(httpMethod: string, uri: string, controller: T)](#Router--addRoute) : <code>Node\<T></code>
-            * [.getRouteMatch(httpMethod: string, uri: string)](#Router--getRouteMatch): <code>undefined | IRouteMatch\<T></code>
-            * [.makeUri(httpMethod: string, controllerId: string, params?: IStringMap)](#Router--makeUri): <code>string</code>
-            * [.getAllRoutes()](#Router--getAllRoutes): <code>Array\<IHttpRouteInfo></code> 
+            * [.addRoute(httpMethod: string, uri: string, controller: T)](#HttpRouter--addRoute) : <code>Node\<T></code>
+            * [.getRouteMatch(httpMethod: string, uri: string)](#HttpRouter--getRouteMatch): <code>undefined | IRouteMatch\<T></code>
+            * [.makeUri(httpMethod: string, controllerId: string, params?: IStringMap)](#HttpRouter--makeUri): <code>string</code>
+            * [.getAllRoutes()](#HttpRouter--getAllRoutes): <code>Array\<IHttpRouteInfo></code> 
 
 <a name="Holiday-Router--Interfaces"></a>
 ## Interfaces
@@ -300,10 +300,10 @@ In this example we adding uri template
 that will match any uri that looks like 
 <code>/catalog/category/somecategory/widget-34/info</code>
 
-```javascript
+```typescript
 import { Router, BasicController } from 'holiday-router'; 
 
-const router = new Router();
+const router: Router = new Router();
 router.addRoute('/catalog/category/{categoryID}/widget-{widget:[0-9]+}/info', new BasicController('somecontroller', 'ctrl1'));
 ```
 
@@ -320,11 +320,12 @@ it must match the regex \[0-9]+ (must be numeric value)
 <a name="Router--getRouteMatch"></a>
 #### .getRouteMatch(uri: string): <code>[IRouteMatchResult\<T>](#Interfaces--IRouteMatchResult)</code>
 
-Adds route to router. 
+Matches the URI and returns RouteMatch or undefined in no match found.
+ 
 
 | param | type | description | 
 | --- | --- | --- |
-| uri | <code>string</code> | a full uri path |
+| uri | <code>string</code> | a full uri path. *uri is case-sensitive* |
 
 **Example**
 In this example we going to add a route
@@ -339,7 +340,7 @@ router.addRoute('/catalog/category/{categoryID}/widget-{widget:([0-9]+)-(blue|re
 const routeMatch = router.getRouteMatch('/catalog/category/toys/widget-34-blue/info');
 ```
 
-We will get back the result object RouteMatch (it implements IRouteMatchResult)
+We will get back the result object RouteMatch (it implements [IRouteMatchResult](#Interfaces--IRouteMatchResult))
 The object will have the following structure:
 
 ```json
@@ -489,7 +490,36 @@ Adds route to router.
 | controller | <code>[IController](#Interfaces--IController)</code> | Controller is an object that must implement IController interface |
 
 
-**Throws** [RouterError](#Errors--RouterError) with [RouterErrorCode](#Enums--RouterErrorCode) = <code>RouterErrorCode.UNSUPPORTED_HTTP_METHOD</code>
+*Throws* [RouterError](#Errors--RouterError) with [RouterErrorCode](#Enums--RouterErrorCode) = <code>RouterErrorCode.UNSUPPORTED_HTTP_METHOD</code>
 if httpMethod not supported by version of Node.js (if used with Node.js) or not in list of method from 'methods' npm module
+
 ---
 
+<a name="HttpRouter--getRouteMatch"></a>
+#### .getRouteMatch(httpMethod: string, uri: string): <code>[IRouteMatchResult\<T>](#Interfaces--IRouteMatchResult)</code>
+
+
+Matches the http request method and URI and returns RouteMatch or undefined in no match found.
+ 
+
+| param | type | description | 
+| --- | --- | --- |
+| httpMethod | <code>string</code> | Http Request method. This argument *must be in upper-case* because internally http method values are stored in upper case |
+| uri | <code>string</code> | a full uri path. *uri is case-sensitive* |
+
+
+**Example**
+In this example we going to add a route
+for the http 'GET' method and then will get the matching object for
+the 'GET' method and url: <code>/catalog/category/toys/widget-34/info</code>
+
+```typescript
+import { HttpRouter, BasicController } from 'holiday-router'; 
+
+const router: HttpRouter = new HttpRouter();
+router.addRoute('get', '/catalog/category/{categoryID}/widget-{widget:([0-9]+)-(blue|red)}/info', new BasicController('somecontroller', 'ctrl1'));
+const routeMatch = router.getRouteMatch('GET', '/catalog/category/toys/widget-34-blue/info');
+```
+
+Notice here that when adding route with .addRoute we provided the httpMethod in lower case because .addRoute internally converts it to upper case
+but we used upper case value 'GET' in .getRouteMatch method, otherwise we will not get a match.
