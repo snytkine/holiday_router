@@ -48,11 +48,10 @@ export default class HttpRouter<T extends IController> {
   }
 
   public makeUri(httpMethod: string, controllerId: string, params?: IStringMap): string {
-    const method = httpMethod.toLocaleUpperCase();
-    const methodRouter = this.routers.get(method);
+    const methodRouter = this.routers.get(httpMethod);
     if (!methodRouter) {
       throw new RouterError(
-        `makeUri failed. No Routes for ${method} method`,
+        `makeUri failed. No Routes for ${httpMethod} method`,
         RouterErrorCode.UNSUPPORTED_HTTP_METHOD,
       );
     }

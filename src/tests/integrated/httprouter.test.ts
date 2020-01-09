@@ -82,7 +82,7 @@ describe('#HttpRouter tests', () => {
     httpRouter.addRoute('post', uri2, ctrl6);
 
     it('.makeUri should return uri string if matching controller found', () => {
-      const url = httpRouter.makeUri('get', 'ctrl2', {
+      const url = httpRouter.makeUri('GET', 'ctrl2', {
         make: 'honda',
         model: 'crv',
       });
@@ -101,7 +101,6 @@ describe('#HttpRouter tests', () => {
         res = e;
       }
 
-      // @ts-ignore
       expect(res.code).to.equal(RouterErrorCode.UNSUPPORTED_HTTP_METHOD);
     });
   });

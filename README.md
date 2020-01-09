@@ -304,7 +304,7 @@ that will match any uri that looks like
 import { Router, BasicController } from 'holiday-router'; 
 
 const router: Router = new Router();
-router.addRoute('/catalog/category/{categoryID}/widget-{widget:[0-9]+}/info', new BasicController('somecontroller', 'ctrl1'));
+router.addRoute('/catalog/category/{categoryID}/item-{widget:[0-9]+}/info', new BasicController('somecontroller', 'ctrl1'));
 ```
 
 Notice that 
@@ -490,7 +490,7 @@ Adds route to router.
 | controller | <code>[IController](#Interfaces--IController)</code> | Controller is an object that must implement IController interface |
 
 
-*Throws* [RouterError](#Errors--RouterError) with [RouterErrorCode](#Enums--RouterErrorCode) = <code>RouterErrorCode.UNSUPPORTED_HTTP_METHOD</code>
+**Throws** [RouterError](#Errors--RouterError) with [RouterErrorCode](#Enums--RouterErrorCode) = <code>RouterErrorCode.UNSUPPORTED_HTTP_METHOD</code>
 if httpMethod not supported by version of Node.js (if used with Node.js) or not in list of method from 'methods' npm module
 
 ---
@@ -517,9 +517,56 @@ the 'GET' method and url: <code>/catalog/category/toys/widget-34/info</code>
 import { HttpRouter, BasicController } from 'holiday-router'; 
 
 const router: HttpRouter = new HttpRouter();
-router.addRoute('get', '/catalog/category/{categoryID}/widget-{widget:([0-9]+)-(blue|red)}/info', new BasicController('somecontroller', 'ctrl1'));
-const routeMatch = router.getRouteMatch('GET', '/catalog/category/toys/widget-34-blue/info');
+router.addRoute('get', '/catalog/category/{categoryID}/item-{widget:([0-9]+)-(blue|red)}/info', new BasicController('somecontroller', 'ctrl1'));
+const routeMatch = router.getRouteMatch('GET', '/catalog/category/toys/item-34-blue/info');
 ```
 
 Notice here that when adding route with .addRoute we provided the httpMethod in lower case because .addRoute internally converts it to upper case
 but we used upper case value 'GET' in .getRouteMatch method, otherwise we will not get a match.
+---
+
+<a name="HttpRouter--makeUri"></a>
+#### .makeUri(httpMethod: string, controllerId: string, params: [IStringMap](#Interfaces--IStringMap) = {}): <code>string</code>
+
+Generates URI for route. Replaces placeholders in URI template with values provided in params argument.
+
+
+| param | type | description | 
+| --- | --- | --- |
+| httpMethod | <code>string</code> | **MUST be in upper case** |
+| controllerId | <code>string</code> | value of .id of Controller (implements [IController](#Interfaces--IController) ) for the route |
+| params | <code>[IStringMap](#Interfaces--IStringMap)</code> | Object with keys matching placeholders in URI template for the route and value to be used in place of placeholders |
+
+
+**Throws** [RouterError](#Errors--RouterError) with [RouterErrorCode](#Enums--RouterErrorCode) = <code>RouterErrorCode.UNSUPPORTED_HTTP_METHOD</code>
+if httpMethod not supported by version of Node.js (if used with Node.js) or not in list of method from 'methods' npm module
+
+**Throws** [RouterError](#Errors--RouterError) with [RouterErrorCode](#Enums--RouterErrorCode) = <code>RouterErrorCode.CONTROLLER_NOT_FOUND</code>
+if controller not found by controllerId.
+
+**Throws** [RouterError](#Errors--RouterError) with [RouterErrorCode](#Enums--RouterErrorCode) = <code>RouterErrorCode.MAKE_URI_MISSING_PARAM</code> if
+params object does not have a key matching any of paramNames in URI template for the route.
+
+**Throws** [RouterError](#Errors--RouterError) with [RouterErrorCode](#Enums--RouterErrorCode) = <code>RouterErrorCode.MAKE_URI_REGEX_FAIL</code> if
+value of param in params object does not match Regex in regex segment in uri template.
+
+
+**Example**
+In this example we going to add a route
+and then call makeUri method to generate URI for the route: 
+
+
+```typescript
+import { HttpRouter, BasicController } from 'holiday-router'; 
+
+const router: HttpRouter = new HttpRouter();
+router.addRoute('GET', '/catalog/category/{categoryID}/item-{widget:([0-9]+)-(blue|red)}/info', new BasicController('somecontroller', 'ctrl1'));
+const uri = router.makeUri('GET', 'ctrl1', {"categoryId":"toys", "widget":"24-blue"});
+```
+
+The value of uri in this example will be <code>/catalog/category/toys/item-24-blue/info</code>
+
+---
+
+ 
+  
