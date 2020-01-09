@@ -449,6 +449,89 @@ The value of uri in this example will be <code>/catalog/category/toys/widget-24-
 <a name="Router--getAllRoutes"></a>
 #### .getAllRoutes(): Array\<[IRouteInfo](#Interfaces--IRouteInfo)>
 
+Example:
+
+```typescript
+import { Router, BasicController, IRouteInfo } from 'holiday-router';
+const uri1 = '/catalog/toys/';
+const uri2 = '/catalog/toys/cars/{make}/{model}';
+const uri3 = '/catalog/toys/cars/{make}/mymodel-{model-x}-item/id-{id}.html';
+const uri4 = '/catalog/toys/cars/{id:widget-([0-9]+)(green|red)}/{year:([0-9]{4})}';
+const uri5 = '/catalog/toys/cars/{make}/mymodel-{model-x}';
+
+const ctrl1 = new BasicController('CTRL-1', 'ctrl1');
+const ctrl2 = new BasicController('CTRL-2', 'ctrl2');
+const ctrl3 = new BasicController('CTRL-3', 'ctrl3');
+const ctrl4 = new BasicController('CTRL-4', 'ctrl4');
+const ctrl5 = new BasicController('CTRL-5', 'ctrl5');
+const ctrl6 = new BasicController('CTRL-6', 'ctrl6');
+const router = new Router();
+router.addRoute(uri1, ctrl1);
+router.addRoute(uri2, ctrl2);
+router.addRoute(uri3, ctrl3);
+router.addRoute(uri4, ctrl4);
+router.addRoute(uri5, ctrl5);
+router.addRoute(uri2, ctrl6);
+
+const res: Array<IRouteInfo> = router.getAllRoutes();
+
+```
+
+The value of res in this example will be
+```json
+[
+  {
+    "uri": "/catalog/toys/",
+    "controller": {
+      "priority": 1,
+      "controller": "CTRL-1",
+      "id": "ctrl1"
+    }
+  },
+  {
+    "uri": "/catalog/toys/cars/{id:widget-([0-9]+)(green|red)}/{year:([0-9]{4})}",
+    "controller": {
+      "priority": 1,
+      "controller": "CTRL-4",
+      "id": "ctrl4"
+    }
+  },
+  {
+    "uri": "/catalog/toys/cars/{make}/mymodel-{model-x}-item/id-{id}.html",
+    "controller": {
+      "priority": 1,
+      "controller": "CTRL-3",
+      "id": "ctrl3"
+    }
+  },
+  {
+    "uri": "/catalog/toys/cars/{make}/mymodel-{model-x}",
+    "controller": {
+      "priority": 1,
+      "controller": "CTRL-5",
+      "id": "ctrl5"
+    }
+  },
+  {
+    "uri": "/catalog/toys/cars/{make}/{model}",
+    "controller": {
+      "priority": 1,
+      "controller": "CTRL-2",
+      "id": "ctrl2"
+    }
+  },
+  {
+    "uri": "/catalog/toys/cars/{make}/{model}",
+    "controller": {
+      "priority": 1,
+      "controller": "CTRL-6",
+      "id": "ctrl6"
+    }
+  }
+]
+
+```
+
 ---
 <a name="HttpRouter-class"></a>
 ### HttpRouter
@@ -568,5 +651,91 @@ The value of uri in this example will be <code>/catalog/category/toys/item-24-bl
 
 ---
 
- 
+<a name="HttpRouter--getAllRoutes"></a>
+#### .getAllRoutes(): Array\<[IHttpRouteInfo](#Interfaces--IHttpRouteInfoRouteInfo)>
+
+Example
+
+```typescript
+import { HttpRouter, BasicController } from 'holiday-router';
+const uri1 = '/catalog/toys/';
+const uri2 = '/catalog/toys/cars/{make}/{model}';
+
+const ctrl1 = new BasicController('CTRL-1', 'ctrl1');
+const ctrl2 = new BasicController('CTRL-2', 'ctrl2');
+const ctrl3 = new BasicController('CTRL-3', 'ctrl3');
+const ctrl4 = new BasicController('CTRL-4', 'ctrl4');
+const ctrl5 = new BasicController('CTRL-5', 'ctrl5');
+const ctrl6 = new BasicController('CTRL-6', 'ctrl6');
+
+const httpRouter = new HttpRouter();
+httpRouter.addRoute('get', uri1, ctrl1);
+httpRouter.addRoute('get', uri2, ctrl2);
+httpRouter.addRoute('post', uri1, ctrl3);
+httpRouter.addRoute('post', uri2, ctrl4);
+httpRouter.addRoute('post', uri1, ctrl5);
+httpRouter.addRoute('post', uri2, ctrl6);
+
+const allRoutes = httpRouter.getAllRoutes();
+```
   
+the value of allRoutes in this example will be
+
+```json
+[
+  {
+    "uri": "/catalog/toys/",
+    "controller": {
+      "priority": 1,
+      "controller": "CTRL-1",
+      "id": "ctrl1"
+    },
+    "method": "GET"
+  },
+  {
+    "uri": "/catalog/toys/cars/{make}/{model}",
+    "controller": {
+      "priority": 1,
+      "controller": "CTRL-2",
+      "id": "ctrl2"
+    },
+    "method": "GET"
+  },
+  {
+    "uri": "/catalog/toys/",
+    "controller": {
+      "priority": 1,
+      "controller": "CTRL-3",
+      "id": "ctrl3"
+    },
+    "method": "POST"
+  },
+  {
+    "uri": "/catalog/toys/",
+    "controller": {
+      "priority": 1,
+      "controller": "CTRL-5",
+      "id": "ctrl5"
+    },
+    "method": "POST"
+  },
+  {
+    "uri": "/catalog/toys/cars/{make}/{model}",
+    "controller": {
+      "priority": 1,
+      "controller": "CTRL-4",
+      "id": "ctrl4"
+    },
+    "method": "POST"
+  },
+  {
+    "uri": "/catalog/toys/cars/{make}/{model}",
+    "controller": {
+      "priority": 1,
+      "controller": "CTRL-6",
+      "id": "ctrl6"
+    },
+    "method": "POST"
+  }
+]
+```  
