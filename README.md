@@ -5,10 +5,12 @@
 
 # Holiday Router
 ## Advanced URI Routing library for matching URI to controller
-## Open Source under the *MIT License*
-#### Written in Typescript. Strong typing and interface based design makes it very flexible for developers to implement own controller classes.
-#### Over 150 unit tests covering 100% of codebased and lots of extra real-life cases.
-#### Using industry standard eslint rules for typescript makes use of best practices for writing clean tyescript code
+- #### Open Source under the *MIT License*
+- #### Written in Typescript. Strong typing and interface based design makes it very flexible for developers to implement own controller classes.
+- #### Ideal for the URI and/or Http routing module in custom frameworks written in TypeScript
+- #### Over 150 unit tests covering 100% of codebased and lots of extra real-life cases.
+- #### Using industry standard eslint rules for typescript makes use of best practices for writing clean tyescript code
+
 ### Features
 * Named uri parameters /catalog/{category}/{subcategory/
 * Catchall routes with support for named catchall parameter /images/\*\*imagepath
@@ -28,6 +30,38 @@ Also there is a convenience classes for creating instances of IController.
 * Compact tree structure for storing routes makes it very memory-efficient and fast.
 * Convenience class HttpRouter is a wrapper class than added support for adding routes specific to http request methods. Basically HttpRouter holds a Map<httpMethod, Router> and matches the http method first and if found delegates uri resolution to a router object for that method.
 
+### How it works
+Here is a break-down of how the routing information is stored
+when we add 5 routes to the router. 
+Router breaks up the URI into uri segments. Segment is a part of the URI
+that ends with path separator '/' and included the path separator
+
+1. /catalog/category/{categoryID}/item-{widget:[0-9]+}/info
+2. /catalog/category/shoes/{brand}
+3. /catalog/category/shoes/{brand}/{size}
+4. /customers/orders/{orderID:[0-9]+}
+5. /customers/customer-{customerID:[0-9]+}/info
+
+```
+Path            Node                                                    NodeType
+--------------------------------------------------------------------------------------
+|- /                                                                    ExactMatchNode
+|  |- catalog/                                                          ExactMatchNode
+|            |- category/                                               ExactMatchNode
+|                       |- shoes/                                       ExactMatchNode
+|                               |- {brand}                              PathParamNode
+|                               |- {brand}/                             PathParamNode
+|                                         |- {size}                     PathParamNode
+|                       |- {categoryID}                                 PathParamNode
+|                                     |- item-{widget:[0-9]+}/          RegexNode
+|                                                            |- info    ExactMatchNode
+|  |- customers/                                                        ExactMatchNode                   
+|              |- customer-{customerID:[0-9]+}/                         RegexNode
+|                                            |- info                    ExactMatchNode
+|              |- orders/                                               ExactMatchNode
+|                       |- {orderID:[0-9]+}                             RegexNode
+
+```
 ## Installation
 
 Install using [npm](https://www.npmjs.org/):
@@ -602,10 +636,12 @@ import { HttpRouter, BasicController } from 'holiday-router';
 const router: HttpRouter = new HttpRouter();
 router.addRoute('get', '/catalog/category/{categoryID}/item-{widget:([0-9]+)-(blue|red)}/info', new BasicController('somecontroller', 'ctrl1'));
 const routeMatch = router.getRouteMatch('GET', '/catalog/category/toys/item-34-blue/info');
+
 ```
 
 Notice here that when adding route with .addRoute we provided the httpMethod in lower case because .addRoute internally converts it to upper case
 but we used upper case value 'GET' in .getRouteMatch method, otherwise we will not get a match.
+
 ---
 
 <a name="HttpRouter--makeUri"></a>
