@@ -602,7 +602,7 @@ Adds route to router.
 
 | param | type | description | 
 | --- | --- | --- |
-| httpMethod | <code>string</code> | http method like get, post, etc. Not case sensitive |
+| httpMethod | <code>HTTPMethod</code> | Uses HTTPMethod enum from http-method-enum npm package |
 | uri | <code>string</code> | uri with supported uri template syntax |
 | controller | <code>[IController](#Interfaces--IController)</code> | Controller is an object that must implement IController interface |
 
@@ -621,7 +621,7 @@ Matches the http request method and URI and returns RouteMatch or undefined in n
 
 | param | type | description | 
 | --- | --- | --- |
-| httpMethod | <code>string</code> | Http Request method. This argument *must be in upper-case* because internally http method values are stored in upper case |
+| httpMethod | <code>HTTPMethod</code> | Http Request method. uses HTTPMethod enum from http-method-enum npm package |
 | uri | <code>string</code> | a full uri path. *uri is case-sensitive* |
 
 
@@ -632,15 +632,13 @@ the 'GET' method and url: <code>/catalog/category/toys/widget-34/info</code>
 
 ```typescript
 import { HttpRouter, BasicController } from 'holiday-router'; 
+import HTTPMethod from 'http-method-enum';
 
 const router: HttpRouter = new HttpRouter();
-router.addRoute('get', '/catalog/category/{categoryID}/item-{widget:([0-9]+)-(blue|red)}/info', new BasicController('somecontroller', 'ctrl1'));
-const routeMatch = router.getRouteMatch('GET', '/catalog/category/toys/item-34-blue/info');
+router.addRoute(HTTPMethod.GET, '/catalog/category/{categoryID}/item-{widget:([0-9]+)-(blue|red)}/info', new BasicController('somecontroller', 'ctrl1'));
+const routeMatch = router.getRouteMatch(HTTPMethod.GET, '/catalog/category/toys/item-34-blue/info');
 
 ```
-
-Notice here that when adding route with .addRoute we provided the httpMethod in lower case because .addRoute internally converts it to upper case
-but we used upper case value 'GET' in .getRouteMatch method, otherwise we will not get a match.
 
 ---
 
@@ -652,7 +650,7 @@ Generates URI for route. Replaces placeholders in URI template with values provi
 
 | param | type | description | 
 | --- | --- | --- |
-| httpMethod | <code>string</code> | **MUST be in upper case** |
+| httpMethod | <code>HTTPMethod</code> | uses emum from http-method-enum npm package |
 | controllerId | <code>string</code> | value of .id of Controller (implements [IController](#Interfaces--IController) ) for the route |
 | params | <code>[IStringMap](#Interfaces--IStringMap)</code> | Object with keys matching placeholders in URI template for the route and value to be used in place of placeholders |
 
@@ -677,10 +675,11 @@ and then call makeUri method to generate URI for the route:
 
 ```typescript
 import { HttpRouter, BasicController } from 'holiday-router'; 
+import HTTPMethod from 'http-method-enum';
 
 const router: HttpRouter = new HttpRouter();
-router.addRoute('GET', '/catalog/category/{categoryID}/item-{widget:([0-9]+)-(blue|red)}/info', new BasicController('somecontroller', 'ctrl1'));
-const uri = router.makeUri('GET', 'ctrl1', {"categoryId":"toys", "widget":"24-blue"});
+router.addRoute(HTTPMethod.GET, '/catalog/category/{categoryID}/item-{widget:([0-9]+)-(blue|red)}/info', new BasicController('somecontroller', 'ctrl1'));
+const uri = router.makeUri(HTTPMethod.GET, 'ctrl1', {"categoryId":"toys", "widget":"24-blue"});
 ```
 
 The value of uri in this example will be <code>/catalog/category/toys/item-24-blue/info</code>
@@ -694,6 +693,8 @@ Example
 
 ```typescript
 import { HttpRouter, BasicController } from 'holiday-router';
+import HTTPMethod from 'http-method-enum';
+
 const uri1 = '/catalog/toys/';
 const uri2 = '/catalog/toys/cars/{make}/{model}';
 
@@ -705,12 +706,12 @@ const ctrl5 = new BasicController('CTRL-5', 'ctrl5');
 const ctrl6 = new BasicController('CTRL-6', 'ctrl6');
 
 const httpRouter = new HttpRouter();
-httpRouter.addRoute('get', uri1, ctrl1);
-httpRouter.addRoute('get', uri2, ctrl2);
-httpRouter.addRoute('post', uri1, ctrl3);
-httpRouter.addRoute('post', uri2, ctrl4);
-httpRouter.addRoute('post', uri1, ctrl5);
-httpRouter.addRoute('post', uri2, ctrl6);
+httpRouter.addRoute(HTTPMethod.GET, uri1, ctrl1);
+httpRouter.addRoute(HTTPMethod.GET, uri2, ctrl2);
+httpRouter.addRoute(HTTPMethod.POST, uri1, ctrl3);
+httpRouter.addRoute(HTTPMethod.POST, uri2, ctrl4);
+httpRouter.addRoute(HTTPMethod.POST, uri1, ctrl5);
+httpRouter.addRoute(HTTPMethod.POST, uri2, ctrl6);
 
 const allRoutes = httpRouter.getAllRoutes();
 ```
