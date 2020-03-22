@@ -71,7 +71,7 @@ npm install holiday-router
 ```
 
 ## API Reference
-* ###[Interfaces](#Holiday-Router--Interfaces)
+* [Interfaces](#Holiday-Router--Interfaces)
     * [IController](#Interfaces--IController)
     * [IRouteMatch](#Interfaces--IRouteMatch)
     * [IRouteMatchResult](#Interfaces--IRouteMatchResult)
@@ -83,13 +83,13 @@ npm install holiday-router
     * [IHttpRouteInfo](#Interfaces--IHttpRouteInfo)
     * [Note\<T>](#Interfaces--Node)
 
-* ### Errors
+* Errors
     * [RouterError](#Errors--RouterError)
 
-* ### Enums
+* Enums
     * [RouterErrorCode](#Enums--RouterErrorCode)
 
-* ### Classes
+* Classes
     * [Router](#Router--class)
         * [new Router\<T extends IController>()](#Router_new)
         * _instance methods_
@@ -100,9 +100,9 @@ npm install holiday-router
     * [HttpRouter](#HttpRouter-class) 
         * [new HttpRouter\<T extends IController>()](#HttpRouter_new)  
         * _instance methods_
-            * [.addRoute(httpMethod: string, uri: string, controller: T)](#HttpRouter--addRoute) : <code>Node\<T></code>
-            * [.getRouteMatch(httpMethod: string, uri: string)](#HttpRouter--getRouteMatch): <code>undefined | IRouteMatch\<T></code>
-            * [.makeUri(httpMethod: string, controllerId: string, params?: IStringMap)](#HttpRouter--makeUri): <code>string</code>
+            * [.addRoute(httpMethod: HTTPMethod, uri: string, controller: T)](#HttpRouter--addRoute) : <code>Node\<T></code>
+            * [.getRouteMatch(httpMethod: HTTPMethod, uri: string)](#HttpRouter--getRouteMatch): <code>undefined | IRouteMatch\<T></code>
+            * [.makeUri(httpMethod: HTTPMethod, controllerId: string, params?: IStringMap)](#HttpRouter--makeUri): <code>string</code>
             * [.getAllRoutes()](#HttpRouter--getAllRoutes): <code>Array\<IHttpRouteInfo></code> 
 
 <a name="Holiday-Router--Interfaces"></a>
@@ -592,12 +592,13 @@ Creates a new instance of Router.
 **Example**
 ```typescript
 import { HttpRouter } from 'holiday-router';
+import HTTPMethod from 'http-method-enum';
 
 const router: HttpRouter = new HttpRouter();
 ```
 ---
 <a name="HttpRouter--addRoute"></a>
-#### .addRoute(httpMethod: string, uri: string, controller: T): <code>[Node\<T>](#Interfaces--Node)</code>
+#### .addRoute(httpMethod: HTTPMethod, uri: string, controller: T): <code>[Node\<T>](#Interfaces--Node)</code>
 Adds route to router. 
 
 | param | type | description | 
@@ -613,7 +614,7 @@ if httpMethod not supported by version of Node.js (if used with Node.js) or not 
 ---
 
 <a name="HttpRouter--getRouteMatch"></a>
-#### .getRouteMatch(httpMethod: string, uri: string): <code>[IRouteMatchResult\<T>](#Interfaces--IRouteMatchResult)</code>
+#### .getRouteMatch(httpMethod: HTTPMethod, uri: string): <code>[IRouteMatchResult\<T>](#Interfaces--IRouteMatchResult)</code>
 
 
 Matches the http request method and URI and returns RouteMatch or undefined in no match found.
