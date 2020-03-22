@@ -1,4 +1,4 @@
-import { IController } from '../interfaces';
+import { IControllerContainer } from '../interfaces';
 
 /**
  * A simple wrapper object to conveniently
@@ -6,7 +6,7 @@ import { IController } from '../interfaces';
  *
  *
  */
-export default class BasicController<T> implements IController {
+export default class BasicController<T> implements IControllerContainer {
   public controller: T;
 
   public readonly priority: number;
@@ -19,7 +19,7 @@ export default class BasicController<T> implements IController {
     this.id = id;
   }
 
-  public equals(other: IController): boolean {
+  public equals(other: IControllerContainer): boolean {
     return other instanceof BasicController && other.controller === this.controller;
   }
 

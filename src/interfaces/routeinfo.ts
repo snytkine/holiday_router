@@ -1,8 +1,8 @@
-import { IController } from './ifnode';
+import { IControllerContainer } from './ifnode';
 
 export interface IRouteInfo {
   uri: string;
-  controller: IController;
+  controller: IControllerContainer;
 }
 
 export interface IHttpRouteInfo extends IRouteInfo {

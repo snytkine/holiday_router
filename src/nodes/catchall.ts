@@ -1,6 +1,6 @@
 import Debug from 'debug';
 import {
-  IController,
+  IControllerContainer,
   IStringMap,
   Node,
   IUriParams,
@@ -19,7 +19,8 @@ const debug = Debug('HOLIDAY-ROUTER:node:catchallnode');
 /**
  * Node represents uri segment that ends with path separator
  */
-export default class CatchAllNode<T extends IController> extends RootNode<T> implements Node<T> {
+export default class CatchAllNode<T extends IControllerContainer> extends RootNode<T>
+  implements Node<T> {
   public paramName: string;
 
   /**

@@ -1,5 +1,5 @@
 import Debug from 'debug';
-import { IController, IStringMap, Node, PARENT_NODE } from '../interfaces';
+import { IControllerContainer, IStringMap, Node, PARENT_NODE } from '../interfaces';
 
 const debug = Debug('HOLIDAY-ROUTER:lib');
 
@@ -13,7 +13,7 @@ const debug = Debug('HOLIDAY-ROUTER:lib');
  *
  * @returns string
  */
-export const makeUrl = <T extends IController>(
+export const makeUrl = <T extends IControllerContainer>(
   node: Node<T>,
   params: IStringMap,
   res: string = '',
@@ -29,7 +29,10 @@ export const makeUrl = <T extends IController>(
   return makeUrl(node[PARENT_NODE], params, ret);
 };
 
-export const makeUriTemplate = <T extends IController>(node: Node<T>, res: string = ''): string => {
+export const makeUriTemplate = <T extends IControllerContainer>(
+  node: Node<T>,
+  res: string = '',
+): string => {
   debug('Entered makeUriPattern with node "%s"', node.name);
 
   const ret: string = node.uriTemplate + res;

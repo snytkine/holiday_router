@@ -1,11 +1,11 @@
 import Debug from 'debug';
-import { CATCH_ALL_PARAM_NAME, IController, Node } from '../interfaces';
+import { CATCH_ALL_PARAM_NAME, IControllerContainer, Node } from '../interfaces';
 
 import { CatchAllNode, ExactMatchNode, PathParamNode, PathParamNodeRegex } from '../nodes';
 
 const debug = Debug('HOLIDAY-ROUTER:lib');
 
-export type NodeFactory = <T extends IController>(uriSegment: string) => Node<T> | null;
+export type NodeFactory = <T extends IControllerContainer>(uriSegment: string) => Node<T> | null;
 
 /**
  * Supports named catchall parameter
@@ -44,7 +44,7 @@ const PathParamRe = /^([^{}/]*){(?:\s*)([a-zA-Z0-9-_]+)(?:\s*)}([^{}]*)$/;
  */
 const PathParamRegexRe = /^([^{}/]*){(?:\s*)([a-zA-Z0-9-_]+)(?:\s*):(.*)}([^{}]*)$/;
 
-export const makeExactMatchNode = <T extends IController>(
+export const makeExactMatchNode = <T extends IControllerContainer>(
   uriSegment: string,
 ): ExactMatchNode<T> | null => {
   if (uriSegment !== CATCH_ALL_PARAM_NAME) {
@@ -61,7 +61,7 @@ export const makeExactMatchNode = <T extends IController>(
   return null;
 };
 
-export const makeCatchAllNode = <T extends IController>(
+export const makeCatchAllNode = <T extends IControllerContainer>(
   uriSegment: string,
 ): CatchAllNode<T> | null => {
   if (uriSegment === CATCH_ALL_PARAM_NAME) {
@@ -77,7 +77,7 @@ export const makeCatchAllNode = <T extends IController>(
   return null;
 };
 
-export const makePathParamNode = <T extends IController>(
+export const makePathParamNode = <T extends IControllerContainer>(
   uriSegment: string,
 ): PathParamNode<T> | null => {
   const res = PathParamRe.exec(uriSegment);
@@ -96,7 +96,7 @@ export const makePathParamNode = <T extends IController>(
  * @param {string} uriSegment
  * @returns {any}
  */
-export const makePathParamNodeRegex = <T extends IController>(
+export const makePathParamNodeRegex = <T extends IControllerContainer>(
   uriSegment: string,
 ): PathParamNodeRegex<T> | null => {
   debug('makePathParamNodeRegex entered with uriSegment=%s"', uriSegment);
@@ -149,7 +149,7 @@ const factories: Array<NodeFactory> = [
  *
  * @param {string} uriSegment
  */
-export const makeNode = <T extends IController>(uriSegment: string): Node<T> | null => {
+export const makeNode = <T extends IControllerContainer>(uriSegment: string): Node<T> | null => {
   let ret: Node<T> | null;
   let i = 0;
 

@@ -15,7 +15,7 @@ export interface IUriParams {
   regexParams?: Array<IRegexParams>;
 }
 
-export interface IRouteMatch<T extends IController> {
+export interface IRouteMatch<T extends IControllerContainer> {
   params: IUriParams;
   node: Node<T>;
 }
@@ -24,17 +24,7 @@ export interface IStringMap {
   [key: string]: string;
 }
 
-/**
- * can be undefined
- * the reason for undefined instead of null is so we can return
- * route match like this:
- * return this.controller && { controller: this.controller, params }
- * in which case if this.controller has not been initialized it will
- * be undefined and so the return value will also be undefined
- */
-export type IRouteMatchResult<T extends IController> = undefined | IRouteMatch<T>;
-
-export interface IController {
+export interface IControllerContainer {
   /**
    * Controller must implement its own logic
    * of how it determines if another controller is functionally equal
@@ -45,7 +35,7 @@ export interface IController {
    *
    * @param other
    */
-  equals(other: IController): boolean;
+  equals(other: IControllerContainer): boolean;
 
   /**
    * Multiple controller may exist in the same node, meaning
@@ -78,7 +68,17 @@ export interface IController {
   toString(): string;
 }
 
-export interface Node<T extends IController> {
+/**
+ * can be undefined
+ * the reason for undefined instead of null is so we can return
+ * route match like this:
+ * return this.controller && { controller: this.controller, params }
+ * in which case if this.controller has not been initialized it will
+ * be undefined and so the return value will also be undefined
+ */
+export type IRouteMatchResult<T extends IControllerContainer> = undefined | IRouteMatch<T>;
+
+export interface Node<T extends IControllerContainer> {
   type: string;
 
   priority: number;

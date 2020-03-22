@@ -1,6 +1,6 @@
 import Debug from 'debug';
 import {
-  IController,
+  IControllerContainer,
   IRouteInfo,
   IRouteMatchResult,
   IStringMap,
@@ -18,7 +18,7 @@ const debug = Debug('HOLIDAY-ROUTER:router');
 /**
  * @TODO add makeUri(controllerID, params) it will call getRouteMatchByControllerId and then makeUri(node,params) or throw
  */
-export default class Router<T extends IController> {
+export default class Router<T extends IControllerContainer> {
   public rootNode: RootNode<T>;
 
   constructor() {

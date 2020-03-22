@@ -1,13 +1,13 @@
-import { IController, Node } from '../interfaces';
+import { IControllerContainer, Node } from '../interfaces';
 
-const printNode = <T extends IController>(node: Node<T>, indent: number = 0): string => {
-  const printControllers = <T extends IController>(controllers: Array<T> = []): string => {
+const printNode = <T extends IControllerContainer>(node: Node<T>, indent: number = 0): string => {
+  const printControllers = <T extends IControllerContainer>(controllers: Array<T> = []): string => {
     return controllers.reduce((acc, ctrl) => {
       return `${acc}\n${' '.repeat(6)}${' '.repeat(indent * 4)} * Controller ${ctrl}`;
     }, '');
   };
 
-  const printChildren = <T extends IController>(children: Array<Node<T>>): string => {
+  const printChildren = <T extends IControllerContainer>(children: Array<Node<T>>): string => {
     return children.reduce((acc, child) => `${acc}${printNode(child, indent + 1)}`, '');
   };
 

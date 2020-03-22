@@ -1,4 +1,4 @@
-import { IController, IRouteMatch, IUriParams, Node } from '../interfaces';
+import { IControllerContainer, IRouteMatch, IUriParams, Node } from '../interfaces';
 
 /**
  * Convenient way to create object of IRouteMatch
@@ -6,7 +6,7 @@ import { IController, IRouteMatch, IUriParams, Node } from '../interfaces';
  * routeMatch can have just node and params. It will already have controllers in
  * the node because node without controllers will not be returned
  */
-export default class RouteMatch<T extends IController> implements IRouteMatch<T> {
+export default class RouteMatch<T extends IControllerContainer> implements IRouteMatch<T> {
   public readonly node: Node<T>;
 
   public readonly params: IUriParams = { pathParams: [] };

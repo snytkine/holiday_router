@@ -1,5 +1,11 @@
 import Debug from 'debug';
-import { IController, IStringMap, Node, IUriParams, IRouteMatchResult } from '../interfaces';
+import {
+  IControllerContainer,
+  IStringMap,
+  Node,
+  IUriParams,
+  IRouteMatchResult,
+} from '../interfaces';
 import RootNode from './rootnode';
 import { PRIORITY } from './nodepriorities';
 import TAG from '../enums/nodetags';
@@ -14,7 +20,8 @@ const debug = Debug('HOLIDAY-ROUTER:node:pathparamnode');
  * Node represents uri segment that
  * extracts pathParam and ends with path separator
  */
-export default class PathParamNode<T extends IController> extends RootNode<T> implements Node<T> {
+export default class PathParamNode<T extends IControllerContainer> extends RootNode<T>
+  implements Node<T> {
   public paramName: string;
 
   public readonly postfix: string;

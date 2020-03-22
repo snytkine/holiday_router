@@ -1,5 +1,5 @@
 import Debug from 'debug';
-import { IController } from '../interfaces';
+import { IControllerContainer } from '../interfaces';
 import BasicController from './basiccontroller';
 
 const debug = Debug('HOLIDAY-ROUTER:NODE:lib');
@@ -11,7 +11,8 @@ const debug = Debug('HOLIDAY-ROUTER:NODE:lib');
  * already has a UniqueController or to add UniqueController
  * to any node that already has any other controller
  */
-export default class UniqueController<T> extends BasicController<T> implements IController {
+export default class UniqueController<T> extends BasicController<T>
+  implements IControllerContainer {
   private readonly isUnique = true;
 
   constructor(
@@ -29,7 +30,7 @@ export default class UniqueController<T> extends BasicController<T> implements I
    * to add 2 of these controllers to the same node.
    * @param controller
    */
-  public equals(other: IController): boolean {
+  public equals(other: IControllerContainer): boolean {
     debug('Entered UniqueController.equals with other="%s"', other.id);
     return this.isUnique;
   }

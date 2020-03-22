@@ -26,7 +26,7 @@ to just matching the url. For example there could be a requirement to pick diffe
 for the same URI based on value of the request header, or presense of query parameters, or time of day,
 or anything else. When route is matched it always returns array of objects that implemnt IControllr interface
 If this feature is not required then just add a single object per URI ane a match will return array with one element
-Also there is a convenience classes for creating instances of IController.
+Also there is a convenience classes for creating instances of IControllerContainer.
 * Compact tree structure for storing routes makes it very memory-efficient and fast.
 * Convenience class HttpRouter is a wrapper class than added support for adding routes specific to http request methods. Basically HttpRouter holds a Map<httpMethod, Router> and matches the http method first and if found delegates uri resolution to a router object for that method.
 
@@ -72,7 +72,7 @@ npm install holiday-router
 
 ## API Reference
 * [Interfaces](#Holiday-Router--Interfaces)
-    * [IController](#Interfaces--IController)
+    * [IControllerContainer](#Interfaces--IControllerContainer)
     * [IRouteMatch](#Interfaces--IRouteMatch)
     * [IRouteMatchResult](#Interfaces--IRouteMatchResult)
     * [IUriParams](#Interfaces--IUriParams)
@@ -91,14 +91,14 @@ npm install holiday-router
 
 * Classes
     * [Router](#Router--class)
-        * [new Router\<T extends IController>()](#Router_new)
+        * [new Router\<T extends IControllerContainer>()](#Router_new)
         * _instance methods_
             * [.addRoute(uri: string, controller: T)](#Router--addRoute) : <code>Node\<T></code>
-            * [.getRouteMatch(uri: string)](#Router--getRouteMatch): <code>IRouteMatchResult\<T extends IController></code>
+            * [.getRouteMatch(uri: string)](#Router--getRouteMatch): <code>IRouteMatchResult\<T extends IControllerContainer></code>
             * [.makeUri(controllerId: string, params: IStringMap = {})](#Router--makeUri): <code>string</code>
             * [.getAllRoutes()](#Router--getAllRoutes): <code>Array\<IRouteInfo></code>
     * [HttpRouter](#HttpRouter-class) 
-        * [new HttpRouter\<T extends IController>()](#HttpRouter_new)  
+        * [new HttpRouter\<T extends IControllerContainer>()](#HttpRouter_new)  
         * _instance methods_
             * [.addRoute(httpMethod: HTTPMethod, uri: string, controller: T)](#HttpRouter--addRoute) : <code>Node\<T></code>
             * [.getRouteMatch(httpMethod: HTTPMethod, uri: string)](#HttpRouter--getRouteMatch): <code>undefined | IRouteMatch\<T></code>
@@ -107,12 +107,12 @@ npm install holiday-router
 
 <a name="Holiday-Router--Interfaces"></a>
 ## Interfaces
-<a name="Interfaces--IController"></a>
-#### IController
-Developer must implement own class that implements an IController interface
+<a name="Interfaces--IControllerContainer"></a>
+#### IControllerContainer
+Developer must implement own class that implements an IControllerContainer interface
 or use one of 2 helper Classes: BasicController or UniqueController
 ```typescript
-interface IController {
+interface IControllerContainer {
   /**
    * Controller must implement its own logic
    * of how it determines if another controller is functionally equal
@@ -123,7 +123,7 @@ interface IController {
    *
    * @param other
    */
-  equals(other: IController): boolean;
+  equals(other: IControllerContainer): boolean;
 
   /**
    * Multiple controller may exist in the same node, meaning
@@ -160,7 +160,7 @@ interface IController {
 <a name="Interfaces--IRouteMatch"></a>
 #### IRouteMatch
 ```typescript
-interface IRouteMatch<T extends IController> {
+interface IRouteMatch<T extends IControllerContainer> {
   params: IUriParams;
   node: Node<T>;
 }
@@ -169,7 +169,7 @@ interface IRouteMatch<T extends IController> {
 <a name="Interfaces--IRouteMatchResult"></a>
 #### IRouteMatchResult
 ```typescript
-type IRouteMatchResult<T extends IController> = undefined | IRouteMatch<T>;
+type IRouteMatchResult<T extends IControllerContainer> = undefined | IRouteMatch<T>;
 ```
 
 <a name="Interfaces--IUriParams"></a>
@@ -212,7 +212,7 @@ interface IStringMap {
 ```typescript
 interface IRouteInfo {
   uri: string;
-  controller: IController;
+  controller: IControllerContainer;
 }
 ```
 
@@ -226,9 +226,9 @@ interface IHttpRouteInfo extends IRouteInfo {
 
 
 <a name="Interfaces--Node"></a>
-#### Node\<T extends IController>
+#### Node\<T extends IControllerContainer>
 ```typescript
-interface Node<T extends IController> {
+interface Node<T extends IControllerContainer> {
   type: string;
 
   priority: number;
@@ -327,7 +327,7 @@ Adds route to router.
 | param | type | description | 
 | --- | --- | --- |
 | uri | <code>string</code> | uri with supported uri template syntax |
-| controller | <code>[IController](#Interfaces--IController)</code> | Controller is an object that must implement IController interface |
+| controller | <code>[IControllerContainer](#Interfaces--IControllerContainer)</code> | Controller is an object that must implement IControllerContainer interface |
 
 **Example**
 In this example we adding uri template
@@ -450,7 +450,7 @@ Generates URI for route. Replaces placeholders in URI template with values provi
 
 | param | type | description | 
 | --- | --- | --- |
-| controllerId | <code>string</code> | value of .id of Controller (implements [IController](#Interfaces--IController) ) for the route |
+| controllerId | <code>string</code> | value of .id of Controller (implements [IControllerContainer](#Interfaces--IControllerContainer) ) for the route |
 | params | <code>[IStringMap](#Interfaces--IStringMap)</code> | Object with keys matching placeholders in URI template for the route and value to be used in place of placeholders |
 
 
@@ -605,7 +605,7 @@ Adds route to router.
 | --- | --- | --- |
 | httpMethod | <code>HTTPMethod</code> | Uses HTTPMethod enum from http-method-enum npm package |
 | uri | <code>string</code> | uri with supported uri template syntax |
-| controller | <code>[IController](#Interfaces--IController)</code> | Controller is an object that must implement IController interface |
+| controller | <code>[IControllerContainer](#Interfaces--IControllerContainer)</code> | Controller is an object that must implement IControllerContainer interface |
 
 
 **Throws** [RouterError](#Errors--RouterError) with [RouterErrorCode](#Enums--RouterErrorCode) = <code>RouterErrorCode.UNSUPPORTED_HTTP_METHOD</code>
@@ -652,7 +652,7 @@ Generates URI for route. Replaces placeholders in URI template with values provi
 | param | type | description | 
 | --- | --- | --- |
 | httpMethod | <code>HTTPMethod</code> | uses emum from http-method-enum npm package |
-| controllerId | <code>string</code> | value of .id of Controller (implements [IController](#Interfaces--IController) ) for the route |
+| controllerId | <code>string</code> | value of .id of Controller (implements [IControllerContainer](#Interfaces--IControllerContainer) ) for the route |
 | params | <code>[IStringMap](#Interfaces--IStringMap)</code> | Object with keys matching placeholders in URI template for the route and value to be used in place of placeholders |
 
 

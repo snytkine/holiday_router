@@ -1,10 +1,10 @@
 import Debug from 'debug';
-import { IController, Node, PARENT_NODE } from '../interfaces';
+import { IControllerContainer, Node, PARENT_NODE } from '../interfaces';
 import { RouterError, RouterErrorCode } from '../errors';
 
 const debug = Debug('HOLIDAY-ROUTER:lib');
 
-export default function ensureNoDuplicatePathParams<T extends IController>(
+export default function ensureNoDuplicatePathParams<T extends IControllerContainer>(
   node: Node<T>,
   paramName: string = '',
 ): boolean {

@@ -1,5 +1,11 @@
 import Debug from 'debug';
-import { IController, IStringMap, Node, IUriParams, IRouteMatchResult } from '../interfaces/ifnode';
+import {
+  IControllerContainer,
+  IStringMap,
+  Node,
+  IUriParams,
+  IRouteMatchResult,
+} from '../interfaces/ifnode';
 import RootNode from './rootnode';
 import { PRIORITY } from './nodepriorities';
 import TAG from '../enums/nodetags';
@@ -10,7 +16,8 @@ const debug = Debug('HOLIDAY-ROUTER:node:exactmatch');
 /**
  * Node represents uri segment that ends with path separator
  */
-export default class ExactMatchNode<T extends IController> extends RootNode<T> implements Node<T> {
+export default class ExactMatchNode<T extends IControllerContainer> extends RootNode<T>
+  implements Node<T> {
   /**
    * The exact match segment may or may not end with path separator
    * for example it may be widgets/ or widgets

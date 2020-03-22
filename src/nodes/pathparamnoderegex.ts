@@ -1,5 +1,11 @@
 import Debug from 'debug';
-import { IController, IStringMap, Node, IUriParams, IRouteMatchResult } from '../interfaces';
+import {
+  IControllerContainer,
+  IStringMap,
+  Node,
+  IUriParams,
+  IRouteMatchResult,
+} from '../interfaces';
 import PathParamNode from './pathparamnode';
 import { Utils, Strlib } from '../utils';
 import { ExtractedPathParam, ExtractedRegexParams, RouteMatch } from '../lib';
@@ -9,7 +15,7 @@ import { RouterError, RouterErrorCode } from '../errors';
 
 const debug = Debug('HOLIDAY-ROUTER:node:pathparamnoderegex');
 
-export default class PathParamNodeRegex<T extends IController> extends PathParamNode<T>
+export default class PathParamNodeRegex<T extends IControllerContainer> extends PathParamNode<T>
   implements Node<T> {
   public readonly regex: RegExp;
 

@@ -1,6 +1,6 @@
 import Debug from 'debug';
 import {
-  IController,
+  IControllerContainer,
   IRouteMatch,
   IRouteMatchResult,
   Node,
@@ -25,7 +25,7 @@ const debug = Debug('HOLIDAY-ROUTER:NODE:RootNode');
  * This should not be necessary as V8 GC should easily figure our this case of
  * circular reference issue, but maybe it will help GC or may it any more efficient?
  */
-export default class RootNode<T extends IController> implements Node<T> {
+export default class RootNode<T extends IControllerContainer> implements Node<T> {
   public [PARENT_NODE]: Node<T>;
 
   public controllers?: Array<T>;

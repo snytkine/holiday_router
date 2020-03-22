@@ -2,12 +2,18 @@ import Debug from 'debug';
 import * as methods from 'methods';
 import { HTTPMethod } from 'http-method-enum';
 import Router from './router';
-import { IController, IHttpRouteInfo, IRouteMatchResult, IStringMap, Node } from './interfaces';
+import {
+  IControllerContainer,
+  IHttpRouteInfo,
+  IRouteMatchResult,
+  IStringMap,
+  Node,
+} from './interfaces';
 import { RouterError, RouterErrorCode } from './errors';
 
 const debug = Debug('HOLIDAY-ROUTER:router');
 
-export default class HttpRouter<T extends IController> {
+export default class HttpRouter<T extends IControllerContainer> {
   private routers: Map<string, Router<T>> = new Map();
 
   public getRouteMatch(httpMethod: HTTPMethod, uri: string): IRouteMatchResult<T> {
