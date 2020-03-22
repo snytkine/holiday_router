@@ -1,9 +1,9 @@
 import { expect } from 'chai';
+import HTTPMethod from 'http-method-enum';
 import HttpRouter from '../../httprouter';
 import { BasicController, RouteMatch } from '../../lib';
 import { ExactMatchNode, PathParamNode } from '../../nodes';
 import { RouterError, RouterErrorCode } from '../../errors';
-import HTTPMethod from 'http-method-enum';
 
 describe('#HttpRouter tests', () => {
   const uri1 = '/catalog/toys/';
