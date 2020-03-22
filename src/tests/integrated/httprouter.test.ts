@@ -3,6 +3,7 @@ import HttpRouter from '../../httprouter';
 import { BasicController, RouteMatch } from '../../lib';
 import { ExactMatchNode, PathParamNode } from '../../nodes';
 import { RouterError, RouterErrorCode } from '../../errors';
+import HTTPMethod from 'http-method-enum';
 
 describe('#HttpRouter tests', () => {
   const uri1 = '/catalog/toys/';
@@ -18,11 +19,11 @@ describe('#HttpRouter tests', () => {
   describe('#addRoute tests', () => {
     it('should add routes for 3 supported http methods', () => {
       const httpRouter = new HttpRouter();
-      const node1 = httpRouter.addRoute('get', uri1, ctrl1);
-      const node2 = httpRouter.addRoute('get', uri2, ctrl2);
+      const node1 = httpRouter.addRoute(HTTPMethod.GET, uri1, ctrl1);
+      const node2 = httpRouter.addRoute(HTTPMethod.GET, uri2, ctrl2);
 
-      const node3 = httpRouter.addRoute('post', uri1, ctrl1);
-      const node4 = httpRouter.addRoute('post', uri2, ctrl2);
+      const node3 = httpRouter.addRoute(HTTPMethod.POST, uri1, ctrl1);
+      const node4 = httpRouter.addRoute(HTTPMethod.POST, uri2, ctrl2);
 
       expect(node1).to.be.instanceOf(ExactMatchNode);
       expect(node2).to.be.instanceOf(PathParamNode);
@@ -34,9 +35,10 @@ describe('#HttpRouter tests', () => {
     it('should throw RouterException if trying to add unsupported http method', () => {
       let ret: RouterError | undefined;
 
+      const unsupportedMethod: unknown = 'question';
       try {
         const httpRouter = new HttpRouter();
-        httpRouter.addRoute('question', uri1, ctrl1);
+        httpRouter.addRoute(unsupportedMethod as HTTPMethod, uri1, ctrl1);
       } catch (e) {
         ret = e;
       }
@@ -49,16 +51,16 @@ describe('#HttpRouter tests', () => {
 
   describe('#getRouteMatch tests', () => {
     const httpRouter = new HttpRouter();
-    httpRouter.addRoute('get', uri1, ctrl1);
-    httpRouter.addRoute('get', uri2, ctrl2);
-    httpRouter.addRoute('post', uri1, ctrl3);
-    httpRouter.addRoute('post', uri2, ctrl4);
-    httpRouter.addRoute('post', uri1, ctrl5);
-    httpRouter.addRoute('post', uri2, ctrl6);
+    httpRouter.addRoute(HTTPMethod.GET, uri1, ctrl1);
+    httpRouter.addRoute(HTTPMethod.GET, uri2, ctrl2);
+    httpRouter.addRoute(HTTPMethod.POST, uri1, ctrl3);
+    httpRouter.addRoute(HTTPMethod.POST, uri2, ctrl4);
+    httpRouter.addRoute(HTTPMethod.POST, uri1, ctrl5);
+    httpRouter.addRoute(HTTPMethod.POST, uri2, ctrl6);
 
     it('getRouteMatch should return iterator matching httpMethod and uri', () => {
       const res = <RouteMatch<BasicController<string>>>(
-        httpRouter.getRouteMatch('GET', '/catalog/toys/cars/honda/crv')
+        httpRouter.getRouteMatch(HTTPMethod.GET, '/catalog/toys/cars/honda/crv')
       );
 
       expect(res).to.be.instanceOf(RouteMatch);
@@ -67,19 +69,19 @@ describe('#HttpRouter tests', () => {
     });
 
     it('getRouteMatch should return undefined if route for httpMethod does not exist for uri', () => {
-      const res = httpRouter.getRouteMatch('put', '/catalog/toys/cars/honda/crv');
+      const res = httpRouter.getRouteMatch(HTTPMethod.PUT, '/catalog/toys/cars/honda/crv');
       expect(res).to.equal(undefined);
     });
   });
 
   describe('#makeUri tests', () => {
     const httpRouter = new HttpRouter();
-    httpRouter.addRoute('get', uri1, ctrl1);
-    httpRouter.addRoute('get', uri2, ctrl2);
-    httpRouter.addRoute('post', uri1, ctrl3);
-    httpRouter.addRoute('post', uri2, ctrl4);
-    httpRouter.addRoute('post', uri1, ctrl5);
-    httpRouter.addRoute('post', uri2, ctrl6);
+    httpRouter.addRoute(HTTPMethod.GET, uri1, ctrl1);
+    httpRouter.addRoute(HTTPMethod.GET, uri2, ctrl2);
+    httpRouter.addRoute(HTTPMethod.POST, uri1, ctrl3);
+    httpRouter.addRoute(HTTPMethod.POST, uri2, ctrl4);
+    httpRouter.addRoute(HTTPMethod.POST, uri1, ctrl5);
+    httpRouter.addRoute(HTTPMethod.POST, uri2, ctrl6);
 
     it('.makeUri should return uri string if matching controller found', () => {
       const url = httpRouter.makeUri('GET', 'ctrl2', {
@@ -107,12 +109,12 @@ describe('#HttpRouter tests', () => {
 
   describe('#getAllRoutes test', () => {
     const httpRouter = new HttpRouter();
-    httpRouter.addRoute('get', uri1, ctrl1);
-    httpRouter.addRoute('get', uri2, ctrl2);
-    httpRouter.addRoute('post', uri1, ctrl3);
-    httpRouter.addRoute('post', uri2, ctrl4);
-    httpRouter.addRoute('post', uri1, ctrl5);
-    httpRouter.addRoute('post', uri2, ctrl6);
+    httpRouter.addRoute(HTTPMethod.GET, uri1, ctrl1);
+    httpRouter.addRoute(HTTPMethod.GET, uri2, ctrl2);
+    httpRouter.addRoute(HTTPMethod.POST, uri1, ctrl3);
+    httpRouter.addRoute(HTTPMethod.POST, uri2, ctrl4);
+    httpRouter.addRoute(HTTPMethod.POST, uri1, ctrl5);
+    httpRouter.addRoute(HTTPMethod.POST, uri2, ctrl6);
     it('#Should return array of route objects', () => {
       const res = httpRouter.getAllRoutes();
       expect(res).to.deep.equal([

@@ -1,5 +1,6 @@
 import Debug from 'debug';
 import * as methods from 'methods';
+import { HTTPMethod } from 'http-method-enum';
 import Router from './router';
 import { IController, IHttpRouteInfo, IRouteMatchResult, IStringMap, Node } from './interfaces';
 import { RouterError, RouterErrorCode } from './errors';
@@ -9,7 +10,7 @@ const debug = Debug('HOLIDAY-ROUTER:router');
 export default class HttpRouter<T extends IController> {
   private routers: Map<string, Router<T>> = new Map();
 
-  public getRouteMatch(httpMethod: string, uri: string): IRouteMatchResult<T> {
+  public getRouteMatch(httpMethod: HTTPMethod, uri: string): IRouteMatchResult<T> {
     debug('Entered HttpRouter.getRouteMatch with method="%s" uri="%s"', httpMethod, uri);
     const methodRouter = this.routers.get(httpMethod);
     if (!methodRouter) {
@@ -20,29 +21,29 @@ export default class HttpRouter<T extends IController> {
     return methodRouter.getRouteMatch(uri);
   }
 
-  public addRoute(httpMethod: string, uri: string, controller: T): Node<T> {
+  public addRoute(httpMethod: HTTPMethod, uri: string, controller: T): Node<T> {
     debug(
       'Entered Router.addRoute() with method="%s" uri="%s" controller="%o"',
       httpMethod,
       uri,
       controller,
     );
-    const method = httpMethod.toLocaleUpperCase();
-    const methodRouter = this.routers.get(method);
+
+    const methodRouter = this.routers.get(httpMethod);
     if (methodRouter) {
       return methodRouter.addRoute(uri, controller);
     }
 
-    if (!methods.includes(method.toLocaleLowerCase())) {
+    if (!methods.includes(httpMethod.toLocaleLowerCase())) {
       throw new RouterError(
-        `Cannot add route for method ${method}`,
+        `Cannot add route for method ${httpMethod}`,
         RouterErrorCode.UNSUPPORTED_HTTP_METHOD,
       );
     }
 
     const router = new Router<T>();
     const ret = router.addRoute(uri, controller);
-    this.routers.set(method, router);
+    this.routers.set(httpMethod, router);
 
     return ret;
   }
