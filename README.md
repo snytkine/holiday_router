@@ -5,13 +5,13 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 # Holiday Router
 ## Advanced URI Routing library for matching URI to controller
-- #### Open Source under the *MIT License*
-- #### Written in Typescript. Strong typing and interface based design makes it very flexible for developers to implement own controller classes.
-- #### Ideal for being used as the URI and/or Http routing module in custom frameworks written in TypeScript
-- #### Over 150 unit tests covering 100% of codebase and many extra real-life use-cases are covered
-- #### Using industry standard eslint rules for typescript makes use of best practices for writing clean tyescript code
+- ### Open Source under the *MIT License*
+- ### Written in Typescript. Strong typing and interface based design makes it very flexible for developers to implement own controller classes.
+- ### Ideal for being used as the URI and/or Http routing module in custom frameworks written in TypeScript
+- ### Over 150 unit tests covering 100% of codebase and many extra real-life use-cases are covered
+- ### Using industry standard eslint rules for typescript makes use of best practices for writing clean tyescript code
 
-### Features
+## Features
 * Named uri parameters /catalog/{category}/{subcategory/
 * Catchall routes with support for named catchall parameter /images/\*\*imagepath
 or just /images/\*\* for anonymous catchall param
@@ -30,7 +30,7 @@ Also there is a convenience classes for creating instances of IController.
 * Compact tree structure for storing routes makes it very memory-efficient and fast.
 * Convenience class HttpRouter is a wrapper class than added support for adding routes specific to http request methods. Basically HttpRouter holds a Map<httpMethod, Router> and matches the http method first and if found delegates uri resolution to a router object for that method.
 
-### How it works
+## How it works
 Here is a break-down of how the routing information is stored
 when we add 5 routes to the router. 
 Router breaks up the URI into uri segments. Segment is a part of the URI
@@ -71,7 +71,7 @@ npm install holiday-router
 ```
 
 ## API Reference
-* ## [Interfaces](#Holiday-Router--Interfaces) ##
+* ###[Interfaces](#Holiday-Router--Interfaces)
     * [IController](#Interfaces--IController)
     * [IRouteMatch](#Interfaces--IRouteMatch)
     * [IRouteMatchResult](#Interfaces--IRouteMatchResult)
@@ -83,13 +83,13 @@ npm install holiday-router
     * [IHttpRouteInfo](#Interfaces--IHttpRouteInfo)
     * [Note\<T>](#Interfaces--Node)
 
-* ### Errors ###
+* ### Errors
     * [RouterError](#Errors--RouterError)
 
-* ### Enums ###
+* ### Enums
     * [RouterErrorCode](#Enums--RouterErrorCode)
 
-* ### Classes ###
+* ### Classes
     * [Router](#Router--class)
         * [new Router\<T extends IController>()](#Router_new)
         * _instance methods_
