@@ -84,7 +84,7 @@ describe('#HttpRouter tests', () => {
     httpRouter.addRoute(HTTPMethod.POST, uri2, ctrl6);
 
     it('.makeUri should return uri string if matching controller found', () => {
-      const url = httpRouter.makeUri('GET', 'ctrl2', {
+      const url = httpRouter.makeUri(HTTPMethod.GET, 'ctrl2', {
         make: 'honda',
         model: 'crv',
       });
@@ -95,7 +95,7 @@ describe('#HttpRouter tests', () => {
     it('.makeUri should throw RouterError if http method is not supported', () => {
       let res: RouterError;
       try {
-        httpRouter.makeUri('something', 'ctrl2', {
+        httpRouter.makeUri('something' as HTTPMethod, 'ctrl2', {
           make: 'honda',
           model: 'crv',
         });

@@ -1,12 +1,12 @@
 import { IRouteInfo } from '../interfaces/routeinfo';
 import { IControllerContainer } from '../interfaces';
 
-export default class RouteInfo implements IRouteInfo {
+export default class RouteInfo<T extends IControllerContainer> implements IRouteInfo<T> {
   public readonly uri: string;
 
-  public readonly controller: IControllerContainer;
+  public readonly controller: T;
 
-  constructor(uri: string, controller: IControllerContainer) {
+  constructor(uri: string, controller: T) {
     this.uri = uri;
     this.controller = controller;
   }

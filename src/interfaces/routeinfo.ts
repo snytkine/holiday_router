@@ -1,10 +1,10 @@
 import { IControllerContainer } from './ifnode';
 
-export interface IRouteInfo {
+export interface IRouteInfo<T extends IControllerContainer> {
   uri: string;
-  controller: IControllerContainer;
+  controller: T;
 }
 
-export interface IHttpRouteInfo extends IRouteInfo {
+export interface IHttpRouteInfo<T extends IControllerContainer> extends IRouteInfo<T> {
   method: string;
 }

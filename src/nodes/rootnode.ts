@@ -101,11 +101,11 @@ export default class RootNode<T extends IControllerContainer> implements Node<T>
   }
 
   public getAllRoutes(): Array<IRouteMatch<T>> {
-    const ret = (this.controllers && [new RouteMatch(this)]) || [];
+    const res: Array<IRouteMatch<T>> = (this.controllers && [new RouteMatch(this)]) || [];
 
-    return this.children.reduce((prev, cur) => {
-      return prev.concat(cur.getAllRoutes());
-    }, ret);
+    return this.children.reduce((prev, next) => {
+      return prev.concat(next.getAllRoutes());
+    }, res);
   }
 
   public getRouteMatchByControllerId(id: string): IRouteMatchResult<T> {

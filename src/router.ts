@@ -89,7 +89,7 @@ export default class Router<T extends IControllerContainer> {
     return makeUrl(routeMatch.node, params);
   }
 
-  public getAllRoutes(): Array<IRouteInfo> {
+  public getAllRoutes(): Array<IRouteInfo<T>> {
     const routes = this.rootNode.getAllRoutes();
     return routes
       .map(routeMatch => {

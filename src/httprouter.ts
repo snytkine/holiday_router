@@ -54,7 +54,7 @@ export default class HttpRouter<T extends IControllerContainer> {
     return ret;
   }
 
-  public makeUri(httpMethod: string, controllerId: string, params?: IStringMap): string {
+  public makeUri(httpMethod: HTTPMethod, controllerId: string, params?: IStringMap): string {
     const methodRouter = this.routers.get(httpMethod);
     if (!methodRouter) {
       throw new RouterError(
@@ -66,8 +66,8 @@ export default class HttpRouter<T extends IControllerContainer> {
     return methodRouter.makeUri(controllerId, params);
   }
 
-  public getAllRoutes(): Array<IHttpRouteInfo> {
-    const ret: Array<IHttpRouteInfo>[] = [];
+  public getAllRoutes(): Array<IHttpRouteInfo<T>> {
+    const ret: Array<Array<IHttpRouteInfo<T>>> = [];
 
     this.routers.forEach((router, httpMethod) => {
       ret.push(

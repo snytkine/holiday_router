@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { IRouteInfo, IRouteMatch } from '../../interfaces';
+import { IRouteMatch } from '../../interfaces';
 import { Router } from '../..';
 import { BasicController, RouteMatch, UniqueController } from '../../lib';
 import { RouterError, RouterErrorCode } from '../../errors';
@@ -22,7 +22,7 @@ describe('#Integrated Router test', () => {
   const ctrl5 = new BasicController('CTRL-5', 'ctrl5');
   const ctrl6 = new BasicController('CTRL-6', 'ctrl6');
 
-  const router = new Router();
+  const router = new Router<BasicController<string>>();
   router.addRoute(uri1, ctrl1);
   router.addRoute(uri2, ctrl2);
   router.addRoute(uri3, ctrl3);
@@ -167,7 +167,7 @@ describe('#Integrated Router test', () => {
 
   describe('#getAllRoutes test', () => {
     it('#Should return array of route objects', () => {
-      const res: Array<IRouteInfo> = router.getAllRoutes();
+      const res = router.getAllRoutes();
       expect(
         res.sort((item1, item2) => {
           return item1.controller.id > item2.controller.id ? 1 : -1;
