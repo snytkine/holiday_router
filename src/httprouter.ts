@@ -14,7 +14,7 @@ import { RouterError, RouterErrorCode } from './errors';
 const debug = Debug('HOLIDAY-ROUTER:router');
 
 export default class HttpRouter<T extends IControllerContainer> {
-  private routers: Map<string, Router<T>> = new Map();
+  private routers: Map<HTTPMethod, Router<T>> = new Map();
 
   public getRouteMatch(httpMethod: HTTPMethod, uri: string): IRouteMatchResult<T> {
     debug('Entered HttpRouter.getRouteMatch with method="%s" uri="%s"', httpMethod, uri);

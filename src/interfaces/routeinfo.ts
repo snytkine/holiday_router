@@ -1,3 +1,4 @@
+import HTTPMethod from 'http-method-enum';
 import { IControllerContainer } from './ifnode';
 
 export interface IRouteInfo<T extends IControllerContainer> {
@@ -6,5 +7,5 @@ export interface IRouteInfo<T extends IControllerContainer> {
 }
 
 export interface IHttpRouteInfo<T extends IControllerContainer> extends IRouteInfo<T> {
-  method: string;
+  method: HTTPMethod;
 }
