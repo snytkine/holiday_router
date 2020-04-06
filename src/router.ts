@@ -16,7 +16,23 @@ import { RouteInfo } from './lib';
 
 const debug = Debug('HOLIDAY-ROUTER:router');
 /**
- * @TODO add makeUri(controllerID, params) it will call getRouteMatchByControllerId and then makeUri(node,params) or throw
+ * @TODO  add deleteController(controllerID: string)
+ * it will find Node with that controller, delete controller from array
+ * of controllers. Then if there are no other controllers in that node
+ * and no child nodes it will delete this node from its' child node
+ * then in child node does not have any more child nodes and does not have any
+ * controllers it will delete that node from that node's parent, and recursively
+ * repeat same operation all the way to root node.
+ *
+ * @todo when adding new route with addRoute() get all routers, get all existing
+ * controllers and make sure there are no controllers with same id.
+ * Controller id should be unique for the entire router.
+ * But first must decide if there are good use-cases for allowing same controller
+ * to exist for different routes.
+ *
+ * Same controller can exist for different HTTP METHODs for same URL
+ * but can same controller exist for different urls in the same instance of router?
+ *
  */
 export default class Router<T extends IControllerContainer> {
   public rootNode: RootNode<T>;
@@ -93,7 +109,6 @@ export default class Router<T extends IControllerContainer> {
     const routes = this.rootNode.getAllRoutes();
     return routes
       .map(routeMatch => {
-        // @ts-ignore
         return routeMatch.node.controllers.map(
           controller => new RouteInfo(makeUriTemplate(routeMatch.node), controller),
         );

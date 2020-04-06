@@ -108,6 +108,19 @@ export default class RootNode<T extends IControllerContainer> implements Node<T>
     }, res);
   }
 
+  /**
+   * @todo here we assume that controller id is unique for all nodes
+   * but we don't really enforce uniqueness of controller id for all routes
+   * we only enforce uniqueness of controller id for one node.
+   * This can cause a problem if same controller id exists in multiple routes
+   *
+   * We really need to either enforce uniquenes or return Array<IRouteMatchResult<T>>
+   *   Enforcing uniqueness of controller id for all routes may also present unwanted
+   *   consequences, like maybe there is a good use case for adding same controller
+   *   to multiple routes.
+   *
+   * @param id
+   */
   public getRouteMatchByControllerId(id: string): IRouteMatchResult<T> {
     debug('Entered getRouteMatchByControllerId in node "%s" with id="id"', this, id);
 

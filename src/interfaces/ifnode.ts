@@ -78,6 +78,9 @@ export interface IControllerContainer {
  */
 export type IRouteMatchResult<T extends IControllerContainer> = undefined | IRouteMatch<T>;
 
+/**
+ * @todo add deleteController(id: string)
+ */
 export interface Node<T extends IControllerContainer> {
   type: string;
 
