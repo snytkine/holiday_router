@@ -73,7 +73,7 @@
     "lodash": "4.17.12",
     "methods": "^1.1.2",
     "source-map-support": "^0.5.16",
-    "uglify-js": "^2.6.0"
+    "uglify-js": "^3.14.3"
   },
   "devDependencies": {
     "@types/chai": "^4.2.7",
