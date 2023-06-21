@@ -64,11 +64,11 @@
   },
   "dependencies": {
     "@types/expect": "^24.3.0",
-    "@typescript-eslint/eslint-plugin": "^2.13.0",
+    "@typescript-eslint/eslint-plugin": "^2.32.0",
     "constantinople": "^3.1.1",
     "debug": "^4.1.1",
     "eslint-config-airbnb-typescript": "^6.3.1",
-    "eslint-plugin-import": "^2.19.1",
+    "eslint-plugin-import": "^2.25.0",
     "http-method-enum": "^1.0.0",
     "lodash": "4.17.12",
     "methods": "^1.1.2",
