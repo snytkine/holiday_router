@@ -63,7 +63,7 @@
     "all": true
   },
   "dependencies": {
-    "@types/expect": "^24.3.0",
+    "@types/expect": "^24.3.2",
     "@typescript-eslint/eslint-plugin": "^2.13.0",
     "constantinople": "^3.1.1",
     "debug": "^4.1.1",
